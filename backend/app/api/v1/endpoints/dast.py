@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from datetime import datetime
 
@@ -14,10 +14,22 @@ router = APIRouter()
 async def scan_dast_url(payload: DastUrlScanRequest, db: Session = Depends(get_db)):
     result = await DastEngine.scan_url(payload.url)
     
-    if "error" in result and not result.get("findings"):
-        raise HTTPException(status_code=400, detail=f"Falha ao conectar no alvo: {result['error']}")
-
     findings = result.get("findings", [])
+    
+    # Tratamento gracioso para URLs inacessíveis ou offline
+    if "error" in result and not findings:
+        findings.append({
+            "vuln_type": "Alvo Inacessível / Timeout de Conexão",
+            "severity": "MEDIUM",
+            "cvss_score": 5.0,
+            "owasp_category": "A05:2021 - Security Misconfiguration",
+            "line_number": 0,
+            "asset_name": payload.url,
+            "asset_type": "URL",
+            "description": f"O servidor alvo não respondeu à tentativa de conexão ({result['error']}). Verifique se o endereço está correto e se o servidor aceita tráfego externo.",
+            "code_snippet": f"Erro de Conexão: {result['error']}"
+        })
+
     max_id = db.query(Vulnerability).order_by(Vulnerability.internal_id.desc()).first()
     next_id = (max_id.internal_id + 1) if max_id else 1
     new_findings_count = 0

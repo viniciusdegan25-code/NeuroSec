@@ -10,22 +10,22 @@ const NeuroRemediation = {
         modal.classList.add("open");
 
         // Preenche com loading
-        document.getElementById("modalVulnTitle").innerText = `Análise e Remediação com IA — ID #${internalId}`;
-        document.getElementById("modalDiagnosisBox").innerHTML = `<div style="color:var(--cyan-neon);">Conectando ao NeuroSec AI Engine (Groq / Llama-3.1)...</div>`;
+        document.getElementById("modalVulnTitle").innerText = `Análise e Remediação com NeuroSec IA — ID #${internalId}`;
+        document.getElementById("modalDiagnosisBox").innerHTML = `<div style="color:var(--cyan-neon);">Conectando à NeuroSec IA para diagnóstico e geração de patch...</div>`;
         document.getElementById("modalDiffContainer").innerHTML = `<div style="color:var(--text-muted);">Aguardando geração do patch...</div>`;
         
         try {
-            const res = await NeuroAPI.post(`/remediate/${internalId}`);
+            const res = await NeuroAPI.post(`/remediate/${internalId}`, { internal_id: internalId });
             
             // Diagnóstico
             document.getElementById("modalDiagnosisBox").innerHTML = `
-                <div style="font-size:13px; line-height:1.6; color:#e2e8f0; white-space:pre-wrap;">${res.diagnosis}</div>
+                <div style="font-size:13px; line-height:1.6; color:#e2e8f0; white-space:pre-wrap;">${this.formatMarkdown(res.diagnosis)}</div>
             `;
 
             // Renderiza Diff
             this.renderDiff(res.diff);
 
-            NeuroUI.toast("Patch de segurança gerado com sucesso!", "success");
+            NeuroUI.toast("Patch de segurança gerado com sucesso pela NeuroSec IA!", "success");
         } catch (err) {
             document.getElementById("modalDiagnosisBox").innerHTML = `<div style="color:var(--crimson-crit);">Erro ao gerar remediação: ${err.message}</div>`;
         }
@@ -88,5 +88,15 @@ const NeuroRemediation = {
 
     escapeHtml(str) {
         return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    },
+
+    formatMarkdown(text) {
+        if (!text) return "";
+        let escaped = this.escapeHtml(text);
+        escaped = escaped.replace(/```([\s\S]*?)```/g, '<pre style="background:rgba(0,0,0,0.5); padding:8px; border-radius:6px; font-family:monospace; margin:6px 0; overflow-x:auto;"><code>$1</code></pre>');
+        escaped = escaped.replace(/`([^`]+)`/g, '<code style="background:rgba(0,0,0,0.4); padding:2px 5px; border-radius:4px; font-family:monospace; color:var(--cyan-neon);">$1</code>');
+        escaped = escaped.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+        escaped = escaped.replace(/\n/g, '<br>');
+        return escaped;
     }
 };

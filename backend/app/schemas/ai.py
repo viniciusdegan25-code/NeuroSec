@@ -16,7 +16,7 @@ class ChatResponse(BaseModel):
     timestamp: str
 
 class RemediationRequest(BaseModel):
-    internal_id: int
+    internal_id: Optional[int] = None
     custom_instructions: Optional[str] = None
 
 class RemediationResponse(BaseModel):

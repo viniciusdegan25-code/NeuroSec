@@ -1,7 +1,8 @@
 import os
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Body
 from sqlalchemy.orm import Session
 from datetime import datetime
+from typing import Optional
 
 from app.db.database import get_db
 from app.db.models import Vulnerability, AuditLog
@@ -17,12 +18,12 @@ if not os.path.exists(PATCHES_DIR):
 @router.post("/{internal_id}", response_model=RemediationResponse, summary="Gera remediação, código corrigido e diff via IA")
 async def remediate_vulnerability(
     internal_id: int, 
-    payload: RemediationRequest = None,
+    payload: Optional[RemediationRequest] = Body(default=None),
     db: Session = Depends(get_db)
 ):
     vuln = db.query(Vulnerability).filter(Vulnerability.internal_id == internal_id).first()
     if not vuln:
-        raise HTTPException(status_code=404, detail="Vulnerabilidade não encontrada.")
+        raise HTTPException(status_code=404, detail=f"Vulnerabilidade #{internal_id} não encontrada no banco.")
 
     custom_notes = payload.custom_instructions if payload else None
 
@@ -60,8 +61,8 @@ async def remediate_vulnerability(
         action="AI_PATCH_GENERATED",
         target_vuln_id=vuln.internal_id,
         vuln_key=vuln.key,
-        operator="NeuroSec AI Engine (Groq/Llama-3.1)",
-        details=f"Patch de segurança autônomo gerado para a falha '{vuln.vuln_type}' no ativo '{vuln.asset_name}'.",
+        operator="NeuroSec IA",
+        details=f"Patch de segurança gerado pela NeuroSec IA para a falha '{vuln.vuln_type}' no ativo '{vuln.asset_name}'.",
         diff_preview=ai_result["diff"][:500]
     )
     db.add(audit)
@@ -89,7 +90,7 @@ def approve_patch(
 ):
     vuln = db.query(Vulnerability).filter(Vulnerability.internal_id == internal_id).first()
     if not vuln:
-        raise HTTPException(status_code=404, detail="Vulnerabilidade não encontrada.")
+        raise HTTPException(status_code=404, detail=f"Vulnerabilidade #{internal_id} não encontrada.")
 
     vuln.status = "remediated"
     vuln.updated_at = datetime.now().strftime("%d/%m/%Y %H:%M")

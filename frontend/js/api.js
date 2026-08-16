@@ -12,7 +12,11 @@ const NeuroAPI = {
     async get(endpoint) {
         try {
             const res = await fetch(`${API_BASE}${endpoint}`);
-            if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+            if (!res.ok) {
+                const errData = await res.json().catch(() => ({}));
+                const errMsg = this._formatErrorMessage(errData) || `HTTP ${res.status}: ${res.statusText}`;
+                throw new Error(errMsg);
+            }
             return await res.json();
         } catch (err) {
             console.error(`Erro GET ${endpoint}:`, err);
@@ -30,7 +34,8 @@ const NeuroAPI = {
             });
             if (!res.ok) {
                 const errData = await res.json().catch(() => ({}));
-                throw new Error(errData.detail || `HTTP ${res.status}`);
+                const errMsg = this._formatErrorMessage(errData) || `HTTP ${res.status}: ${res.statusText}`;
+                throw new Error(errMsg);
             }
             return await res.json();
         } catch (err) {
@@ -47,7 +52,11 @@ const NeuroAPI = {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body)
             });
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            if (!res.ok) {
+                const errData = await res.json().catch(() => ({}));
+                const errMsg = this._formatErrorMessage(errData) || `HTTP ${res.status}`;
+                throw new Error(errMsg);
+            }
             return await res.json();
         } catch (err) {
             console.error(`Erro PATCH ${endpoint}:`, err);
@@ -59,13 +68,30 @@ const NeuroAPI = {
     async delete(endpoint) {
         try {
             const res = await fetch(`${API_BASE}${endpoint}`, { method: "DELETE" });
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            if (!res.ok) {
+                const errData = await res.json().catch(() => ({}));
+                const errMsg = this._formatErrorMessage(errData) || `HTTP ${res.status}`;
+                throw new Error(errMsg);
+            }
             return await res.json();
         } catch (err) {
             console.error(`Erro DELETE ${endpoint}:`, err);
             NeuroUI.toast(`Falha ao excluir: ${err.message}`, "error");
             throw err;
         }
+    },
+
+    _formatErrorMessage(errData) {
+        if (!errData) return null;
+        if (typeof errData.detail === "string") return errData.detail;
+        if (Array.isArray(errData.detail)) {
+            return errData.detail.map(d => d.msg || d.message || JSON.stringify(d)).join(", ");
+        }
+        if (typeof errData.detail === "object") {
+            return errData.detail.msg || JSON.stringify(errData.detail);
+        }
+        if (errData.message) return errData.message;
+        return null;
     }
 };
 
