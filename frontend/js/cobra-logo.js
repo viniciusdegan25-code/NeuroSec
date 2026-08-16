@@ -1,55 +1,71 @@
 // NeuroSec Cobra Naja Cyber Shield Vector & Matrix Engine
 const NeuroCobra = {
-    getShieldSVG(size = 32, glowColor = "#00FF41") {
+    getShieldSVG(size = 32, glowColor = "#00FF88") {
         return `
-        <svg width="${size}" height="${size}" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="cobra-naja-svg">
+        <svg width="${size}" height="${size}" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="cobra-naja-svg">
             <defs>
-                <filter id="matrixGlow" x="-20%" y="-20%" width="140%" height="140%">
-                    <feGaussianBlur stdDeviation="2" result="blur" />
+                <filter id="najaNeonGlow" x="-30%" y="-30%" width="160%" height="160%">
+                    <feGaussianBlur stdDeviation="2.5" result="blur" />
                     <feComposite in="SourceGraphic" in2="blur" operator="over" />
                 </filter>
-                <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#00FF41" stop-opacity="0.9"/>
-                    <stop offset="50%" stop-color="#10B981" stop-opacity="0.7"/>
-                    <stop offset="100%" stop-color="#07090E" stop-opacity="0.95"/>
-                </linearGradient>
-                <linearGradient id="najaGrad" x1="50%" y1="0%" x2="50%" y2="100%">
-                    <stop offset="0%" stop-color="#00FF41"/>
+                <linearGradient id="najaGreenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#00FF88"/>
+                    <stop offset="50%" stop-color="#00FF41"/>
                     <stop offset="100%" stop-color="#10B981"/>
                 </linearGradient>
             </defs>
 
-            <!-- Outer Shield Outline -->
-            <path d="M50 8 L85 24 L85 58 Q85 82 50 94 Q15 82 15 58 L15 24 Z" 
-                  stroke="url(#shieldGrad)" stroke-width="2.5" fill="#0B111E" fill-opacity="0.85" filter="url(#matrixGlow)"/>
+            <!-- Outer Cobra Hood & Shield Silhouette -->
+            <path d="M60 12 
+                     C45 12 28 22 20 42 
+                     C14 58 24 78 60 108 
+                     C96 78 106 58 100 42 
+                     C92 22 75 12 60 12 Z" 
+                  stroke="url(#najaGreenGrad)" 
+                  stroke-width="3.5" 
+                  stroke-linejoin="round"
+                  stroke-linecap="round"
+                  fill="#0B111E" 
+                  fill-opacity="0.9"
+                  filter="url(#najaNeonGlow)"/>
 
-            <!-- Lateral Cyber Circuit Traces -->
-            <path d="M22 36 L32 36 L38 42" stroke="#00FF41" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
-            <circle cx="22" cy="36" r="1.5" fill="#00FF41"/>
-            <path d="M78 36 L68 36 L62 42" stroke="#00FF41" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
-            <circle cx="78" cy="36" r="1.5" fill="#00FF41"/>
+            <!-- Inner Hood Boundary Wings -->
+            <path d="M34 42 
+                     C28 54 36 72 60 92 
+                     C84 72 92 54 86 42" 
+                  stroke="url(#najaGreenGrad)" 
+                  stroke-width="2.5" 
+                  stroke-linecap="round" 
+                  fill="none" 
+                  opacity="0.85"/>
 
-            <!-- Cobra Naja Expanded Hood (Capelo da Naja) -->
-            <path d="M50 22 C36 22 28 32 26 48 C25 58 35 70 50 78 C65 70 75 58 74 48 C72 32 64 22 50 22 Z" 
-                  fill="none" stroke="url(#najaGrad)" stroke-width="2" />
+            <!-- Cobra Head Crown & Brow -->
+            <path d="M46 22 L60 16 L74 22 L68 34 L52 34 Z" 
+                  stroke="url(#najaGreenGrad)" 
+                  stroke-width="2.5" 
+                  fill="#07090E" 
+                  stroke-linejoin="round"/>
 
-            <!-- Cobra Internal Hood Markings & Neural Scales -->
-            <path d="M35 44 C38 36 44 32 50 32 C56 32 62 36 65 44" stroke="#00FF41" stroke-width="1.5" fill="none" opacity="0.8"/>
-            <path d="M38 52 C42 46 46 44 50 44 C54 44 58 46 62 52" stroke="#10B981" stroke-width="1.5" fill="none" opacity="0.7"/>
-            <path d="M42 60 L50 56 L58 60" stroke="#00FF41" stroke-width="1.5" fill="none"/>
-            <path d="M45 67 L50 64 L55 67" stroke="#10B981" stroke-width="1.5" fill="none"/>
+            <!-- Glowing Slanted Viper Eyes -->
+            <path d="M48 26 L54 28" stroke="#00FF88" stroke-width="2.5" stroke-linecap="round" filter="url(#najaNeonGlow)"/>
+            <path d="M72 26 L66 28" stroke="#00FF88" stroke-width="2.5" stroke-linecap="round" filter="url(#najaNeonGlow)"/>
 
-            <!-- Cobra Head Crown & Fangs Profile -->
-            <path d="M50 26 L44 34 L50 40 L56 34 Z" fill="#00FF41" opacity="0.9"/>
-            
-            <!-- Glowing Eyes (Cyber Optics) -->
-            <circle cx="46" cy="32" r="1.5" fill="#FFFFFF" />
-            <circle cx="54" cy="32" r="1.5" fill="#FFFFFF" />
-            <circle cx="46" cy="32" r="2.5" fill="#00FF41" opacity="0.7" filter="url(#matrixGlow)"/>
-            <circle cx="54" cy="32" r="2.5" fill="#00FF41" opacity="0.7" filter="url(#matrixGlow)"/>
+            <!-- Viper Mouth & Fangs -->
+            <path d="M52 38 L60 46 L68 38" stroke="url(#najaGreenGrad)" stroke-width="2" fill="#040711"/>
+            <!-- Left Fang -->
+            <path d="M54 38 L55 42" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/>
+            <!-- Right Fang -->
+            <path d="M66 38 L65 42" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/>
 
-            <!-- Base Shield Node -->
-            <circle cx="50" cy="88" r="2" fill="#00FF41" filter="url(#matrixGlow)"/>
+            <!-- Cobra Segmented Belly Plates / Horizontal Ribs -->
+            <path d="M46 52 C52 50 68 50 74 52" stroke="url(#najaGreenGrad)" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M48 60 C53 58 67 58 72 60" stroke="url(#najaGreenGrad)" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M50 68 C54 66 66 66 70 68" stroke="url(#najaGreenGrad)" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M52 76 C55 74 65 74 68 76" stroke="url(#najaGreenGrad)" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M55 83 C57 82 63 82 65 83" stroke="url(#najaGreenGrad)" stroke-width="2" stroke-linecap="round"/>
+
+            <!-- Central Spine Neural Line -->
+            <path d="M60 46 L60 84" stroke="#00FF88" stroke-width="1.5" stroke-dasharray="2 3" opacity="0.6"/>
         </svg>
         `;
     },
@@ -85,7 +101,7 @@ const NeuroCobra = {
             ctx.fillStyle = "rgba(7, 9, 14, 0.08)";
             ctx.fillRect(0, 0, width, height);
 
-            ctx.fillStyle = "#00FF41";
+            ctx.fillStyle = "#00FF88";
             ctx.font = `${fontSize}px 'JetBrains Mono', monospace`;
 
             for (let i = 0; i < drops.length; i++) {
