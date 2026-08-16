@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitar Avaliação Enterprise — NeuroSec ASPM 4.0</title>
+    <meta name="description" content="Agende uma avaliação personalizada da postura de segurança da sua aplicação com os especialistas da NeuroSec.">
+    <link rel="stylesheet" href="/css/matrix.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 8 L85 24 L85 58 Q85 82 50 94 Q15 82 15 58 L15 24 Z' fill='%2300FF41'/></svg>">
+</head>
+<body style="min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between;">
+    <canvas id="matrixCanvas"></canvas>
+    <div class="ambient-glow-top"></div>
+
+    <!-- Header -->
+    <header class="neo-nav">
+        <div class="container neo-nav-content">
+            <a href="/" class="brand-logo">
+                <div class="cobra-badge" data-cobra-shield="24"></div>
+                <div class="brand-text-wrapper">
+                    <span class="brand-title">NeuroSec <span class="highlight">ASPM</span></span>
+                    <span class="brand-version">v4.0 Neo-Matrix</span>
+                </div>
+            </a>
+
+            <div class="nav-actions">
+                <a href="/" class="btn-secondary-dark">← Voltar para a Home</a>
+                <a href="/dashboard" class="btn-primary-matrix">Acessar Cockpit 🚀</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Evaluation Form Section -->
+    <main style="padding: 130px 0 60px 0; flex: 1;">
+        <div class="container" style="max-width: 680px;">
+            <div style="text-align: center; margin-bottom: 36px;">
+                <div class="hero-pill" style="margin: 0 auto 16px auto;">
+                    <span class="pulsing-dot"></span>
+                    <span>PROGRAMA PILOTO CORPORATIVO 2026</span>
+                </div>
+                <h1 style="font-size: 36px; font-weight: 800; color: #fff; letter-spacing: -0.02em; margin-bottom: 12px;">
+                    Solicitar Avaliação da Postura de Segurança
+                </h1>
+                <p style="font-size: 15px; color: var(--text-muted); line-height: 1.6;">
+                    Preencha o formulário para receber uma análise preliminar gratuita do seu ecossistema de código e infraestrutura com o motor <strong>NeuroSec ASPM 4.0</strong>.
+                </p>
+            </div>
+
+            <!-- Form Card -->
+            <div class="pulse-card" style="background: rgba(17, 24, 39, 0.85); border: 1px solid var(--border-matrix); padding: 36px; border-radius: 16px; box-shadow: var(--shadow-card);">
+                <form id="evaluationForm" onsubmit="event.preventDefault(); submitLead();">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 600; color: #cbd5e1; margin-bottom: 8px;">Seu Nome Completo *</label>
+                            <input type="text" id="leadName" required placeholder="Ex: Alex Santana" style="width: 100%; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 12px 14px; color: #fff; font-size: 14px; outline: none;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 600; color: #cbd5e1; margin-bottom: 8px;">E-mail Corporativo *</label>
+                            <input type="email" id="leadEmail" required placeholder="alex@empresa.com.br" style="width: 100%; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 12px 14px; color: #fff; font-size: 14px; outline: none;">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 600; color: #cbd5e1; margin-bottom: 8px;">Nome da Empresa *</label>
+                            <input type="text" id="leadCompany" required placeholder="Ex: FinTech Enterprise" style="width: 100%; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 12px 14px; color: #fff; font-size: 14px; outline: none;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 600; color: #cbd5e1; margin-bottom: 8px;">Seu Cargo / Função</label>
+                            <input type="text" id="leadRole" placeholder="Ex: CISO / Tech Lead / DevSecOps" style="width: 100%; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 12px 14px; color: #fff; font-size: 14px; outline: none;">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 600; color: #cbd5e1; margin-bottom: 8px;">Tamanho da Empresa</label>
+                            <select id="leadSize" style="width: 100%; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 12px 14px; color: #fff; font-size: 14px; outline: none;">
+                                <option value="1-50 colaboradores">1 a 50 colaboradores</option>
+                                <option value="51-200 colaboradores" selected>51 a 200 colaboradores</option>
+                                <option value="201-1000 colaboradores">201 a 1.000 colaboradores</option>
+                                <option value="1000+ colaboradores">Mais de 1.000 colaboradores</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 600; color: #cbd5e1; margin-bottom: 8px;">Principal Desafio Atual</label>
+                            <select id="leadChallenge" style="width: 100%; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 12px 14px; color: #fff; font-size: 14px; outline: none;">
+                                <option value="Automação ASPM & DevSecOps">Automação ASPM & DevSecOps</option>
+                                <option value="Conformidade LGPD & SOC 2">Conformidade LGPD & SOC 2</option>
+                                <option value="Vazamento de Chaves & Secrets">Vazamento de Chaves & Secrets</option>
+                                <option value="Auditoria de Nuvem & IaC">Auditoria de Nuvem & IaC</option>
+                                <option value="Cadeia de Suprimentos & CVEs">Cadeia de Suprimentos & CVEs</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="btnSubmitLead" class="btn-primary-matrix" style="width: 100%; padding: 16px; font-size: 16px; justify-content: center;">
+                        <span>Enviar Solicitação de Avaliação</span>
+                        <span>⚡</span>
+                    </button>
+                </form>
+
+                <!-- Success Box (Hidden by default) -->
+                <div id="leadSuccessBox" style="display: none; text-align: center; padding: 30px 10px;">
+                    <div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(0,255,65,0.15); border: 2px solid var(--matrix-green); color: var(--matrix-green); font-size: 32px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; box-shadow: var(--shadow-matrix);">
+                        ✓
+                    </div>
+                    <h3 style="font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 12px;">Solicitação Confirmada com Sucesso!</h3>
+                    <p style="font-size: 15px; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px;">
+                        Nossa equipe técnica e executiva de DevSecOps entrará em contato em menos de 24 horas para estruturar a sua avaliação.
+                    </p>
+                    <a href="/dashboard" class="btn-primary-matrix" style="padding: 12px 24px;">Explorar Cockpit Online Agora →</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer style="padding: 30px 0; border-top: 1px solid var(--border-subtle); background: var(--bg-primary); text-align: center;">
+        <div class="container" style="font-size: 13px; color: var(--text-dim);">
+            © 2026 NeuroSec Enterprise Technologies. Documento de Avaliação de Conformidade Confidencial.
+        </div>
+    </footer>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="/js/cobra-logo.js"></script>
+    <script src="/js/api.js"></script>
+    <script>
+        async function submitLead() {
+            const btn = document.getElementById("btnSubmitLead");
+            const form = document.getElementById("evaluationForm");
+            const successBox = document.getElementById("leadSuccessBox");
+
+            const payload = {
+                name: document.getElementById("leadName").value.trim(),
+                corporate_email: document.getElementById("leadEmail").value.trim(),
+                company_name: document.getElementById("leadCompany").value.trim(),
+                job_title: document.getElementById("leadRole").value.trim() || "Executivo / DevSecOps",
+                company_size: document.getElementById("leadSize").value,
+                main_challenge: document.getElementById("leadChallenge").value
+            };
+
+            btn.disabled = true;
+            btn.innerHTML = "<span>Processando registro seguro...</span>";
+
+            try {
+                await NeuroAPI.post("/leads", payload);
+                form.style.display = "none";
+                successBox.style.display = "block";
+                NeuroUI.toast("Solicitação registrada com sucesso no NeuroSec!", "success");
+            } catch (err) {
+                btn.disabled = false;
+                btn.innerHTML = "<span>Tentar Enviar Novamente</span> <span>⚡</span>";
+                NeuroUI.toast("Falha ao registrar solicitação: " + err.message, "error");
+            }
+        }
+    </script>
+</body>
+</html>

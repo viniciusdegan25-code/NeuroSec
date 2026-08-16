@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Threat Intelligence Feed 2026 — NeuroSec ASPM 4.0</title>
+    <meta name="description" content="Boletim de Inteligência de Ameaças Cibernéticas e Notícias de Segurança em Tempo Real - Cenário 2026.">
+    <link rel="stylesheet" href="/css/matrix.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 8 L85 24 L85 58 Q85 82 50 94 Q15 82 15 58 L15 24 Z' fill='%2300FF41'/></svg>">
+</head>
+<body>
+    <canvas id="matrixCanvas"></canvas>
+    <div class="ambient-glow-top"></div>
+
+    <!-- Navigation Header -->
+    <header class="neo-nav">
+        <div class="container neo-nav-content">
+            <a href="/" class="brand-logo">
+                <div class="cobra-badge" data-cobra-shield="24"></div>
+                <div class="brand-text-wrapper">
+                    <span class="brand-title">NeuroSec <span class="highlight">ASPM</span></span>
+                    <span class="brand-version">v4.0 Neo-Matrix</span>
+                </div>
+            </a>
+
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="/" class="nav-link">Home</a></li>
+                    <li><a href="/dashboard" class="nav-link">Cockpit / Dashboard</a></li>
+                    <li><a href="/noticias" class="nav-link active">Threat Intel 2026</a></li>
+                    <li><a href="/avaliacao" class="nav-link">Para Empresas</a></li>
+                </ul>
+            </nav>
+
+            <div class="nav-actions">
+                <a href="/dashboard" class="btn-secondary-dark">Acessar Plataforma 🚀</a>
+                <a href="/avaliacao" class="btn-primary-matrix">Solicitar Avaliação</a>
+            </div>
+        </div>
+    </header>
+
+    <main style="padding: 130px 0 80px 0;">
+        <div class="container">
+            <div class="section-header">
+                <div class="hero-pill" style="margin: 0 auto 16px auto;">
+                    <span class="pulsing-dot"></span>
+                    <span>BOLETIM DE INTELIGÊNCIA EM TEMPO REAL</span>
+                </div>
+                <h1 class="section-title" style="font-size: 42px;">Pulse of the Security Matrix</h1>
+                <p class="section-desc">Análises detalhadas de novos vetores de ataque, linhagens de malware autônomo, conformidade regulatória e avisos criptográficos do cenário 2026.</p>
+            </div>
+
+            <!-- News Grid -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 40px;">
+                <!-- News 1 -->
+                <article class="pulse-card">
+                    <div class="pulse-meta">
+                        <span class="pulse-badge badge-zero-day">Zero-Day Alert</span>
+                        <span class="pulse-date">16/08/2026</span>
+                    </div>
+                    <h3 class="pulse-title">Linhagens Polimórficas em Pacotes NPM & PyPI</h3>
+                    <p class="pulse-summary">Ataques de Supply-Chain utilizam ofuscação dinâmica em runtime para burlar linters convencionais. O motor SCA do NeuroSec realiza análise semântica de lockfiles.</p>
+                    <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 12px; color: var(--text-dim);">Autor: SecOps Intel</span>
+                        <a href="/dashboard" class="pulse-link">Escanear com SCA →</a>
+                    </div>
+                </article>
+
+                <!-- News 2 -->
+                <article class="pulse-card">
+                    <div class="pulse-meta">
+                        <span class="pulse-badge badge-quantum">PQC Cryptography</span>
+                        <span class="pulse-date">15/08/2026</span>
+                    </div>
+                    <h3 class="pulse-title">Transição Obrigatória para Algoritmos NIST Kyber & Dilithium</h3>
+                    <p class="pulse-summary">Com a maturidade de processadores quânticos de 1000+ qubits, chaves RSA 2048 e ECC são consideradas em risco. O scanner SAST mapeia algoritmos obsoletos em segundos.</p>
+                    <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 12px; color: var(--text-dim);">Autor: Lab Criptográfico</span>
+                        <a href="/dashboard" class="pulse-link">Auditar Código →</a>
+                    </div>
+                </article>
+
+                <!-- News 3 -->
+                <article class="pulse-card">
+                    <div class="pulse-meta">
+                        <span class="pulse-badge badge-compliance">Regulação LGPD</span>
+                        <span class="pulse-date">14/08/2026</span>
+                    </div>
+                    <h3 class="pulse-title">ANPD Aplica Novas Diretrizes de Responsabilidade em ASPM</h3>
+                    <p class="pulse-summary">A comprovação de rastreabilidade de código e logs imutáveis passa a ser requisito para evitar multas de até 2% do faturamento (teto de R$ 50 milhões).</p>
+                    <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 12px; color: var(--text-dim);">Autor: Jurídico & Compliance</span>
+                        <a href="/dashboard" class="pulse-link">Ver Trilha Audit →</a>
+                    </div>
+                </article>
+
+                <!-- News 4 -->
+                <article class="pulse-card">
+                    <div class="pulse-meta">
+                        <span class="pulse-badge badge-zero-day">Nuvem & IaC</span>
+                        <span class="pulse-date">12/08/2026</span>
+                    </div>
+                    <h3 class="pulse-title">Misconfigurations em Terraform e Vazamentos em Buckets S3</h3>
+                    <p class="pulse-summary">Políticas de IAM permissivas (`Action: *`) continuam sendo a causa primária de exfiltração de dados em nuvem. Nosso CSPM identifica desvios antes do deploy.</p>
+                    <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 12px; color: var(--text-dim);">Autor: Cloud Defense</span>
+                        <a href="/dashboard" class="pulse-link">Auditar Terraform →</a>
+                    </div>
+                </article>
+
+                <!-- News 5 -->
+                <article class="pulse-card">
+                    <div class="pulse-meta">
+                        <span class="pulse-badge badge-quantum">IA Ofensiva</span>
+                        <span class="pulse-date">10/08/2026</span>
+                    </div>
+                    <h3 class="pulse-title">Ataques Cibernéticos Orquestrados por Modelos de Linguagem Autônomos</h3>
+                    <p class="pulse-summary">A resposta para ameaças impulsionadas por IA exige contramedidas de IA defensiva. A <strong>NeuroSec IA</strong> gera Unified Git Diffs defensivos instantaneamente.</p>
+                    <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 12px; color: var(--text-dim);">Autor: Pesquisa IA</span>
+                        <a href="/dashboard" class="pulse-link">Conversar com IA →</a>
+                    </div>
+                </article>
+
+                <!-- News 6 -->
+                <article class="pulse-card">
+                    <div class="pulse-meta">
+                        <span class="pulse-badge badge-compliance">OWASP 2026</span>
+                        <span class="pulse-date">08/08/2026</span>
+                    </div>
+                    <h3 class="pulse-title">Atualização das Métricas de MTTR e Redução de Risco Financeiro</h3>
+                    <p class="pulse-summary">Empresas com ASPM ativo registraram redução de 85% no MTTR e economia média estimada em mais de R$ 35.000 por vulnerabilidade remediada antes da produção.</p>
+                    <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 12px; color: var(--text-dim);">Autor: ROI Analyst</span>
+                        <a href="/dashboard" class="pulse-link">Ver Scorecard →</a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <footer style="padding: 30px 0; border-top: 1px solid var(--border-subtle); background: var(--bg-primary); text-align: center;">
+        <div class="container" style="font-size: 13px; color: var(--text-dim);">
+            © 2026 NeuroSec Enterprise Technologies. Feed de Inteligência Ciber-Defensiva.
+        </div>
+    </footer>
+
+    <script src="/js/cobra-logo.js"></script>
+    <script src="/js/api.js"></script>
+</body>
+</html>

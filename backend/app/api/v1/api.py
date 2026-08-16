@@ -11,7 +11,8 @@ from app.api.v1.endpoints import (
     scorecard,
     audit,
     terminal,
-    reports
+    reports,
+    leads
 )
 
 api_router = APIRouter()
@@ -27,3 +28,4 @@ api_router.include_router(scorecard.router, prefix="/scorecard", tags=["Security
 api_router.include_router(audit.router, prefix="/audit", tags=["Trilha de Auditoria"])
 api_router.include_router(terminal.router, prefix="/terminal", tags=["Cyber Terminal"])
 api_router.include_router(reports.router, prefix="/reports", tags=["Relatórios Executivos"])
+api_router.include_router(leads.router, prefix="/leads", tags=["Captação de Avaliação"])

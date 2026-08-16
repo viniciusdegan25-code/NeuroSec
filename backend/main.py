@@ -114,7 +114,7 @@ def seed_initial_data(db):
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
-    description="Plataforma de Application Security Posture Management (ASPM) de Alto Padrão",
+    description="Plataforma de Application Security Posture Management (ASPM 4.0) — Neo-Matrix Enterprise",
     version=settings.VERSION,
     lifespan=lifespan
 )
@@ -135,7 +135,7 @@ app.include_router(api_router, prefix=settings.API_V1_STR)
 # Aliases de compatibilidade para conveniência
 app.include_router(api_router, prefix="/api")
 
-# Montagem do Frontend estático (CSS, JS, Assets e Raiz)
+# Montagem do Frontend estático (CSS, JS, Assets e Rotas Multi-Page)
 frontend_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "frontend"))
 if os.path.exists(frontend_path):
     css_path = os.path.join(frontend_path, "css")
@@ -151,12 +151,41 @@ if os.path.exists(frontend_path):
         
     app.mount("/static", StaticFiles(directory=frontend_path), name="static")
 
+    # 1. Rota Comercial Hub Principal (Multi-Page)
     @app.get("/")
     def serve_frontend_root():
         index_file = os.path.join(frontend_path, "index.html")
         if os.path.exists(index_file):
             return FileResponse(index_file)
-        return {"message": "NeuroSec ASPM Backend API is running."}
+        return {"message": "NeuroSec ASPM 4.0 Backend API is running."}
+
+    # 2. Rota de Solicitação de Avaliação / Onboarding (Multi-Page)
+    @app.get("/avaliacao")
+    @app.get("/solicitar-avaliacao")
+    def serve_avaliacao_page():
+        page = os.path.join(frontend_path, "avaliacao.html")
+        if os.path.exists(page):
+            return FileResponse(page)
+        return FileResponse(os.path.join(frontend_path, "index.html"))
+
+    # 3. Rota do Portal de Inteligência de Ameaças 2026 (Multi-Page)
+    @app.get("/noticias")
+    @app.get("/threat-intel")
+    def serve_noticias_page():
+        page = os.path.join(frontend_path, "noticias.html")
+        if os.path.exists(page):
+            return FileResponse(page)
+        return FileResponse(os.path.join(frontend_path, "index.html"))
+
+    # 4. Rota do Dashboard / Cockpit SPA Logado (Single Page Application)
+    @app.get("/dashboard")
+    @app.get("/app")
+    @app.get("/cockpit")
+    def serve_dashboard_spa():
+        page = os.path.join(frontend_path, "dashboard.html")
+        if os.path.exists(page):
+            return FileResponse(page)
+        return FileResponse(os.path.join(frontend_path, "index.html"))
 
 @app.get("/health", summary="Healthcheck da API")
 def healthcheck():

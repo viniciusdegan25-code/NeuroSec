@@ -3,81 +3,83 @@ const NeuroTerminal = {
     history: [],
     historyIndex: -1,
 
-    init() {
-        const form = document.getElementById("terminalForm");
-        const input = document.getElementById("terminalInput");
-        const body = document.getElementById("terminalBody");
+    async execute() {
+        const input = document.getElementById("terminalCommandInput") || document.getElementById("terminalInput");
+        const screen = document.getElementById("terminalScreen") || document.getElementById("terminalBody");
+        if (!input || !screen) return;
 
-        if (!form || !input) return;
+        const cmd = input.value.trim();
+        if (!cmd) return;
 
-        // Auto focus
-        input.focus();
+        this.history.push(cmd);
+        this.historyIndex = this.history.length;
 
-        form.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const cmd = input.value.trim();
-            if (!cmd) return;
+        this.appendOutput(`neurosec> ${cmd}`, "prompt");
+        input.value = "";
 
-            this.history.push(cmd);
-            this.historyIndex = this.history.length;
-
-            this.appendOutput(`neurosec@appsec:~$ ${cmd}`, "prompt");
-            input.value = "";
-
-            try {
-                const res = await NeuroAPI.post("/terminal/execute", { command: cmd });
-                if (res.type === "clear") {
-                    body.innerHTML = "";
-                } else if (res.output) {
-                    this.appendOutput(res.output, res.type);
-                }
-            } catch (err) {
-                this.appendOutput(`[ERRO] Falha de comunicação: ${err.message}`, "error");
+        try {
+            const res = await NeuroAPI.post("/terminal/execute", { command: cmd });
+            if (res.type === "clear") {
+                screen.innerHTML = `<div>NEUROSEC CYBER CLI v4.0.0 — Terminal Limpo.</div><br>`;
+            } else if (res.output) {
+                this.appendOutput(res.output, res.type);
             }
+        } catch (err) {
+            this.appendOutput(`[ERRO] Falha ao executar comando: ${err.message}`, "error");
+        }
 
-            body.scrollTop = body.scrollHeight;
-        });
+        screen.scrollTop = screen.scrollHeight;
+    },
 
-        // History Navigation (Up/Down)
+    clear() {
+        const screen = document.getElementById("terminalScreen") || document.getElementById("terminalBody");
+        if (screen) {
+            screen.innerHTML = `<div>NEUROSEC CYBER CLI v4.0.0 — Terminal Limpo. Digite 'help' para comandos.</div><br>`;
+        }
+    },
+
+    appendOutput(text, type = "text") {
+        const screen = document.getElementById("terminalScreen") || document.getElementById("terminalBody");
+        if (!screen) return;
+
+        const el = document.createElement("div");
+        el.style.margin = "4px 0";
+        el.style.whiteSpace = "pre-wrap";
+
+        if (type === "prompt") {
+            el.style.color = "var(--matrix-green)";
+            el.style.fontWeight = "700";
+        } else if (type === "error") {
+            el.style.color = "var(--crit-red)";
+        } else if (type === "success") {
+            el.style.color = "var(--matrix-green)";
+        } else {
+            el.style.color = "#E2E8F0";
+        }
+
+        el.innerText = text;
+        screen.appendChild(el);
+    }
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+    const input = document.getElementById("terminalCommandInput") || document.getElementById("terminalInput");
+    if (input) {
         input.addEventListener("keydown", (e) => {
             if (e.key === "ArrowUp") {
-                if (this.historyIndex > 0) {
-                    this.historyIndex--;
-                    input.value = this.history[this.historyIndex];
+                if (NeuroTerminal.historyIndex > 0) {
+                    NeuroTerminal.historyIndex--;
+                    input.value = NeuroTerminal.history[NeuroTerminal.historyIndex];
                 }
             } else if (e.key === "ArrowDown") {
-                if (this.historyIndex < this.history.length - 1) {
-                    this.historyIndex++;
-                    input.value = this.history[this.historyIndex];
+                if (NeuroTerminal.historyIndex < NeuroTerminal.history.length - 1) {
+                    NeuroTerminal.historyIndex++;
+                    input.value = NeuroTerminal.history[NeuroTerminal.historyIndex];
                 } else {
-                    this.historyIndex = this.history.length;
+                    NeuroTerminal.historyIndex = NeuroTerminal.history.length;
                     input.value = "";
                 }
             }
         });
-    },
-
-    appendOutput(text, type = "text") {
-        const body = document.getElementById("terminalBody");
-        if (!body) return;
-
-        const el = document.createElement("div");
-        el.className = "terminal-output";
-
-        if (type === "prompt") el.style.color = "var(--cyan-neon)";
-        else if (type === "error") el.style.color = "var(--crimson-crit)";
-        else if (type === "success") el.style.color = "var(--emerald-safe)";
-        else el.style.color = "#e2e8f0";
-
-        el.innerText = text;
-        body.appendChild(el);
-    },
-
-    runQuickCommand(cmd) {
-        const input = document.getElementById("terminalInput");
-        if (input) {
-            input.value = cmd;
-            document.getElementById("terminalForm")?.dispatchEvent(new Event("submit"));
-        }
     }
-};
+});

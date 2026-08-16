@@ -60,3 +60,16 @@ class Asset(Base):
     criticality = Column(String, default="TIER_1_CRITICAL")
     environment = Column(String, default="production")
     last_scanned = Column(String, default=lambda: datetime.now().strftime("%d/%m/%Y %H:%M"))
+
+class EnterpriseLead(Base):
+    __tablename__ = "enterprise_leads"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    corporate_email = Column(String, nullable=False, index=True)
+    company_name = Column(String, nullable=False)
+    job_title = Column(String, default="Executivo / Analista")
+    company_size = Column(String, default="50-200")
+    main_challenge = Column(String, default="ASPM & Postura de Segurança")
+    status = Column(String, default="new")          # new, contacted, demo_scheduled
+    created_at = Column(String, default=lambda: datetime.now().strftime("%d/%m/%Y %H:%M:%S"))

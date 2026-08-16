@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cockpit Executivo — NeuroSec ASPM 4.0</title>
+    <meta name="description" content="Painel de Controle e Cockpit ASPM Modular da plataforma NeuroSec.">
+    <link rel="stylesheet" href="/css/matrix.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 8 L85 24 L85 58 Q85 82 50 94 Q15 82 15 58 L15 24 Z' fill='%2300FF41'/></svg>">
+</head>
+<body style="overflow: hidden;">
+    <div class="dashboard-layout">
+        <!-- ===================================================================
+             EXPANDABLE NEO-MATRIX SIDEBAR
+             =================================================================== -->
+        <aside class="dash-sidebar" id="dashSidebar">
+            <div>
+                <!-- Sidebar Header -->
+                <div class="sidebar-header">
+                    <a href="/" class="sidebar-logo">
+                        <div class="cobra-badge" data-cobra-shield="22"></div>
+                        <div class="brand-text-wrapper sub-tab-text">
+                            <span class="brand-title" style="font-size: 16px;">NeuroSec <span class="highlight">ASPM</span></span>
+                            <span class="brand-version" style="font-size: 9px;">v4.0 Cockpit</span>
+                        </div>
+                    </a>
+                    <button class="sidebar-collapse-btn" id="sidebarToggleBtn" title="Recolher/Expandir Menu">
+                        <span id="collapseIcon">◀</span>
+                    </button>
+                </div>
+
+                <!-- Navigation Modules -->
+                <div class="sidebar-nav">
+                    <!-- Module 1: Executivo & Métricas -->
+                    <div class="nav-module-group">
+                        <div class="nav-module-title">1. Postura & Inteligência</div>
+                        <button class="sub-tab-btn active" data-tab="tab-scorecard">
+                            <span class="sub-tab-icon">📊</span>
+                            <span class="sub-tab-text">Security Scorecard (0-100)</span>
+                        </button>
+                        <button class="sub-tab-btn" data-tab="tab-inventory">
+                            <span class="sub-tab-icon">🛡️</span>
+                            <span class="sub-tab-text">Inventário de Ameaças</span>
+                        </button>
+                    </div>
+
+                    <!-- Module 2: Scanners Multidimensionais -->
+                    <div class="nav-module-group">
+                        <div class="nav-module-title">2. Motores de Varredura</div>
+                        <button class="sub-tab-btn" data-tab="tab-sast">
+                            <span class="sub-tab-icon">⚡</span>
+                            <span class="sub-tab-text">SAST (Código Estático)</span>
+                        </button>
+                        <button class="sub-tab-btn" data-tab="tab-dast">
+                            <span class="sub-tab-icon">🌐</span>
+                            <span class="sub-tab-text">DAST & Infra Web (URL)</span>
+                        </button>
+                        <button class="sub-tab-btn" data-tab="tab-sca">
+                            <span class="sub-tab-icon">📦</span>
+                            <span class="sub-tab-text">SCA & SBOM (Supply Chain)</span>
+                        </button>
+                        <button class="sub-tab-btn" data-tab="tab-cloud">
+                            <span class="sub-tab-icon">☁️</span>
+                            <span class="sub-tab-text">Cloud CSPM (IaC / Nuvem)</span>
+                        </button>
+                    </div>
+
+                    <!-- Module 3: IA & Remediação -->
+                    <div class="nav-module-group">
+                        <div class="nav-module-title">3. Inteligência Autônoma</div>
+                        <button class="sub-tab-btn" data-tab="tab-remediation">
+                            <span class="sub-tab-icon">🤖</span>
+                            <span class="sub-tab-text">Studio de Remediação (Diff)</span>
+                        </button>
+                        <button class="sub-tab-btn" data-tab="tab-central-ai" style="color: #A5B4FC;">
+                            <span class="sub-tab-icon">🧠</span>
+                            <span class="sub-tab-text">Central de IA Dedicada</span>
+                        </button>
+                    </div>
+
+                    <!-- Module 4: Governança & Operações -->
+                    <div class="nav-module-group">
+                        <div class="nav-module-title">4. Governança & Terminal</div>
+                        <button class="sub-tab-btn" data-tab="tab-terminal">
+                            <span class="sub-tab-icon">💻</span>
+                            <span class="sub-tab-text">Cyber Terminal CLI</span>
+                        </button>
+                        <button class="sub-tab-btn" data-tab="tab-audit">
+                            <span class="sub-tab-icon">📜</span>
+                            <span class="sub-tab-text">Trilha de Auditoria</span>
+                        </button>
+                        <button class="sub-tab-btn" data-tab="tab-reports">
+                            <span class="sub-tab-icon">📄</span>
+                            <span class="sub-tab-text">Relatório Executivo PDF</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar User Profile Footer -->
+            <div class="sidebar-footer">
+                <div class="user-avatar">NS</div>
+                <div class="user-info sub-tab-text">
+                    <span class="user-name">SecOps Lead / CISO</span>
+                    <span class="user-role"><a href="/" style="color:var(--emerald); text-decoration:none;">← Voltar à Home</a></span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ===================================================================
+             MAIN DASHBOARD CONTENT VIEWPORT
+             =================================================================== -->
+        <main class="dash-main">
+            <!-- Topbar -->
+            <header class="dash-topbar">
+                <div class="topbar-left">
+                    <span class="breadcrumb-module">ASPM 4.0 /</span>
+                    <span class="breadcrumb-active" id="activeBreadcrumb">Security Scorecard (0-100)</span>
+                </div>
+
+                <div class="topbar-right">
+                    <div class="status-badge-live">
+                        <span class="pulsing-dot"></span>
+                        <span>Motor Sentinela Ativo</span>
+                    </div>
+                    <button class="btn-secondary-dark" style="padding: 8px 16px; font-size: 13px;" onclick="NeuroApp.refreshAll();">
+                        <span>Atualizar Postura</span>
+                        <span>⟳</span>
+                    </button>
+                    <a href="/avaliacao" class="btn-primary-matrix" style="padding: 8px 16px; font-size: 13px;">
+                        Avaliação Enterprise
+                    </a>
+                </div>
+            </header>
+
+            <!-- Dynamic Viewport Area -->
+            <div class="dash-content-viewport">
+                <!-- =======================================================
+                     VIEW 1: SCORECARD EXECUTIVO
+                     ======================================================= -->
+                <section class="subtab-view active" id="tab-scorecard">
+                    <div style="display: grid; grid-template-columns: 340px 1fr; gap: 24px; margin-bottom: 28px;">
+                        <!-- Gauge Score Card -->
+                        <div class="pulse-card" style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 20px;">
+                            <span class="section-tag">// SCORECARD DE SEGURANÇA</span>
+                            <div class="gauge-container" style="margin: 16px 0;">
+                                <div class="gauge-circle" id="gaugeCircle">
+                                    <div class="gauge-inner">
+                                        <span class="gauge-score" id="scoreDisplay" style="color:var(--matrix-green); font-size: 42px;">--</span>
+                                        <span class="gauge-grade" id="gradeDisplay" style="font-size: 14px; font-weight: 700; color: #fff;">Calculando...</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="posture-status" id="postureStatus" style="font-weight: 600; color: #cbd5e1; font-size: 14px;">Analisando postura global...</span>
+                        </div>
+
+                        <!-- KPI Metrics Grid -->
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+                            <div class="pulse-card">
+                                <span style="font-size: 12px; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Prejuízo Financeiro Evitado</span>
+                                <div style="font-size: 26px; font-weight: 800; color: var(--matrix-green); font-family: var(--font-mono); margin: 8px 0;" id="kpiLossAvoided">R$ --</div>
+                                <span style="font-size: 12px; color: var(--text-muted);">Cálculo estimado por remediação de falhas críticas</span>
+                            </div>
+
+                            <div class="pulse-card">
+                                <span style="font-size: 12px; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Tempo Médio de Resolução (MTTR)</span>
+                                <div style="font-size: 26px; font-weight: 800; color: #fff; font-family: var(--font-mono); margin: 8px 0;" id="kpiMttr">-- dias</div>
+                                <span style="font-size: 12px; color: var(--text-muted);">Redução de 85% com Unified Diff autônomo</span>
+                            </div>
+
+                            <div class="pulse-card">
+                                <span style="font-size: 12px; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Vulnerabilidades Abertas</span>
+                                <div style="font-size: 26px; font-weight: 800; color: var(--crit-red); font-family: var(--font-mono); margin: 8px 0;" id="kpiOpenVulns">--</div>
+                                <span style="font-size: 12px; color: var(--text-muted);">Ameaças ativas sob monitoramento contínuo</span>
+                            </div>
+
+                            <div class="pulse-card">
+                                <span style="font-size: 12px; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Taxa de Eficácia de Remediação</span>
+                                <div style="font-size: 26px; font-weight: 800; color: var(--indigo-ai); font-family: var(--font-mono); margin: 8px 0;" id="kpiRemediationRate">--%</div>
+                                <span style="font-size: 12px; color: var(--text-muted);">Patches de código aprovados e aplicados</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =======================================================
+                     VIEW 2: INVENTÁRIO DE AMEAÇAS
+                     ======================================================= -->
+                <section class="subtab-view" id="tab-inventory">
+                    <div class="pulse-card" style="padding: 24px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 14px;">
+                            <div>
+                                <h2 style="font-size: 20px; font-weight: 700; color: #fff;">Inventário Dinâmico de Ameaças</h2>
+                                <p style="font-size: 13px; color: var(--text-muted);">Gerenciamento unificado de vulnerabilidades detectadas nos 4 vetores de inspeção.</p>
+                            </div>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <input type="text" id="inventorySearch" placeholder="Buscar por vulnerabilidade, arquivo ou CVE..." style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 8px 14px; color: #fff; font-size: 13px; width: 260px; outline: none;" oninput="NeuroInventory.filter();">
+                                <select id="inventorySeverityFilter" style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 8px 12px; color: #fff; font-size: 13px; outline: none;" onchange="NeuroInventory.filter();">
+                                    <option value="ALL">Todas Severidades</option>
+                                    <option value="CRITICAL">Crítica</option>
+                                    <option value="HIGH">Alta</option>
+                                    <option value="MEDIUM">Média</option>
+                                    <option value="LOW">Baixa</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
+                                <thead>
+                                    <tr style="border-bottom: 1px solid var(--border-subtle); color: var(--text-dim); font-size: 11px; text-transform: uppercase;">
+                                        <th style="padding: 12px;">ID</th>
+                                        <th style="padding: 12px;">Vulnerabilidade</th>
+                                        <th style="padding: 12px;">Ativo / Origem</th>
+                                        <th style="padding: 12px;">Severidade</th>
+                                        <th style="padding: 12px;">CVSS</th>
+                                        <th style="padding: 12px;">Status</th>
+                                        <th style="padding: 12px; text-align: right;">Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="inventoryTableBody">
+                                    <tr><td colspan="7" style="text-align: center; padding: 30px; color: var(--text-muted);">Carregando inventário de segurança...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =======================================================
+                     VIEW 3: SCANNER SAST
+                     ======================================================= -->
+                <section class="subtab-view" id="tab-sast">
+                    <div class="pulse-card" style="padding: 24px;">
+                        <h2 style="font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 6px;">⚡ Scanner SAST (Análise Estática de Código)</h2>
+                        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Analise arquivos Python, JavaScript ou SQL em busca de injeções, chaves expostas e RCE.</p>
+                        
+                        <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+                            <button class="btn-secondary-dark" style="padding: 6px 12px; font-size: 12px;" onclick="loadSastSample('sqli')">Exemplo: Injeção SQL</button>
+                            <button class="btn-secondary-dark" style="padding: 6px 12px; font-size: 12px;" onclick="loadSastSample('secrets')">Exemplo: Secrets Expostas</button>
+                            <button class="btn-secondary-dark" style="padding: 6px 12px; font-size: 12px;" onclick="loadSastSample('rce')">Exemplo: Command Injection</button>
+                        </div>
+
+                        <textarea id="sastCodeInput" rows="10" placeholder="Cole seu código aqui para análise SAST..." style="width: 100%; background: #07090E; border: 1px solid var(--border-subtle); border-radius: 8px; padding: 14px; font-family: var(--font-mono); font-size: 13px; color: #00FF41; outline: none; margin-bottom: 16px; resize: vertical;"></textarea>
+                        
+                        <button class="btn-primary-matrix" onclick="NeuroScanners.runSast();">Executar Varredura SAST</button>
+
+                        <div id="sastResultsBox" style="margin-top: 24px; display: none;"></div>
+                    </div>
+                </section>
+
+                <!-- =======================================================
+                     VIEW 4: SCANNER DAST
+                     ======================================================= -->
+                <section class="subtab-view" id="tab-dast">
+                    <div class="pulse-card" style="padding: 24px;">
+                        <h2 style="font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 6px;">🌐 Scanner DAST & Infra Web (URL)</h2>
+                        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Inspeção profunda de cabeçalhos de segurança RFC (HSTS, CSP, X-Frame-Options) e SSL/TLS com bypass de WAF (Cloudflare/Azion/Akamai).</p>
+
+                        <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+                            <input type="text" id="dastUrlInput" placeholder="https://exemplo.com.br" style="flex: 1; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 12px 14px; color: #fff; font-size: 14px; outline: none;">
+                            <button class="btn-primary-matrix" onclick="NeuroScanners.runDast();">Disparar Scan DAST</button>
+                        </div>
+
+                        <div id="dastResultsBox" style="margin-top: 24px; display: none;"></div>
+                    </div>
+                </section>
+
+                <!-- =======================================================
+                     VIEW 5: SCANNER SCA & SBOM
+                     ======================================================= -->
+                <section class="subtab-view" id="tab-sca">
+                    <div class="pulse-card" style="padding: 24px;">
+                        <h2 style="font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 6px;">📦 Scanner SCA & SBOM (Cadeia de Suprimentos)</h2>
+                        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Mapeamento de CVEs e bibliotecas desatualizadas em arquivos <code>requirements.txt</code> ou manifestos de dependências.</p>
+
+                        <textarea id="scaInput" rows="8" placeholder="requests==2.28.0&#10;django==3.2.0&#10;pyyaml==5.3.1" style="width: 100%; background: #07090E; border: 1px solid var(--border-subtle); border-radius: 8px; padding: 14px; font-family: var(--font-mono); font-size: 13px; color: #A5B4FC; outline: none; margin-bottom: 16px;"></textarea>
+
+                        <button class="btn-primary-matrix" onclick="NeuroScanners.runSca();">Analisar Dependências & SBOM</button>
+
+                        <div id="scaResultsBox" style="margin-top: 24px; display: none;"></div>
+                    </div>
+                </section>
+
+                <!-- =======================================================
+                     VIEW 6: CLOUD CSPM
+                     ======================================================= -->
+                <section class="subtab-view" id="tab-cloud">
+                    <div class="pulse-card" style="padding: 24px;">
+                        <h2 style="font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 6px;">☁️ Auditoria Cloud CSPM-lite (Nuvem & IaC)</h2>
+                        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Auditoria de infraestrutura como código (Terraform / CloudFormation / JSON) detectando S3 Buckets públicos e falhas de IAM.</p>
+
+                        <textarea id="cloudInput" rows="8" placeholder='resource "aws_s3_bucket" "public_data" {&#10;  bucket = "dados-empresa"&#10;  acl    = "public-read"&#10;}' style="width: 100%; background: #07090E; border: 1px solid var(--border-subtle); border-radius: 8px; padding: 14px; font-family: var(--font-mono); font-size: 13px; color: #38BDF8; outline: none; margin-bottom: 16px;"></textarea>
+
+                        <button class="btn-primary-matrix" onclick="NeuroScanners.runCloud();">Auditar Infraestrutura IaC</button>
+
+                        <div id="cloudResultsBox" style="margin-top: 24px; display: none;"></div>
+                    </div>
+                </section>
+
+                <!-- =======================================================
+                     VIEW 7: STUDIO DE REMEDIAÇÃO & DIFF
+                     ======================================================= -->
+                <section class="subtab-view" id="tab-remediation">
+                    <div class="pulse-card" style="padding: 24px;">
+                        <h2 style="font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 6px;">🤖 Studio de Remediação com IA & Diff Viewer</h2>
+                        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Diagnóstico de causa-raiz e geração autônoma de Unified Git Diff defensivo lado a lado.</p>
+
+                        <div id="remediationListContainer">
+                            <p style="color: var(--text-muted); font-size: 14px;">Selecione qualquer vulnerabilidade do <a href="#" onclick="NeuroDashboard.switchTab('tab-inventory');" style="color:var(--matrix-green);">Inventário de Ameaças</a> e clique no botão <strong>"Remediar com IA"</strong> para abrir o studio.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =======================================================
+                     VIEW 8: CENTRAL DE IA DEDICADA EM TELA CHEIA (ESTILO CHATGPT)
+                     ======================================================= -->
+                <section class="subtab-view" id="tab-central-ai">
+                    <div class="central-ai-container">
+                        <!-- AI Header -->
+                        <div class="central-ai-header">
+                            <div class="ai-engine-title">
+                                <span style="font-size: 20px;">🧠</span>
+                                <div>
+                                    <div style="font-size: 15px; font-weight: 700; color: #fff;">Central de IA Dedicada // NeuroSec IA Workspace</div>
+                                    <div style="font-size: 11px; color: #A5B4FC;">Assistente de Ciber-Defesa, Auditoria de Código e Consultoria Regulatória</div>
+                                </div>
+                            </div>
+                            <div class="ai-chips-quick">
+                                <button class="ai-chip" onclick="NeuroCentralAi.sendPreset('Como mitigar SQL Injection de forma definitiva em Python?')">SQL Injection</button>
+                                <button class="ai-chip" onclick="NeuroCentralAi.sendPreset('Quais são as exigências da LGPD sobre relatórios de segurança?')">LGPD & Multas</button>
+                                <button class="ai-chip" onclick="NeuroCentralAi.sendPreset('Explique como configurar cabeçalhos HSTS e CSP no Nginx.')">HSTS & CSP</button>
+                                <button class="ai-chip" onclick="NeuroCentralAi.sendPreset('Sou leigo em programação, como posso usar a plataforma?')">Sou Leigo</button>
+                            </div>
+                        </div>
+
+                        <!-- Chat Messages Body -->
+                        <div class="central-ai-chat-body" id="centralAiMessages">
+                            <div class="ai-msg bot">
+                                <div class="ai-msg-avatar">IA</div>
+                                <div class="ai-msg-content">
+                                    👋 Bem-vindo à <strong>Central de IA Dedicada do NeuroSec ASPM 4.0</strong>!<br><br>
+                                    Estou pronta para atuar como sua analista sênior de segurança de aplicações (AppSec), auditar arquiteturas, calcular impactos de negócio (ROI) e gerar patches defensivos.<br><br>
+                                    <em>Como posso ajudar na postura de segurança da sua empresa hoje?</em>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Input Area -->
+                        <div class="central-ai-input-area">
+                            <div class="ai-input-wrapper">
+                                <textarea id="centralAiInput" class="ai-input-field" placeholder="Digite sua dúvida de segurança, peça um diagnóstico ou cole um snippet para auditoria..."></textarea>
+                                <button id="centralAiSendBtn" class="btn-ai-indigo" onclick="NeuroCentralAi.sendMessage();">
+                                    <span>Enviar</span>
+                                    <span>➔</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =======================================================
+                     VIEW 9: CYBER TERMINAL CLI
+                     ======================================================= -->
+                <section class="subtab-view" id="tab-terminal">
+                    <div class="pulse-card" style="padding: 24px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <div>
+                                <h2 style="font-size: 20px; font-weight: 700; color: #fff;">💻 Cyber Terminal CLI Interativo</h2>
+                                <p style="font-size: 13px; color: var(--text-muted);">Console embarcado para execução de comandos de postura e auditoria.</p>
+                            </div>
+                            <button class="btn-secondary-dark" style="padding: 6px 12px; font-size: 12px;" onclick="NeuroTerminal.clear();">Limpar Terminal</button>
+                        </div>
+
+                        <div id="terminalScreen" style="background: #040711; border: 1px solid var(--border-subtle); border-radius: 8px; padding: 18px; font-family: var(--font-mono); font-size: 13px; color: #00FF41; min-height: 380px; max-height: 480px; overflow-y: auto; line-height: 1.6;">
+                            <div>NEUROSEC CYBER CLI v4.0.0 — Inicializado com sucesso.</div>
+                            <div>Digite '<strong>help</strong>' para listar todos os comandos disponíveis.</div>
+                            <br>
+                        </div>
+
+                        <div style="display: flex; gap: 10px; margin-top: 14px;">
+                            <span style="font-family: var(--font-mono); color: var(--matrix-green); font-size: 16px; padding: 8px 0;">neurosec&gt;</span>
+                            <input type="text" id="terminalCommandInput" placeholder="help, scorecard, list, recon --url https://..." style="flex: 1; background: #07090E; border: 1px solid var(--border-matrix); border-radius: 6px; padding: 10px 14px; color: #fff; font-family: var(--font-mono); font-size: 13px; outline: none;" onkeydown="if(event.key === 'Enter') NeuroTerminal.execute();">
+                            <button class="btn-primary-matrix" onclick="NeuroTerminal.execute();">Executar</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =======================================================
+                     VIEW 10: TRILHA DE AUDITORIA (AUDIT TRAIL)
+                     ======================================================= -->
+                <section class="subtab-view" id="tab-audit">
+                    <div class="pulse-card" style="padding: 24px;">
+                        <h2 style="font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 6px;">📜 Trilha de Auditoria & Governança (SOC 2 / ISO 27001)</h2>
+                        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Registro imutável e cronológico de todas as ações, aprovações de patches e varreduras executadas.</p>
+
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
+                                <thead>
+                                    <tr style="border-bottom: 1px solid var(--border-subtle); color: var(--text-dim); font-size: 11px; text-transform: uppercase;">
+                                        <th style="padding: 12px;">Timestamp</th>
+                                        <th style="padding: 12px;">Ação</th>
+                                        <th style="padding: 12px;">Operador</th>
+                                        <th style="padding: 12px;">Detalhes</th>
+                                        <th style="padding: 12px;">Chave Ativo</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="auditTableBody">
+                                    <tr><td colspan="5" style="text-align: center; padding: 30px; color: var(--text-muted);">Carregando registros de conformidade...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =======================================================
+                     VIEW 11: RELATÓRIO EXECUTIVO EM PDF
+                     ======================================================= -->
+                <section class="subtab-view" id="tab-reports">
+                    <div class="pulse-card" style="padding: 36px; text-align: center; max-width: 650px; margin: 20px auto;">
+                        <div class="cobra-badge" data-cobra-shield="40" style="margin: 0 auto 16px auto; width: 56px; height: 56px;"></div>
+                        <h2 style="font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 12px;">Exportação de Relatório Executivo C-Level</h2>
+                        <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px;">
+                            Gere um documento formal em PDF contendo o Security Scorecard consolidado, matriz de severidade, inventário prioritário e trilha de auditoria para envio à diretoria e investidores.
+                        </p>
+                        <a href="/api/v1/reports/pdf" target="_blank" class="btn-primary-matrix" style="padding: 14px 28px; font-size: 15px;">
+                            <span>Baixar Relatório Executivo em PDF</span>
+                            <span>📥</span>
+                        </a>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- ===================================================================
+         MODAL DE REMEDIAÇÃO COM IA & DIFF VIEWER
+         =================================================================== -->
+    <div class="modal-backdrop" id="remediationModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modalVulnTitle" style="font-size: 16px; font-weight: 700; color: #fff;">Análise e Remediação com IA</h3>
+                <button class="modal-close-btn" onclick="NeuroRemediation.closeModal();">✕</button>
+            </div>
+            
+            <div class="modal-body">
+                <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; margin-bottom: 6px;">Diagnóstico Técnico da NeuroSec IA:</div>
+                <div class="diagnosis-box" id="modalDiagnosisBox">
+                    <div style="color:var(--cyan-neon);">Conectando ao motor cognitivo...</div>
+                </div>
+
+                <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; margin: 16px 0 6px 0;">Visualização do Patch de Código (Unified Diff):</div>
+                <div id="modalDiffContainer">
+                    <div style="color:var(--text-muted);">Aguardando geração do patch...</div>
+                </div>
+
+                <div style="margin-top: 18px;">
+                    <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Operador Responsável pela Aprovação</label>
+                    <input type="text" id="remediationOperatorInput" value="SecOps Lead / CISO" style="width: 100%; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 10px 14px; color: #fff; font-size: 13px; outline: none;">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-secondary-dark" onclick="NeuroRemediation.closeModal();">Fechar</button>
+                <button class="btn-primary-matrix" onclick="NeuroRemediation.approveCurrent();">✓ Aprovar Patch & Registrar em Auditoria</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Quick AI Agent -->
+    <div class="floating-ai-trigger" id="floatingAiBtn" title="Conversar com NeuroSec IA">🧠</div>
+    <div class="floating-ai-drawer" id="floatingAiDrawer">
+        <div style="padding: 14px 18px; background: rgba(99,102,241,0.15); border-bottom: 1px solid var(--border-ai); display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 8px; height: 8px; border-radius: 50%; background: var(--matrix-green); box-shadow: 0 0 6px var(--matrix-green);"></div>
+                <span style="font-weight: 700; font-size: 13px; color: #fff;">NeuroSec IA</span>
+            </div>
+            <button id="closeFloatingAi" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px;">✕</button>
+        </div>
+        <div id="floatingAiMessages" style="flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 12px; font-size: 13px;">
+            <div style="background: rgba(255,255,255,0.04); padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border-subtle); color: #E2E8F0;">
+                👋 Olá! Estou monitorando o Cockpit com você. Precisa de apoio em algum scanner, cálculo de risco ou aprovação de patch?
+            </div>
+        </div>
+        <div style="padding: 10px 14px; border-top: 1px solid var(--border-subtle); display: flex; gap: 8px; background: var(--bg-surface);">
+            <input type="text" id="floatingAiInput" placeholder="Pergunte algo ou tire dúvidas..." style="flex: 1; background: transparent; border: 1px solid var(--border-subtle); border-radius: 6px; padding: 8px 12px; color: #fff; font-size: 13px; outline: none;">
+            <button id="floatingAiSendBtn" style="background: var(--indigo-ai); border: none; border-radius: 6px; color: #fff; padding: 0 14px; cursor: pointer; font-weight: 600;">→</button>
+        </div>
+    </div>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="/js/cobra-logo.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/scorecard.js"></script>
+    <script src="/js/inventory.js"></script>
+    <script src="/js/scanners.js"></script>
+    <script src="/js/remediation.js"></script>
+    <script src="/js/terminal.js"></script>
+    <script src="/js/audit.js"></script>
+    <script src="/js/central-ia.js"></script>
+    <script src="/js/dashboard.js"></script>
+    <script src="/js/copilot.js"></script>
+</body>
+</html>
