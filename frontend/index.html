@@ -43,10 +43,11 @@
 
     <!-- Main Content -->
     <main>
-        <!-- Hero Section -->
+        <!-- Hero Section with Live Threat Radar HUD -->
         <section class="hero-section">
             <div class="container">
                 <div class="hero-grid">
+                    <!-- Left Column: Value Proposition & Hero Pitch -->
                     <div class="hero-text-content">
                         <div class="hero-pill">
                             <span class="pulsing-dot"></span>
@@ -90,10 +91,54 @@
                         </div>
                     </div>
 
-                    <!-- Mockup Visual Frame -->
-                    <div class="hero-mockup-wrapper">
-                        <div class="hero-mockup-frame">
-                            <img src="/assets/matrix_hero.jpg" alt="NeuroSec Neo-Matrix Enterprise Cockpit Preview" onerror="this.src='/assets/mockup.jpg'">
+                    <!-- Right Column: Live Interactive Threat Radar HUD & Breaking News Feed -->
+                    <div class="threat-radar-hud">
+                        <!-- HUD Header -->
+                        <div class="radar-hud-header">
+                            <div class="radar-status-indicator">
+                                <span class="pulsing-dot"></span>
+                                <span>LIVE THREAT RADAR // 2026 MATRIX</span>
+                            </div>
+                            <span class="radar-threat-level">Nível: Elevado</span>
+                        </div>
+
+                        <!-- Live Threat Bulletins List -->
+                        <div class="radar-feed-list">
+                            <!-- Threat Item 1 -->
+                            <a href="/noticias" class="radar-feed-item">
+                                <div class="radar-item-top">
+                                    <span class="radar-tag radar-tag-red">🚨 Zero-Day Alert</span>
+                                    <span class="radar-time">Agora • 2026</span>
+                                </div>
+                                <div class="radar-item-title">Supply-Chain Attack: Pacotes Python & NPM com Injeção de Código</div>
+                                <div class="radar-item-desc">Nova variante polimórfica escapa de linters tradicionais. O motor SCA do NeuroSec neutraliza a linhagem.</div>
+                            </a>
+
+                            <!-- Threat Item 2 -->
+                            <a href="/noticias" class="radar-feed-item">
+                                <div class="radar-item-top">
+                                    <span class="radar-tag radar-tag-indigo">⚛️ PQC Criptografia</span>
+                                    <span class="radar-time">Hoje • 2026</span>
+                                </div>
+                                <div class="radar-item-title">Transição para Algoritmos Pós-Quânticos NIST Kyber / Dilithium</div>
+                                <div class="radar-item-desc">Algoritmos RSA e ECC legados sofrem risco iminente de quebra. Auditoria SAST mapeia chaves obsoletas.</div>
+                            </a>
+
+                            <!-- Threat Item 3 -->
+                            <a href="/noticias" class="radar-feed-item">
+                                <div class="radar-item-top">
+                                    <span class="radar-tag radar-tag-green">⚖️ ANPD & LGPD</span>
+                                    <span class="radar-time">Em Destaque</span>
+                                </div>
+                                <div class="radar-item-title">Diretrizes Rígidas de ASPM com Multas de até R$ 50 Milhões</div>
+                                <div class="radar-item-desc">Exigência de rastreabilidade de código e Trilha de Auditoria SOC 2 imutável para conformidade corporativa.</div>
+                            </a>
+                        </div>
+
+                        <!-- Quick DAST Check Bar -->
+                        <div class="radar-quick-scanner">
+                            <input type="text" id="heroQuickInput" class="radar-quick-input" placeholder="Teste uma URL: https://exemplo.com.br">
+                            <button class="radar-quick-btn" onclick="runHeroQuickScan();">Testar DAST ➔</button>
                         </div>
                     </div>
                 </div>
@@ -233,6 +278,16 @@
     <script src="/js/api.js"></script>
     <script src="/js/copilot.js"></script>
     <script>
+        function runHeroQuickScan() {
+            const input = document.getElementById("heroQuickInput");
+            const url = input ? input.value.trim() : "";
+            if (!url) {
+                window.location.href = "/dashboard";
+            } else {
+                window.location.href = "/dashboard";
+            }
+        }
+
         // Drawer toggle handler
         const floatBtn = document.getElementById("floatingAiBtn");
         const drawer = document.getElementById("floatingAiDrawer");
