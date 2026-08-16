@@ -1,7 +1,12 @@
-// NeuroSec API Client Layer
-const API_BASE = window.location.port === "8000" || window.location.port === "80" 
-    ? "/api/v1" 
-    : "http://127.0.0.1:8000/api/v1";
+// NeuroSec API Client Layer - Cloud & Local Hybrid Router
+const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+const isRender = window.location.hostname.includes("onrender.com");
+
+const API_BASE = isRender
+    ? "/api/v1"
+    : (isLocal 
+        ? (window.location.port === "8000" ? "/api/v1" : "http://127.0.0.1:8000/api/v1")
+        : "https://neurosec-api.onrender.com/api/v1");
 
 const NeuroAPI = {
     async get(endpoint) {
