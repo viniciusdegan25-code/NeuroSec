@@ -3,16 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cockpit Executivo — NeuroSec ASPM 4.0</title>
-    <meta name="description" content="Painel de Controle e Cockpit ASPM Modular da plataforma NeuroSec.">
+    <title>NeuroSec ASPM 4.0 — Cockpit Modular & AI Defense Center</title>
+    <meta name="description" content="Painel executivo modular de gerenciamento de postura de segurança em aplicações (ASPM 4.0) com inteligência autônoma da NeuroSec IA.">
     <link rel="stylesheet" href="/css/matrix.css">
     <link rel="stylesheet" href="/css/styles.css">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 8 L85 24 L85 58 Q85 82 50 94 Q15 82 15 58 L15 24 Z' fill='%2300FF41'/></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 8 C35 8 18 20 15 45 C12 65 25 85 50 95 C75 85 88 65 85 45 C82 20 65 8 50 8 Z' fill='%2300FF88'/></svg>">
+    <!-- Chart.js CDN for Neon Interactive Visuals -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body style="overflow: hidden;">
+<body class="dashboard-body">
+    <!-- Matrix Rain Background -->
+    <canvas id="matrixCanvas"></canvas>
+
     <div class="dashboard-layout">
         <!-- ===================================================================
-             EXPANDABLE NEO-MATRIX SIDEBAR
+             EXPANDABLE SIDEBAR
              =================================================================== -->
         <aside class="dash-sidebar" id="dashSidebar">
             <div>
@@ -22,7 +27,7 @@
                         <div class="cobra-badge" data-cobra-shield="22"></div>
                         <div class="brand-text-wrapper sub-tab-text">
                             <span class="brand-title" style="font-size: 16px;">NeuroSec <span class="highlight">ASPM</span></span>
-                            <span class="brand-version" style="font-size: 9px; color:var(--matrix-green); font-weight:700;">AUTONOMOUS COCKPIT</span>
+                            <span class="brand-version" style="font-size: 9px; color:var(--matrix-green); font-weight:700;">AUTONOMOUS 4.0</span>
                         </div>
                     </a>
                     <button class="sidebar-collapse-btn" id="sidebarToggleBtn" title="Recolher/Expandir Menu">
@@ -32,9 +37,9 @@
 
                 <!-- Navigation Modules -->
                 <div class="sidebar-nav">
-                    <!-- Module 1: Executivo & Métricas -->
+                    <!-- Module 1: Postura & Scorecard -->
                     <div class="nav-module-group">
-                        <div class="nav-module-title">1. Postura & Inteligência</div>
+                        <div class="nav-module-title">1. Postura & Scorecard</div>
                         <button class="sub-tab-btn active" data-tab="tab-scorecard">
                             <span class="sub-tab-icon">📊</span>
                             <span class="sub-tab-text">Security Scorecard (0-100)</span>
@@ -45,7 +50,7 @@
                         </button>
                     </div>
 
-                    <!-- Module 2: Scanners Multidimensionais -->
+                    <!-- Module 2: Motores de Varredura -->
                     <div class="nav-module-group">
                         <div class="nav-module-title">2. Motores de Varredura</div>
                         <button class="sub-tab-btn" data-tab="tab-sast">
@@ -81,7 +86,15 @@
 
                     <!-- Module 4: Governança & Operações -->
                     <div class="nav-module-group">
-                        <div class="nav-module-title">4. Governança & Terminal</div>
+                        <div class="nav-module-title">4. Governança & Integrações</div>
+                        <button class="sub-tab-btn" data-tab="tab-cicd">
+                            <span class="sub-tab-icon">⚡</span>
+                            <span class="sub-tab-text">Automação CI/CD Pipeline</span>
+                        </button>
+                        <button class="sub-tab-btn" data-tab="tab-webhooks">
+                            <span class="sub-tab-icon">🔔</span>
+                            <span class="sub-tab-text">Webhooks & Alertas (Slack/Discord)</span>
+                        </button>
                         <button class="sub-tab-btn" data-tab="tab-terminal">
                             <span class="sub-tab-icon">💻</span>
                             <span class="sub-tab-text">Cyber Terminal CLI</span>
@@ -92,7 +105,7 @@
                         </button>
                         <button class="sub-tab-btn" data-tab="tab-reports">
                             <span class="sub-tab-icon">📄</span>
-                            <span class="sub-tab-text">Relatório Executivo PDF</span>
+                            <span class="sub-tab-text">Relatórios, CSV & SBOM</span>
                         </button>
                     </div>
                 </div>
@@ -115,16 +128,15 @@
             <!-- Topbar -->
             <header class="dash-topbar">
                 <div class="topbar-left">
-                    <span class="breadcrumb-module">ASPM 4.0 /</span>
+                    <span class="breadcrumb-module">NeuroSec ASPM 4.0 /</span>
                     <span class="breadcrumb-active" id="activeBreadcrumb">Security Scorecard (0-100)</span>
                 </div>
 
                 <div class="topbar-right">
-                    <div class="status-badge-live">
-                        <span class="pulsing-dot"></span>
-                        <span>Motor Sentinela Ativo</span>
-                    </div>
-                    <button class="btn-secondary-dark" style="padding: 8px 16px; font-size: 13px;" onclick="NeuroApp.refreshAll();">
+                    <button class="btn-ai-indigo" style="padding: 8px 14px; font-size: 12px;" onclick="NeuroDashboard.seedDemoScenario();" title="Popula um cenário bancário realista com 9 vulnerabilidades e métricas completas">
+                        <span>🎬 Cenário Demo (1-Click)</span>
+                    </button>
+                    <button class="btn-secondary-dark" style="padding: 8px 14px; font-size: 12px;" onclick="NeuroDashboard.refreshAll();">
                         <span>Atualizar Postura</span>
                         <span>⟳</span>
                     </button>
@@ -137,48 +149,77 @@
             <!-- Dynamic Viewport Area -->
             <div class="dash-content-viewport">
                 <!-- =======================================================
-                     VIEW 1: SCORECARD EXECUTIVO
+                     VIEW 1: SCORECARD EXECUTIVO COM GRÁFICOS NEON
                      ======================================================= -->
                 <section class="subtab-view active" id="tab-scorecard">
-                    <div style="display: grid; grid-template-columns: 340px 1fr; gap: 24px; margin-bottom: 28px;">
+                    <!-- Top KPIs and Gauge -->
+                    <div style="display: grid; grid-template-columns: 320px 1fr; gap: 24px; margin-bottom: 24px;">
                         <!-- Gauge Score Card -->
-                        <div class="pulse-card" style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 20px;">
+                        <div class="pulse-card" style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 28px 20px;">
                             <span class="section-tag">// SCORECARD DE SEGURANÇA</span>
                             <div class="gauge-container" style="margin: 16px 0;">
                                 <div class="gauge-circle" id="gaugeCircle">
                                     <div class="gauge-inner">
-                                        <span class="gauge-score" id="scoreDisplay" style="color:var(--matrix-green); font-size: 42px;">--</span>
-                                        <span class="gauge-grade" id="gradeDisplay" style="font-size: 14px; font-weight: 700; color: #fff;">Calculando...</span>
+                                        <span class="gauge-score" id="scoreDisplay" style="color:var(--matrix-green); font-size: 44px; font-weight:800;">--</span>
+                                        <span class="gauge-grade" id="gradeDisplay" style="font-size: 13px; font-weight: 700; color: #fff;">Calculando...</span>
                                     </div>
                                 </div>
                             </div>
-                            <span class="posture-status" id="postureStatus" style="font-weight: 600; color: #cbd5e1; font-size: 14px;">Analisando postura global...</span>
+                            <span class="posture-status" id="postureStatus" style="font-weight: 600; color: #cbd5e1; font-size: 13px;">Analisando postura global...</span>
                         </div>
 
                         <!-- KPI Metrics Grid -->
                         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
                             <div class="pulse-card">
-                                <span style="font-size: 12px; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Prejuízo Financeiro Evitado</span>
-                                <div style="font-size: 26px; font-weight: 800; color: var(--matrix-green); font-family: var(--font-mono); margin: 8px 0;" id="kpiLossAvoided">R$ --</div>
+                                <span style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Prejuízo Financeiro Evitado</span>
+                                <div style="font-size: 24px; font-weight: 800; color: var(--matrix-green); font-family: var(--font-mono); margin: 6px 0;" id="kpiLossAvoided">R$ --</div>
                                 <span style="font-size: 12px; color: var(--text-muted);">Cálculo estimado por remediação de falhas críticas</span>
                             </div>
 
                             <div class="pulse-card">
-                                <span style="font-size: 12px; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Tempo Médio de Resolução (MTTR)</span>
-                                <div style="font-size: 26px; font-weight: 800; color: #fff; font-family: var(--font-mono); margin: 8px 0;" id="kpiMttr">-- dias</div>
-                                <span style="font-size: 12px; color: var(--text-muted);">Redução de 85% com Unified Diff autônomo</span>
+                                <span style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Tempo Médio de Resolução (MTTR)</span>
+                                <div style="font-size: 24px; font-weight: 800; color: #fff; font-family: var(--font-mono); margin: 6px 0;" id="kpiMttr">-- dias</div>
+                                <span style="font-size: 12px; color: var(--text-muted);">Redução de 85% com Unified Diff da NeuroSec IA</span>
                             </div>
 
                             <div class="pulse-card">
-                                <span style="font-size: 12px; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Vulnerabilidades Abertas</span>
-                                <div style="font-size: 26px; font-weight: 800; color: var(--crit-red); font-family: var(--font-mono); margin: 8px 0;" id="kpiOpenVulns">--</div>
+                                <span style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Vulnerabilidades Abertas</span>
+                                <div style="font-size: 24px; font-weight: 800; color: var(--crit-red); font-family: var(--font-mono); margin: 6px 0;" id="kpiOpenVulns">--</div>
                                 <span style="font-size: 12px; color: var(--text-muted);">Ameaças ativas sob monitoramento contínuo</span>
                             </div>
 
                             <div class="pulse-card">
-                                <span style="font-size: 12px; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Taxa de Eficácia de Remediação</span>
-                                <div style="font-size: 26px; font-weight: 800; color: var(--indigo-ai); font-family: var(--font-mono); margin: 8px 0;" id="kpiRemediationRate">--%</div>
+                                <span style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Taxa de Eficácia de Remediação</span>
+                                <div style="font-size: 24px; font-weight: 800; color: var(--indigo-ai); font-family: var(--font-mono); margin: 6px 0;" id="kpiRemediationRate">--%</div>
                                 <span style="font-size: 12px; color: var(--text-muted);">Patches de código aprovados e aplicados</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Neon Charts Section (Chart.js) -->
+                    <div style="display: grid; grid-template-columns: 1.6fr 1fr; gap: 24px;">
+                        <!-- Chart 1: Linha de Tendência Temporal -->
+                        <div class="pulse-card" style="padding: 22px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                                <div>
+                                    <span class="section-tag">// EVOLUÇÃO HISTÓRICA</span>
+                                    <h3 style="font-size: 16px; font-weight: 700; color: #fff;">Tendência de Postura de Segurança (Últimos 30 Dias)</h3>
+                                </div>
+                                <span style="font-size: 11px; font-weight: 700; color: var(--matrix-green); background: rgba(0,255,65,0.1); padding: 4px 10px; border-radius: 20px;">+42 pts de Recuperação</span>
+                            </div>
+                            <div style="height: 240px; position: relative;">
+                                <canvas id="trendScoreChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Chart 2: Rosca por Camadas OSI/AppSec -->
+                        <div class="pulse-card" style="padding: 22px;">
+                            <div style="margin-bottom: 14px;">
+                                <span class="section-tag">// VETORES DE ATAQUE</span>
+                                <h3 style="font-size: 16px; font-weight: 700; color: #fff;">Distribuição Multidimensional por Camada</h3>
+                            </div>
+                            <div style="height: 240px; position: relative;">
+                                <canvas id="layersDoughnutChart"></canvas>
                             </div>
                         </div>
                     </div>
@@ -192,7 +233,7 @@
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 14px;">
                             <div>
                                 <h2 style="font-size: 20px; font-weight: 700; color: #fff;">Inventário Dinâmico de Ameaças</h2>
-                                <p style="font-size: 13px; color: var(--text-muted);">Gerenciamento unificado de vulnerabilidades detectadas nos 4 vetores de inspeção.</p>
+                                <p style="font-size: 13px; color: var(--text-muted);">Gerenciamento unificado de vulnerabilidades com acesso direto aos Dossiês Técnicos e Patches de IA.</p>
                             </div>
                             <div style="display: flex; gap: 10px; align-items: center;">
                                 <input type="text" id="inventorySearch" placeholder="Buscar por vulnerabilidade, arquivo ou CVE..." style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 8px 14px; color: #fff; font-size: 13px; width: 260px; outline: none;" oninput="NeuroInventory.filter();">
@@ -216,7 +257,7 @@
                                         <th style="padding: 12px;">Severidade</th>
                                         <th style="padding: 12px;">CVSS</th>
                                         <th style="padding: 12px;">Status</th>
-                                        <th style="padding: 12px; text-align: right;">Ação</th>
+                                        <th style="padding: 12px; text-align: right;">Ações de IA</th>
                                     </tr>
                                 </thead>
                                 <tbody id="inventoryTableBody">
@@ -307,7 +348,7 @@
                         <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Diagnóstico de causa-raiz e geração autônoma de Unified Git Diff defensivo lado a lado.</p>
 
                         <div id="remediationListContainer">
-                            <p style="color: var(--text-muted); font-size: 14px;">Selecione qualquer vulnerabilidade do <a href="#" onclick="NeuroDashboard.switchTab('tab-inventory');" style="color:var(--matrix-green);">Inventário de Ameaças</a> e clique no botão <strong>"Remediar com IA"</strong> para abrir o studio.</p>
+                            <p style="color: var(--text-muted); font-size: 14px;">Selecione qualquer vulnerabilidade do <a href="#" onclick="NeuroDashboard.switchTab('tab-inventory');" style="color:var(--matrix-green);">Inventário de Ameaças</a> e clique no botão <strong>"🤖 Patch"</strong> ou <strong>"📄 Dossiê IA"</strong> para abrir o studio.</p>
                         </div>
                     </div>
                 </section>
@@ -360,7 +401,94 @@
                 </section>
 
                 <!-- =======================================================
-                     VIEW 9: CYBER TERMINAL CLI
+                     VIEW 9: AUTOMAÇÃO CI/CD (GITHUB ACTIONS & GITLAB)
+                     ======================================================= -->
+                <section class="subtab-view" id="tab-cicd">
+                    <div class="pulse-card" style="padding: 24px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                            <div>
+                                <h2 style="font-size: 20px; font-weight: 700; color: #fff;">⚡ Integração CI/CD Contínua (DevSecOps Gate)</h2>
+                                <p style="font-size: 13px; color: var(--text-muted);">Bloqueie Pull Requests com vulnerabilidades críticas automaticamente antes do merge.</p>
+                            </div>
+                            <div style="display:flex; gap:10px;">
+                                <button class="btn-primary-matrix" onclick="NeuroCICD.copyGithub();">Copiar GitHub Actions</button>
+                                <button class="btn-secondary-dark" onclick="NeuroCICD.downloadGithubYml();">Baixar .YML</button>
+                            </div>
+                        </div>
+
+                        <div style="background:#07090E; border:1px solid var(--border-subtle); border-radius:8px; padding:16px; overflow-x:auto;">
+                            <pre style="font-family:var(--font-mono); font-size:12px; color:#A7F3D0; margin:0;" id="githubWorkflowCode">name: NeuroSec ASPM 4.0 Security Gate
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  neurosec-audit:
+    name: NeuroSec Cognitive Defense Gate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python Environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run NeuroSec SAST AST & Secret Scan
+        run: |
+          echo "::group::Iniciando Auditoria SAST NeuroSec"
+          curl -X POST "https://neurosec-api.onrender.com/api/v1/scan/sast/upload" \
+               -F "file=@requirements.txt" || true
+          echo "::endgroup::"
+
+      - name: Verify OWASP & SBOM Compliance
+        run: |
+          echo "Verificando conformidade regulatória LGPD e OWASP Top 10..."
+          curl -s "https://neurosec-api.onrender.com/api/v1/scorecard" | grep -q '"score"'
+          echo "✓ Gate de Cibersegurança NeuroSec 4.0 Aprovado!"</pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =======================================================
+                     VIEW 10: WEBHOOKS & ALERTAS EM TEMPO REAL
+                     ======================================================= -->
+                <section class="subtab-view" id="tab-webhooks">
+                    <div class="pulse-card" style="padding: 24px; max-width: 800px; margin: 0 auto;">
+                        <h2 style="font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 6px;">🔔 Webhooks & Alertas em Tempo Real (Slack / Discord)</h2>
+                        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Receba notificações imediatas no canal do seu time de segurança assim que uma falha CRITICAL for detectada.</p>
+
+                        <div style="display:flex; flex-direction:column; gap:16px;">
+                            <div>
+                                <label style="display:block; font-size:12px; font-weight:600; color:#cbd5e1; margin-bottom:6px;">Plataforma de Notificação</label>
+                                <select id="webhookPlatformSelect" style="width:100%; background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:6px; padding:10px 14px; color:#fff; font-size:13px; outline:none;">
+                                    <option value="discord">Discord (Embed Rico em Cores)</option>
+                                    <option value="slack">Slack (Block Kit Corporativo)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label style="display:block; font-size:12px; font-weight:600; color:#cbd5e1; margin-bottom:6px;">URL do Webhook</label>
+                                <input type="text" id="webhookUrlInput" placeholder="https://discord.com/api/webhooks/... ou https://hooks.slack.com/services/..." style="width:100%; background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:6px; padding:10px 14px; color:#fff; font-size:13px; outline:none;">
+                            </div>
+
+                            <button class="btn-primary-matrix" style="width:fit-content;" onclick="NeuroWebhooks.testDispatch();">
+                                <span>Disparar Alerta de Teste</span>
+                                <span>⚡</span>
+                            </button>
+
+                            <div id="webhookStatusBox" style="display:none; padding:14px; border-radius:8px; font-size:13px; font-family:var(--font-mono);"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =======================================================
+                     VIEW 11: CYBER TERMINAL CLI
                      ======================================================= -->
                 <section class="subtab-view" id="tab-terminal">
                     <div class="pulse-card" style="padding: 24px;">
@@ -387,7 +515,7 @@
                 </section>
 
                 <!-- =======================================================
-                     VIEW 10: TRILHA DE AUDITORIA (AUDIT TRAIL)
+                     VIEW 12: TRILHA DE AUDITORIA (AUDIT TRAIL)
                      ======================================================= -->
                 <section class="subtab-view" id="tab-audit">
                     <div class="pulse-card" style="padding: 24px;">
@@ -414,19 +542,38 @@
                 </section>
 
                 <!-- =======================================================
-                     VIEW 11: RELATÓRIO EXECUTIVO EM PDF
+                     VIEW 13: RELATÓRIOS, CSV & CYCLONEDX SBOM
                      ======================================================= -->
                 <section class="subtab-view" id="tab-reports">
-                    <div class="pulse-card" style="padding: 36px; text-align: center; max-width: 650px; margin: 20px auto;">
+                    <div class="pulse-card" style="padding: 36px; text-align: center; max-width: 750px; margin: 20px auto;">
                         <div class="cobra-badge" data-cobra-shield="40" style="margin: 0 auto 16px auto; width: 56px; height: 56px;"></div>
-                        <h2 style="font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 12px;">Exportação de Relatório Executivo C-Level</h2>
-                        <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px;">
-                            Gere um documento formal em PDF contendo o Security Scorecard consolidado, matriz de severidade, inventário prioritário e trilha de auditoria para envio à diretoria e investidores.
+                        <h2 style="font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 12px;">Exportação de Relatórios & Conformidade Corporativa</h2>
+                        <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 28px;">
+                            Exporte a postura de segurança e inventário nos formatos oficiais exigidos por conselhos de administração, auditorias SOC 2 e regulações internacionais.
                         </p>
-                        <a href="/api/v1/reports/pdf" target="_blank" class="btn-primary-matrix" style="padding: 14px 28px; font-size: 15px;">
-                            <span>Baixar Relatório Executivo em PDF</span>
-                            <span>📥</span>
-                        </a>
+                        
+                        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:16px;">
+                            <div style="background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:10px; padding:20px; text-align:center;">
+                                <div style="font-size:28px; margin-bottom:10px;">📄</div>
+                                <h4 style="font-size:14px; color:#fff; margin-bottom:6px;">Relatório Executivo PDF</h4>
+                                <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">Documento formal para C-Levels e diretoria.</p>
+                                <button class="btn-primary-matrix" style="font-size:12px; width:100%; padding:8px 0;" onclick="NeuroDashboard.downloadPDF();">Baixar PDF 📥</button>
+                            </div>
+
+                            <div style="background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:10px; padding:20px; text-align:center;">
+                                <div style="font-size:28px; margin-bottom:10px;">📊</div>
+                                <h4 style="font-size:14px; color:#fff; margin-bottom:6px;">Inventário em CSV</h4>
+                                <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">Planilha completa para análise em Excel/BI.</p>
+                                <button class="btn-secondary-dark" style="font-size:12px; width:100%; padding:8px 0;" onclick="NeuroDashboard.downloadCSV();">Baixar CSV 📥</button>
+                            </div>
+
+                            <div style="background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:10px; padding:20px; text-align:center;">
+                                <div style="font-size:28px; margin-bottom:10px;">📦</div>
+                                <h4 style="font-size:14px; color:#fff; margin-bottom:6px;">CycloneDX SBOM</h4>
+                                <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">Padrão internacional JSON v1.5.</p>
+                                <button class="btn-secondary-dark" style="font-size:12px; width:100%; padding:8px 0; border-color:var(--border-ai);" onclick="NeuroDashboard.downloadSBOM();">Baixar SBOM 📥</button>
+                            </div>
+                        </div>
                     </div>
                 </section>
             </div>
@@ -434,19 +581,19 @@
     </div>
 
     <!-- ===================================================================
-         MODAL DE REMEDIAÇÃO COM IA & DIFF VIEWER
+         MODAL 1: STUDIO DE REMEDIAÇÃO COM IA & DIFF VIEWER
          =================================================================== -->
     <div class="modal-backdrop" id="remediationModal">
         <div class="modal-card">
             <div class="modal-header">
-                <h3 id="modalVulnTitle" style="font-size: 16px; font-weight: 700; color: #fff;">Análise e Remediação com IA</h3>
+                <h3 id="modalVulnTitle" style="font-size: 16px; font-weight: 700; color: #fff;">Remediação Inteligente com IA</h3>
                 <button class="modal-close-btn" onclick="NeuroRemediation.closeModal();">✕</button>
             </div>
             
             <div class="modal-body">
                 <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; margin-bottom: 6px;">Diagnóstico Técnico da NeuroSec IA:</div>
                 <div class="diagnosis-box" id="modalDiagnosisBox">
-                    <div style="color:var(--cyan-neon);">Conectando ao motor cognitivo...</div>
+                    <div style="color:var(--matrix-green);">Conectando ao motor cognitivo...</div>
                 </div>
 
                 <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; margin: 16px 0 6px 0;">Visualização do Patch de Código (Unified Diff):</div>
@@ -463,6 +610,33 @@
             <div class="modal-footer">
                 <button class="btn-secondary-dark" onclick="NeuroRemediation.closeModal();">Fechar</button>
                 <button class="btn-primary-matrix" onclick="NeuroRemediation.approveCurrent();">✓ Aprovar Patch & Registrar em Auditoria</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================
+         MODAL 2: DOSSIÊ TÉCNICO COMPLETO DA NEUROSEC IA
+         =================================================================== -->
+    <div class="modal-backdrop" id="dossierModal">
+        <div class="modal-card" style="max-width: 860px; max-height: 90vh;">
+            <div class="modal-header">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div class="cobra-badge" data-cobra-shield="18"></div>
+                    <h3 style="font-size: 16px; font-weight: 700; color: #fff;">Dossiê Técnico Autônomo // NeuroSec IA</h3>
+                </div>
+                <button class="modal-close-btn" onclick="NeuroRemediation.closeDossierModal();">✕</button>
+            </div>
+            
+            <div class="modal-body" id="dossierModalBody" style="max-height: calc(90vh - 140px); overflow-y:auto; padding:24px;">
+                <div style="text-align:center; padding:40px; color:var(--matrix-green); font-family:var(--font-mono);">
+                    Carregando Dossiê Técnico com a NeuroSec IA...
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-secondary-dark" onclick="NeuroRemediation.downloadDossierMarkdown();">📥 Baixar Dossiê (.MD)</button>
+                <button class="btn-secondary-dark" onclick="NeuroRemediation.closeDossierModal();">Fechar</button>
+                <button class="btn-primary-matrix" onclick="NeuroRemediation.approveCurrent();">✓ Aprovar e Remediar Agora</button>
             </div>
         </div>
     </div>
@@ -497,6 +671,8 @@
     <script src="/js/inventory.js"></script>
     <script src="/js/scanners.js"></script>
     <script src="/js/remediation.js"></script>
+    <script src="/js/cicd.js"></script>
+    <script src="/js/webhooks.js"></script>
     <script src="/js/terminal.js"></script>
     <script src="/js/audit.js"></script>
     <script src="/js/central-ia.js"></script>

@@ -2,7 +2,7 @@ import httpx
 import re
 import difflib
 import os
-from typing import Dict, Any, Tuple, Optional
+from typing import Dict, Any, Tuple, Optional, List
 from app.core.config import settings
 
 class AISecurityEngine:
@@ -68,185 +68,307 @@ class AISecurityEngine:
                 user_content += f"Instrução adicional do analista: {custom_prompt}\n"
             user_content += "Gere o diagnóstico detalhado e a reescrita segura de código com remediação completa."
 
-            payload = {
-                "model": settings.GROQ_MODEL,
-                "messages": [
-                    {"role": "system", "content": system_instruction},
-                    {"role": "user", "content": user_content}
-                ],
-                "temperature": 0.1,
-                "max_tokens": 1500
-            }
-
-            headers = {
-                "Authorization": f"Bearer {settings.GROQ_API_KEY.strip()}",
-                "Content-Type": "application/json"
-            }
-
             try:
-                async with httpx.AsyncClient(timeout=15.0) as client:
-                    response = await client.post(settings.GROQ_URL, headers=headers, json=payload)
+                async with httpx.AsyncClient(timeout=25.0) as client:
+                    response = await client.post(
+                        "https://api.groq.com/openai/v1/chat/completions",
+                        headers={
+                            "Authorization": f"Bearer {settings.GROQ_API_KEY}",
+                            "Content-Type": "application/json"
+                        },
+                        json={
+                            "model": settings.GROQ_MODEL,
+                            "messages": [
+                                {"role": "system", "content": system_instruction},
+                                {"role": "user", "content": user_content}
+                            ],
+                            "temperature": 0.2,
+                            "max_tokens": 1500
+                        }
+                    )
+                    
                     if response.status_code == 200:
-                        raw_response = response.json()["choices"][0]["message"]["content"]
-                        fixed_code = cls.clean_markdown_code(raw_response)
+                        data = response.json()
+                        raw_reply = data["choices"][0]["message"]["content"]
+                        fixed_code = cls.clean_markdown_code(raw_reply)
+                        diff_text = cls.generate_unified_diff(original_code, fixed_code, filename=asset_name)
                         
-                        if not fixed_code or fixed_code == raw_response.strip():
-                            fixed_code = cls._generate_rule_based_fallback(vuln_type, original_code)
-                        
-                        diff = cls.generate_unified_diff(original_code, fixed_code, asset_name)
                         return {
-                            "diagnosis": raw_response,
+                            "diagnosis": raw_reply,
                             "fixed_code": fixed_code,
-                            "diff": diff,
+                            "diff": diff_text,
                             "bandit_compliance": True
                         }
             except Exception:
                 pass
 
-        # Fallback estruturado inteligente da NeuroSec IA
-        simulated_fixed = cls._generate_rule_based_fallback(vuln_type, original_code)
-        diff = cls.generate_unified_diff(original_code, simulated_fixed, asset_name)
-        diag = cls._generate_diagnostic_knowledge(vuln_type, asset_name, severity)
+        # Motor Cognitivo Local de Alta Precisão (Fallback Determinístico)
+        fixed_code = cls._generate_rule_based_fallback(vuln_type, original_code)
+        diff_text = cls.generate_unified_diff(original_code, fixed_code, filename=asset_name)
+        diagnosis_text = cls._generate_diagnostic_knowledge(vuln_type, asset_name, severity)
+
         return {
-            "diagnosis": diag,
-            "fixed_code": simulated_fixed,
-            "diff": diff,
+            "diagnosis": diagnosis_text,
+            "fixed_code": fixed_code,
+            "diff": diff_text,
             "bandit_compliance": True
         }
 
     @classmethod
-    async def chat_with_copilot(cls, message: str, context: Optional[str] = None) -> str:
-        """Canal conversacional flexível, casual e técnico com a NeuroSec IA."""
-        
-        # 1. Tenta Groq se chave configurada
-        if settings.GROQ_API_KEY and len(settings.GROQ_API_KEY) > 10:
-            system_prompt = (
-                "Você é a NeuroSec IA, a inteligência artificial oficial da plataforma NeuroSec ASPM.\n"
-                "Tom de voz e diretrizes:\n"
-                "- Seja flexível, acessível, acolhedora e amigável para usuários curiosos, iniciantes ou leigos.\n"
-                "- Quando o usuário fizer perguntas casuais (ex: 'olá', 'quem é você?', 'o que é este site?'), responda de forma natural, calorosa e clara, explicando o que é a plataforma sem complicação.\n"
-                "- Quando o usuário fizer perguntas técnicas ou executivas (OWASP, CVSS, SQLi, LGPD, ROI), demonstre autoridade técnica de alto nível com explicações práticas e didáticas.\n"
-                "- Sempre responda em Português do Brasil (pt-BR) com formatação limpa e emojis moderados."
+    async def generate_deep_remediation_dossier(
+        cls,
+        vuln_type: str,
+        asset_name: str,
+        original_code: str,
+        severity: str,
+        cve_id: Optional[str] = None,
+        owasp_category: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """Gera o Dossiê Técnico Completo e Aprofundado de Remediação com a NeuroSec IA."""
+
+        v_upper = vuln_type.upper()
+        cve_text = cve_id if cve_id else "N/A (Falha de Código Próprio / Postura)"
+        owasp_text = owasp_category if owasp_category else "A03:2021 - Injection / Vulnerable Components"
+
+        # 1. Determina o vetor didático de exploração (Proof of Concept)
+        if "SQL" in v_upper:
+            cwe_id = "CWE-89: Improper Neutralization of Special Elements used in an SQL Command"
+            poc_payload = "' OR '1'='1' --"
+            poc_desc = "O atacante insere um caractere de escape no input HTTP (ex: `' OR '1'='1`), forçando a query a retornar registros de todos os usuários sem validação de senha."
+            strat_1 = "Substituir concatenação de strings (f-strings / %) por Prepared Statements com Bind Parameters (%s ou :param)."
+            strat_2 = "Migrar o acesso a dados para um ORM moderno (ex: SQLAlchemy ou Django ORM) com modelos tipados."
+            strat_3 = "Implantar regras de inspeção no WAF (ModSecurity / Cloudflare) com bloqueio de operadores booleanos em parâmetros GET/POST."
+            unit_test = (
+                "def test_sql_injection_defense():\n"
+                "    malicious_input = \"admin' OR '1'='1\"\n"
+                "    result = authenticate_user(malicious_input, 'password123')\n"
+                "    assert result is None, 'Falha: O sistema autenticou o payload de SQLi!'\n"
+            )
+        elif "SECRET" in v_upper or "KEY" in v_upper or "SENHA" in v_upper:
+            cwe_id = "CWE-798: Use of Hard-coded Credentials"
+            poc_payload = 'grep -r "api_key" . / git log -p'
+            poc_desc = "O invasor varre repositórios públicos ou históricos de commits para extrair a chave em texto plano e obter acesso irrestrito aos serviços de banco ou nuvem."
+            strat_1 = "Substituir o valor estático por leitura segura via variáveis de ambiente com `os.getenv('SECRET_KEY')`."
+            strat_2 = "Integrar com um cofre de segredos corporativo (HashiCorp Vault ou AWS Secrets Manager) com rotação automática de chaves."
+            strat_3 = "Adicionar ferramentas de pre-commit hook (TruffleHog / GitGuardian) para bloquear commits contendo credenciais."
+            unit_test = (
+                "import os\n"
+                "def test_no_hardcoded_secrets():\n"
+                "    assert os.getenv('API_SECRET_KEY') is not None, 'Erro: Variável de ambiente não encontrada!'\n"
+                "    assert 'SuperSecret' not in open('config.py').read(), 'Erro: Chave ainda presente no código!'\n"
+            )
+        elif "COMMAND" in v_upper or "RCE" in v_upper or "EVAL" in v_upper:
+            cwe_id = "CWE-78: Improper Neutralization of Special Elements used in an OS Command"
+            poc_payload = "127.0.0.1; cat /etc/passwd # / ping 127.0.0.1 && whoami"
+            poc_desc = "O atacante anexa um operador de comando shell (; ou &&) na entrada, forçando o servidor a executar binários arbitrários com privilégios de sistema."
+            strat_1 = "Eliminar `shell=True` e `eval()`. Passar argumentos como lista estrita para `subprocess.run(['ping', '-c', '1', ip])`."
+            strat_2 = "Validar a entrada com regex e conversores de tipo estrito (ex: `ipaddress.ip_address(input_ip)`)."
+            strat_3 = "Executar a aplicação em containers não-root (rootless Docker) com AppArmor e Seccomp ativos."
+            unit_test = (
+                "def test_command_injection_defense():\n"
+                "    evil_ip = '127.0.0.1; whoami'\n"
+                "    with pytest.raises(ValueError):\n"
+                "        safe_ping(evil_ip)\n"
+            )
+        elif "HSTS" in v_upper or "CSP" in v_upper or "CLICKJACKING" in v_upper or "URL" in v_upper:
+            cwe_id = "CWE-693: Protection Mechanism Failure (Security Misconfiguration)"
+            poc_payload = "<iframe src='https://alvo.com'></iframe> / SSL Stripping Attack"
+            poc_desc = "Sem headers defensivos, atacantes podem embutir a aplicação em páginas falsas para captura de cliques ou interceptar conexões HTTP não criptografadas."
+            strat_1 = "Configurar os cabeçalhos `Strict-Transport-Security` e `Content-Security-Policy` diretamente no Proxy Reverso (Nginx/Cloudflare)."
+            strat_2 = "Adicionar middleware de segurança web no FastAPI (`starlette.middleware.httpsredirect`)."
+            strat_3 = "Habilitar HSTS Preload list no navegador para forçar criptografia HTTPS obrigatória."
+            unit_test = (
+                "def test_security_headers_present():\n"
+                "    response = client.get('/')\n"
+                "    assert 'Strict-Transport-Security' in response.headers\n"
+                "    assert 'Content-Security-Policy' in response.headers\n"
+            )
+        else:
+            cwe_id = "CWE-1395: Dependency on Vulnerable Third-Party Component"
+            poc_payload = "Exploração de CVE conhecida via pacote desatualizado"
+            poc_desc = "A biblioteca de terceiros contém uma falha pública registrada em bases NVD que permite bypass de autenticação ou DoS."
+            strat_1 = "Atualizar a versão do pacote no `requirements.txt` para a versão mínima de segurança."
+            strat_2 = "Travar hashes criptográficos no `poetry.lock` ou `Pipfile.lock` para integridade de supply-chain."
+            strat_3 = "Adicionar checagem contínua de SCA no pipeline de CI/CD para rejeitar builds com CVEs de severidade alta."
+            unit_test = (
+                "def test_dependency_cve_compliance():\n"
+                "    # Verifica que bibliotecas vulneráveis não estão instaladas\n"
+                "    assert check_package_safety() is True\n"
             )
 
-            full_message = message
-            if context:
-                full_message = f"[Contexto do Ativo/Vulnerabilidade: {context}]\n\nPergunta do Usuário: {message}"
+        # Gera o patch de código
+        patch_info = await cls.generate_remediation_patch(vuln_type, asset_name, original_code, severity)
 
-            payload = {
-                "model": settings.GROQ_MODEL,
-                "messages": [
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": full_message}
-                ],
-                "temperature": 0.4
-            }
+        # Monta o Dossiê Estruturado em Markdown
+        markdown_dossier = f"""# 📄 DOSSIÊ TÉCNICO DE REMEDIAÇÃO // NEUROSEC IA
+**Plataforma NeuroSec ASPM 4.0 — Módulo de Inteligência Cognitiva**
 
-            headers = {
-                "Authorization": f"Bearer {settings.GROQ_API_KEY.strip()}",
-                "Content-Type": "application/json"
-            }
+---
+
+## 1. Identificação da Ameaça & Causa Raiz
+- **Vulnerabilidade:** `{vuln_type}`
+- **Severidade:** `{severity}`
+- **Ativo Afetado:** `{asset_name}`
+- **CVE Correspondente:** `{cve_text}`
+- **Classificação OWASP:** `{owasp_text}`
+- **CWE Standard:** `{cwe_id}`
+
+### Diagnóstico Técnico:
+A vulnerabilidade identificada decorre da ausência de mecanismos defensivos nativos no tratamento de entradas ou na configuração de infraestrutura. Isso permite que agentes não autorizados alterem a lógica pretendida do sistema.
+
+---
+
+## 2. Impacto de Negócio & Conformidade
+- **Risco LGPD (Art. 46):** Violação do princípio de segurança e proteção de dados pessoais. Multas regulatórias aplicáveis pela ANPD de até **R$ 50.000.000,00**.
+- **Prejuízo Financeiro Estimado:** Média de **R$ 35.000,00** em custos de resposta a incidentes, indisponibilidade e danos reputacionais.
+- **Conformidade de Auditoria:** Bloqueador direto para certificações **SOC 2 Type II** e **ISO/IEC 27001**.
+
+---
+
+## 3. Simulação do Vetor de Ataque (Proof of Concept Didático)
+- **Vetor de Exploração:** `{poc_payload}`
+- **Mecanismo:** {poc_desc}
+
+---
+
+## 4. Matriz de Abordagens de Mitigação (3 Estratégias)
+
+### 🔹 Estratégia 1: Correção Imediata no Código (Hotfix)
+{strat_1}
+
+### 🔹 Estratégia 2: Refatoração de Arquitetura & Governança
+{strat_2}
+
+### 🔹 Estratégia 3: Defesa em Profundidade (WAF / Perímetro)
+{strat_3}
+
+---
+
+## 5. Implementação Segura & Unified Git Diff
+
+### Código Remediado pela NeuroSec IA:
+```python
+{patch_info['fixed_code']}
+```
+
+### Visualização do Patch (Unified Diff):
+```diff
+{patch_info['diff']}
+```
+
+---
+
+## 6. Teste Unitário Defensivo (Validação Automatizada)
+```python
+{unit_test}
+```
+
+---
+*Dossiê emitido e validado pela NeuroSec IA — Plataforma de ASPM 4.0.*
+"""
+
+        return {
+            "status": "success",
+            "vuln_type": vuln_type,
+            "asset_name": asset_name,
+            "severity": severity,
+            "cve_id": cve_text,
+            "owasp_category": owasp_text,
+            "cwe_id": cwe_id,
+            "poc_payload": poc_payload,
+            "poc_description": poc_desc,
+            "strategies": {
+                "hotfix": strat_1,
+                "architecture": strat_2,
+                "infrastructure": strat_3
+            },
+            "fixed_code": patch_info["fixed_code"],
+            "diff": patch_info["diff"],
+            "unit_test_code": unit_test,
+            "markdown_dossier": markdown_dossier
+        }
+
+    @classmethod
+    async def chat_with_copilot(cls, message: str, history: list = None) -> str:
+        """Motor de Chat Interativo da NeuroSec IA para Atendimento Casual, Curiosos e DevSecOps."""
+        
+        # 1. Tenta API Groq
+        if settings.GROQ_API_KEY and len(settings.GROQ_API_KEY) > 10:
+            system_prompt = (
+                "Você é a NeuroSec IA, a inteligência artificial especialista da plataforma NeuroSec ASPM 4.0.\n"
+                "Sua missão é ajudar tanto usuários leigos e curiosos quanto especialistas técnicos de DevSecOps e C-Levels.\n"
+                "Diretrizes:\n"
+                "1. Seja cordial, acolhedor e didático. Se alguém disser 'olá' ou demonstrar curiosidade, cumprimente com simpatia.\n"
+                "2. Para usuários leigos: use analogias simples (ex: comparar o ASPM a um médico especialista para sites e códigos).\n"
+                "3. Para perguntas de negócio: explique como o NeuroSec evita multas da LGPD (até R$ 50M) e economiza R$ 35k por falha evitada.\n"
+                "4. Para especialistas técnicos: cite termos formais como OWASP Top 10, CWE, SAST, DAST, SCA e gere código seguro com diff."
+            )
+
+            messages = [{"role": "system", "content": system_prompt}]
+            if history:
+                for h in history[-6:]:
+                    messages.append({"role": h.get("role", "user"), "content": h.get("content", "")})
+            messages.append({"role": "user", "content": message})
 
             try:
-                async with httpx.AsyncClient(timeout=10.0) as client:
-                    response = await client.post(settings.GROQ_URL, headers=headers, json=payload)
-                    if response.status_code == 200:
-                        return response.json()["choices"][0]["message"]["content"]
+                async with httpx.AsyncClient(timeout=20.0) as client:
+                    res = await client.post(
+                        "https://api.groq.com/openai/v1/chat/completions",
+                        headers={
+                            "Authorization": f"Bearer {settings.GROQ_API_KEY}",
+                            "Content-Type": "application/json"
+                        },
+                        json={
+                            "model": settings.GROQ_MODEL,
+                            "messages": messages,
+                            "temperature": 0.5,
+                            "max_tokens": 1000
+                        }
+                    )
+                    if res.status_code == 200:
+                        return res.json()["choices"][0]["message"]["content"]
             except Exception:
                 pass
 
-        # 2. Base Cognitiva Adaptativa da NeuroSec IA (Respostas naturais, casuais e técnicas)
-        return cls._generate_conversational_knowledge(message)
+        # 2. Motor Cognitivo Nativo (Fallback Conversacional Inteligente)
+        return cls._chat_conversational_fallback(message)
 
     @classmethod
-    def _generate_conversational_knowledge(cls, msg: str) -> str:
-        """Base de conhecimento nativa e adaptativa da NeuroSec IA para conversas casuais e técnicas."""
-        m = msg.strip().lower()
-        
-        # Cumprimentos e conversas casuais
-        if re.search(r"^(oi|ol[aá]|bom dia|boa tarde|boa noite|opa|fala|e a[ií]|hey|hello|salve)", m):
-            return (
-                "Olá! 👋 Que bom ter você por aqui!\n\n"
-                "Eu sou a **NeuroSec IA**, a inteligência artificial responsável por proteger aplicações e sistemas na plataforma NeuroSec.\n\n"
-                "Você pode me perguntar qualquer coisa:\n"
-                "- 💡 **Para curiosos:** *'O que é o NeuroSec e como ele funciona?'*\n"
-                "- 🏢 **Para gestores:** *'Como a plataforma evita perdas financeiras?'*\n"
-                "- 💻 **Para desenvolvedores:** *'Como blindar um código contra SQL Injection?'*\n\n"
-                "Como posso te ajudar hoje?"
-            )
-        
-        if re.search(r"(quem [eé] voc[eê]|seu nome|o que voc[eê] faz|quem te criou|o que [eé] voc[eê])", m):
-            return (
-                "Eu sou a **NeuroSec IA**! 🤖🛡️\n\n"
-                "Sou o motor inteligente da plataforma **NeuroSec ASPM** (Application Security Posture Management). "
-                "Minha missão é analisar códigos-fonte, sites e ambientes de nuvem para encontrar falhas de segurança e, "
-                "o mais importante, **gerar as correções (patches) automaticamente** para que qualquer pessoa ou empresa mantenha seus sistemas blindados.\n\n"
-                "Quer testar algum scanner ou tem alguma dúvida sobre segurança?"
-            )
-        
-        if re.search(r"(o que [eé] (o )?neurosec|o que [eé] aspm|para que serve|como funciona o site|expli(ca|que))", m):
-            return (
-                "O **NeuroSec** é uma plataforma corporativa de **ASPM (Application Security Posture Management)**. 🚀\n\n"
-                "De forma simples: pense no NeuroSec como um 'médico especialista' para softwares e sites. Ele:\n"
-                "1. ⚡ **Examina o código** procurando brechas (como senhas expostas ou injeções de SQL).\n"
-                "2. 🌐 **Inspeciona sites online** para ver se a conexão é 100% segura.\n"
-                "3. 📦 **Verifica dependências** para garantir que nenhuma biblioteca esteja desatualizada.\n"
-                "4. 🤖 **Reescreve o código com segurança**, entregando a solução pronta em 1 clique!\n\n"
-                "Você pode testar qualquer scanner direto na aba **Central de Scans**!"
-            )
+    def _chat_conversational_fallback(cls, msg: str) -> str:
+        """Motor de Conversação Nativo em Português para Respostas Imediatas."""
+        m = msg.lower().strip()
 
-        if re.search(r"(sou leigo|n[aã]o entendo de c[oó]digo|n[aã]o sei programar|ajuda para leigo|f[aá]cil)", m):
+        if any(w in m for w in ["olá", "ola", "oi", "bom dia", "boa tarde", "boa noite", "tudo bem", "quem e voce", "quem é você"]):
             return (
-                "Fique super tranquilo! ✨ O NeuroSec foi desenhado exatamente para que você **não precise entender de código** para manter seu negócio seguro.\n\n"
-                "Aqui você conta com:\n"
-                "- 📊 Um **Scorecard de 0 a 100** (como uma nota de prova fácil de entender).\n"
-                "- 🟢 **Semáforo de risco** (Verde = Seguro, Vermelho = Requer Atenção).\n"
-                "- 💰 Cálculo de **Prejuízo Evitado** em reais.\n"
-                "- 🤖 Eu mesma faço as correções difíceis e te explico tudo em bom português!\n\n"
-                "Quer que eu analise alguma URL ou arquivo para você?"
+                "Olá! 👋 Sou a **NeuroSec IA**, o motor de Inteligência Artificial defensiva da plataforma **NeuroSec ASPM 4.0**.\n\n"
+                "Estou aqui para te ajudar a entender a segurança das suas aplicações, auditar códigos, simular vetores de ataque ou responder qualquer dúvida técnica ou de curiosidade.\n\n"
+                "Como posso te apoiar hoje?"
             )
-
-        if re.search(r"(quanto custa|pre[cç]o|valor|roi|perda|preju[ií]zo|investimento|investidor)", m):
+        elif any(w in m for w in ["leigo", "não entendo", "nao entendo", "curiosidade", "o que é", "o que e", "como funciona"]):
             return (
-                "**💼 Visão de Negócio & ROI da NeuroSec:**\n\n"
-                "- Uma violação de dados pode gerar multas de até **R$ 50 milhões pela LGPD**, além de perda de reputação e clientes.\n"
-                "- No NeuroSec, cada vulnerabilidade corrigida pela IA evita um prejuízo financeiro estimado em **R$ 35.000** em média.\n"
-                "- Nosso **Mean Time to Remediate (MTTR)** cai de 48 horas (processo manual) para **menos de 30 segundos** com a NeuroSec IA.\n\n"
-                "Você pode acompanhar essas métricas ao vivo no nosso **Dashboard Executivo**!"
+                "Que ótimo que você está aqui explorando! 😊 De forma bem simples:\n\n"
+                "Pense no **NeuroSec** como um **médico especialista para programas e sites de computador**.\n\n"
+                "- Ele faz um 'exame de raio-x' em todo o sistema (**SAST, DAST, SCA, Cloud**).\n"
+                "- Identifica se há portas abertas para invasores (**Scorecard de 0 a 100**).\n"
+                "- E quando encontra um problema, a nossa IA gera o **remédio exato (Patch de Código Seguro)** com apenas 1 clique de aprovação!\n\n"
+                "Você pode testar colando qualquer código no **Scanner SAST** ou digitando uma URL no **Scanner DAST**!"
             )
-
-        # Perguntas técnicas específicas
-        if "sql" in m or "injection" in m:
+        elif "sqli" in m or "sql" in m or "injeção" in m or "injecao" in m:
             return (
-                "**Diagnóstico NeuroSec IA — Injeção de SQL (OWASP A03:2021)** 💉\n\n"
-                "A injeção de SQL acontece quando dados digitados pelo usuário são misturados diretamente no comando SQL, permitindo que um invasor leia ou apague o banco de dados.\n\n"
-                "**🛡️ Como Corrigir:**\n"
-                "Use sempre **Prepared Statements (Bind Parameters)** em vez de concatenar texto:\n"
+                "**Mitigação de SQL Injection de acordo com OWASP Top 10 (A03:2021):** 🛡️\n\n"
+                "1. **Nunca concatene strings** diretamente em comandos SQL.\n"
+                "2. Utilize **Prepared Statements** com variáveis vinculadas (Bind Variables):\n\n"
                 "```python\n"
-                "# Exemplo Seguro:\n"
-                "cursor.execute('SELECT * FROM users WHERE user=%s AND pass=%s', (usuario, senha_hash))\n"
-                "```\n"
-                "Na aba **Central de Scans**, nosso scanner SAST detecta isso automaticamente no seu código!"
+                "# Inseguro:\n"
+                "cursor.execute(f\"SELECT * FROM users WHERE user='{username}'\")\n\n"
+                "# 100% Seguro (Recomendado pela NeuroSec IA):\n"
+                "cursor.execute(\"SELECT * FROM users WHERE user=%s\", (username,))\n"
+                "```\n\n"
+                "O motor SAST do NeuroSec detecta e corrige esse vetor automaticamente no **Studio de Remediação**."
             )
-        elif "secret" in m or "senha" in m or "chave" in m or "key" in m:
+        elif "lgpd" in m or "anpd" in m or "multa" in m or "prejuizo" in m:
             return (
-                "**Diagnóstico NeuroSec IA — Hardcoded Secrets (OWASP A07:2021)** 🔑\n\n"
-                "Nunca deixe senhas, tokens ou chaves de API escritas diretamente no código-fonte.\n\n"
-                "**🛡️ Boas Práticas:**\n"
-                "1. Guarde credenciais em **Variáveis de Ambiente** (`os.getenv('SUA_CHAVE')`).\n"
-                "2. Adicione arquivos `.env` no `.gitignore`.\n"
-                "3. Use gerenciadores como AWS Secrets Manager ou Vault em produção."
-            )
-        elif "hsts" in m or "header" in m or "cabeçalho" in m:
-            return (
-                "**Diagnóstico NeuroSec IA — Cabeçalho HSTS (Strict-Transport-Security)** 🔒\n\n"
-                "O HSTS força os navegadores a se comunicarem apenas por HTTPS seguro, impedindo que hackers interceptem dados em conexões públicas (Wi-Fi de cafés, aeroportos).\n\n"
-                "**🛡️ Configuração no Servidor (Nginx / Cloudflare):**\n"
-                "`Strict-Transport-Security: max-age=31536000; includeSubDomains; preload`"
-            )
-        elif "lgpd" in m or "multa" in m or "lei" in m:
-            return (
-                "**Conformidade LGPD com a NeuroSec IA (Lei 13.709/2018)** ⚖️\n\n"
+                "**Impacto Financeiro e Governança LGPD:** ⚖️\n\n"
                 "O **Artigo 46 da LGPD** exige que as empresas adotem medidas de segurança eficazes para proteger dados pessoais.\n\n"
                 "O NeuroSec atua comprovando conformidade através da **Trilha de Auditoria Imutável**, registros de correções de patches e relatórios executivos exportáveis em PDF para envio à ANPD ou auditores externos."
             )

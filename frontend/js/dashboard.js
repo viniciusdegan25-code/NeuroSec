@@ -3,7 +3,7 @@ const NeuroDashboard = {
     currentTab: "tab-scorecard",
 
     tabTitles: {
-        "tab-scorecard": "Security Scorecard (0-100)",
+        "tab-scorecard": "Security Scorecard & Métricas Executivas",
         "tab-inventory": "Inventário Dinâmico de Ameaças",
         "tab-sast": "SAST // Scanner de Código Estático",
         "tab-dast": "DAST // Scanner de Infraestrutura Web",
@@ -13,7 +13,9 @@ const NeuroDashboard = {
         "tab-central-ai": "Central de IA Dedicada // Workspace AppSec",
         "tab-terminal": "Cyber Terminal CLI Interativo",
         "tab-audit": "Trilha de Auditoria & Governança (SOC 2)",
-        "tab-reports": "Exportação de Relatório Executivo em PDF"
+        "tab-reports": "Exportação de Relatórios & Conformidade",
+        "tab-cicd": "Automação CI/CD // GitHub Actions & GitLab",
+        "tab-webhooks": "Webhooks & Alertas em Tempo Real (Slack/Discord)"
     },
 
     init() {
@@ -93,6 +95,33 @@ const NeuroDashboard = {
         } catch (e) {
             console.error("Erro ao sincronizar dashboard:", e);
         }
+    },
+
+    async seedDemoScenario() {
+        if (!confirm("Deseja carregar o Cenário de Demonstração Enterprise (Fintech / Banking)? Isto populará 9 vulnerabilidades e métricas ricas para apresentação.")) {
+            return;
+        }
+
+        try {
+            const res = await NeuroAPI.post("/vulnerabilities/seed-demo", {});
+            alert(`✓ ${res.message}\n${res.posture_summary}`);
+            await this.refreshAll();
+            this.switchTab("tab-scorecard");
+        } catch (err) {
+            alert(`Erro ao carregar cenário demo: ${err.message}`);
+        }
+    },
+
+    downloadCSV() {
+        window.open("/api/v1/reports/csv", "_blank");
+    },
+
+    downloadSBOM() {
+        window.open("/api/v1/reports/cyclonedx-sbom", "_blank");
+    },
+
+    downloadPDF() {
+        window.open("/api/v1/reports/executive-pdf", "_blank");
     }
 };
 

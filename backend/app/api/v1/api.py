@@ -12,7 +12,8 @@ from app.api.v1.endpoints import (
     audit,
     terminal,
     reports,
-    leads
+    leads,
+    webhooks
 )
 
 api_router = APIRouter()
@@ -29,3 +30,4 @@ api_router.include_router(audit.router, prefix="/audit", tags=["Trilha de Audito
 api_router.include_router(terminal.router, prefix="/terminal", tags=["Cyber Terminal"])
 api_router.include_router(reports.router, prefix="/reports", tags=["Relatórios Executivos"])
 api_router.include_router(leads.router, prefix="/leads", tags=["Captação de Avaliação"])
+api_router.include_router(webhooks.router, prefix="/webhooks", tags=["Webhooks & Alertas"])

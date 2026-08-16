@@ -63,11 +63,14 @@ const NeuroInventory = {
                     <td style="padding:12px;">${statusHtml}</td>
                     <td style="padding:12px; text-align:right;">
                         <div style="display:inline-flex; gap:6px;">
-                            <button class="btn-ai-indigo" style="padding:6px 12px; font-size:11px;" onclick="NeuroRemediation.openModal(${v.internal_id})">
-                                🤖 Remediar
+                            <button class="btn-secondary-dark" style="padding:5px 9px; font-size:11px; border-color:rgba(0,255,65,0.3);" onclick="NeuroRemediation.openDossierModal(${v.internal_id})" title="Ver Dossiê Técnico Completo da IA">
+                                📄 Dossiê IA
+                            </button>
+                            <button class="btn-ai-indigo" style="padding:5px 9px; font-size:11px;" onclick="NeuroRemediation.openModal(${v.internal_id})" title="Studio de Remediação Diff">
+                                🤖 Patch
                             </button>
                             ${v.status !== 'remediated' ? `
-                                <button class="btn-primary-matrix" style="padding:6px 10px; font-size:11px;" onclick="NeuroRemediation.approveDirect(${v.internal_id})">
+                                <button class="btn-primary-matrix" style="padding:5px 9px; font-size:11px;" onclick="NeuroRemediation.approveDirect(${v.internal_id})" title="Aprovar Remediação Imediatamente">
                                     ✓
                                 </button>
                             ` : ''}

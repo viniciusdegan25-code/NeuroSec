@@ -81,6 +81,26 @@ async def remediate_vulnerability(
         bandit_compliance=ai_result.get("bandit_compliance", True)
     )
 
+@router.get("/{internal_id}/dossier", summary="Gera o Dossiê Técnico Completo e Aprofundado de Remediação com IA")
+async def get_remediation_dossier(
+    internal_id: int,
+    db: Session = Depends(get_db)
+):
+    vuln = db.query(Vulnerability).filter(Vulnerability.internal_id == internal_id).first()
+    if not vuln:
+        raise HTTPException(status_code=404, detail=f"Vulnerabilidade #{internal_id} não encontrada.")
+
+    dossier = await AISecurityEngine.generate_deep_remediation_dossier(
+        vuln_type=vuln.vuln_type,
+        asset_name=vuln.asset_name,
+        original_code=vuln.original_code or "",
+        severity=vuln.severity,
+        cve_id=vuln.cve_id,
+        owasp_category=vuln.owasp_category
+    )
+
+    return dossier
+
 @router.post("/{internal_id}/approve", summary="Aprova formalmente o patch de segurança e aplica remediação")
 def approve_patch(
     internal_id: int, 

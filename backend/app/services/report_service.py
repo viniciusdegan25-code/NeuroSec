@@ -1,4 +1,8 @@
 import os
+import io
+import csv
+import json
+from typing import Dict, Any, List
 from datetime import datetime
 from sqlalchemy.orm import Session
 from app.db.models import Vulnerability, AuditLog
@@ -13,13 +17,13 @@ except ImportError:
 if HAS_FPDF:
     class ExecutivePDF(FPDF):
         def header(self):
-            self.set_fill_color(9, 13, 22)
+            self.set_fill_color(7, 9, 14)
             self.rect(0, 0, 210, 35, 'F')
             
             self.set_font("Helvetica", "B", 18)
-            self.set_text_color(0, 240, 255) # Cyan neon
+            self.set_text_color(0, 255, 65) # Neon Matrix Green
             self.set_xy(15, 10)
-            self.cell(0, 8, "NEUROSEC // ASPM ENTERPRISE", ln=1)
+            self.cell(0, 8, "NEUROSEC // ASPM 4.0 ENTERPRISE", ln=1)
             
             self.set_font("Helvetica", "", 10)
             self.set_text_color(148, 163, 184)
@@ -31,10 +35,10 @@ if HAS_FPDF:
             self.set_y(-18)
             self.set_font("Helvetica", "I", 8)
             self.set_text_color(100, 116, 139)
-            self.cell(0, 10, f"NeuroSec AI Security Platform - Documento Confidencial | Pagina {self.page_no()}", align="C")
+            self.cell(0, 10, f"NeuroSec AI Security Platform 4.0 - Documento Confidencial | Pagina {self.page_no()}", align="C")
 
 class ReportService:
-    """Gerador de Relatórios Executivos em PDF e HTML de Alto Padrão."""
+    """Gerador de Relatórios Executivos em PDF, CSV e CycloneDX SBOM de Alto Padrão."""
 
     @classmethod
     def generate_pdf_report(cls, db: Session, output_path: str = "neurosec_executive_report.pdf") -> str:
@@ -43,15 +47,14 @@ class ReportService:
         audits = db.query(AuditLog).order_by(AuditLog.id.desc()).limit(10).all()
 
         if not HAS_FPDF:
-            # Fallback para relatório HTML executivo caso a biblioteca fpdf ainda não esteja instalada no ambiente local
             html_content = f"""
             <!DOCTYPE html>
             <html>
-            <head><meta charset="utf-8"><title>Relatório Executivo NeuroSec</title>
-            <style>body{{font-family:sans-serif; padding:40px; background:#040711; color:#fff;}}</style>
+            <head><meta charset="utf-8"><title>Relatório Executivo NeuroSec 4.0</title>
+            <style>body{{font-family:sans-serif; padding:40px; background:#07090E; color:#fff;}}</style>
             </head>
             <body>
-            <h1 style="color:#00f0ff;">NEUROSEC ASPM ENTERPRISE</h1>
+            <h1 style="color:#00FF41;">NEUROSEC ASPM 4.0 ENTERPRISE</h1>
             <h2>Relatório Executivo de Postura de Segurança</h2>
             <p>Score Global: <strong>{metrics.score}/100 ({metrics.grade})</strong> - {metrics.posture_status}</p>
             <p>Prejuízo Financeiro Evitado: <strong>R$ {metrics.loss_avoided_brl:,.2f}</strong></p>
@@ -59,103 +62,159 @@ class ReportService:
             </body>
             </html>
             """
-            with open(output_path.replace(".pdf", ".html"), "w", encoding="utf-8") as f:
+            html_path = output_path.replace(".pdf", ".html")
+            with open(html_path, "w", encoding="utf-8") as f:
                 f.write(html_content)
-            return output_path.replace(".pdf", ".html")
+            return html_path
 
         pdf = ExecutivePDF(orientation='P', unit='mm', format='A4')
         pdf.set_auto_page_break(auto=True, margin=20)
         pdf.add_page()
-
-        # Data de emissão
-        pdf.set_font("Helvetica", "B", 10)
-        pdf.set_text_color(71, 85, 105)
-        pdf.cell(0, 6, f"Data de Emissao: {datetime.now().strftime('%d/%m/%Y as %H:%M')}", ln=1, align="R")
-        pdf.ln(4)
-
-        # 1. Resumo Executivo e Scorecard
-        pdf.set_font("Helvetica", "B", 14)
-        pdf.set_text_color(30, 41, 59)
-        pdf.cell(0, 8, "1. Indice Global de Postura de Seguranca (Security Scorecard)", ln=1)
-        pdf.ln(2)
-
-        # Tabela de KPIs Principais
-        pdf.set_fill_color(241, 245, 249)
-        pdf.set_draw_color(203, 213, 225)
-        pdf.set_font("Helvetica", "B", 10)
-        pdf.set_text_color(15, 23, 42)
-
-        col_w = 47
-        pdf.cell(col_w, 10, "Score de Seguranca", 1, 0, 'C', True)
-        pdf.cell(col_w, 10, "Classificacao", 1, 0, 'C', True)
-        pdf.cell(col_w, 10, "Ameacas Abertas", 1, 0, 'C', True)
-        pdf.cell(col_w, 10, "Prejuizo Evitado", 1, 1, 'C', True)
-
-        pdf.set_font("Helvetica", "", 11)
-        pdf.set_text_color(0, 100, 150)
-        pdf.cell(col_w, 12, f"{metrics.score}/100 ({metrics.grade})", 1, 0, 'C')
-        pdf.cell(col_w, 12, metrics.posture_status, 1, 0, 'C')
         
-        pdf.set_text_color(220, 38, 38 if metrics.open_vulnerabilities > 0 else 22, 163, 74)
-        pdf.cell(col_w, 12, str(metrics.open_vulnerabilities), 1, 0, 'C')
-        
-        pdf.set_text_color(16, 185, 129)
-        pdf.cell(col_w, 12, f"R$ {metrics.loss_avoided_brl:,.2f}", 1, 1, 'C')
-        pdf.ln(6)
-
-        # 2. Distribuição por Severidade
+        pdf.ln(5)
         pdf.set_font("Helvetica", "B", 14)
-        pdf.set_text_color(30, 41, 59)
-        pdf.cell(0, 8, "2. Distribuicao por Severidade & Criticidade", ln=1)
-        pdf.ln(2)
-
+        pdf.set_text_color(255, 255, 255)
+        pdf.cell(0, 10, "1. RESUMO EXECUTIVO DE POSTURA", ln=1)
+        
         pdf.set_font("Helvetica", "", 10)
-        pdf.set_text_color(51, 65, 85)
-        pdf.cell(0, 6, f"- Falhas Criticas (Risco Imediato): {metrics.severity_breakdown.critical}", ln=1)
-        pdf.cell(0, 6, f"- Falhas Altas (Elevada Explotabilidade): {metrics.severity_breakdown.high}", ln=1)
-        pdf.cell(0, 6, f"- Falhas Medias (Vulnerabilidade Relevante): {metrics.severity_breakdown.medium}", ln=1)
-        pdf.cell(0, 6, f"- Falhas Baixas / Informativas: {metrics.severity_breakdown.low + metrics.severity_breakdown.info}", ln=1)
-        pdf.cell(0, 6, f"- Taxa de Eficacia de Remediacao: {metrics.remediation_rate}%", ln=1)
-        pdf.ln(6)
-
-        # 3. Inventário de Ameaças Prioritárias
+        pdf.set_text_color(203, 213, 225)
+        pdf.cell(50, 7, f"Data da Auditoria:", 0)
+        pdf.cell(0, 7, f"{datetime.utcnow().strftime('%d/%m/%Y %H:%M:%S')} UTC", ln=1)
+        pdf.cell(50, 7, f"Security Score:", 0)
+        pdf.cell(0, 7, f"{metrics.score} / 100 ({metrics.grade}) - {metrics.posture_status}", ln=1)
+        pdf.cell(50, 7, f"Prejuizo Evitado:", 0)
+        pdf.cell(0, 7, f"R$ {metrics.loss_avoided_brl:,.2f}", ln=1)
+        pdf.cell(50, 7, f"Tempo Medio Remediado (MTTR):", 0)
+        pdf.cell(0, 7, f"{metrics.mttr_days} dias", ln=1)
+        
+        pdf.ln(8)
         pdf.set_font("Helvetica", "B", 14)
-        pdf.set_text_color(30, 41, 59)
-        pdf.cell(0, 8, "3. Inventario de Vulnerabilidades Prioritarias", ln=1)
-        pdf.ln(2)
-
-        pdf.set_fill_color(241, 245, 249)
+        pdf.set_text_color(255, 255, 255)
+        pdf.cell(0, 10, "2. DISTRIBUICAO DE VULNERABILIDADES (ATUAL)", ln=1)
+        
+        pdf.set_fill_color(17, 24, 39)
         pdf.set_font("Helvetica", "B", 9)
-        pdf.cell(15, 8, "ID", 1, 0, 'C', True)
-        pdf.cell(25, 8, "Tipo Ativo", 1, 0, 'C', True)
-        pdf.cell(60, 8, "Nome do Ativo", 1, 0, 'L', True)
-        pdf.cell(50, 8, "Vulnerabilidade", 1, 0, 'L', True)
-        pdf.cell(20, 8, "Severidade", 1, 0, 'C', True)
-        pdf.cell(20, 8, "Status", 1, 1, 'C', True)
-
+        pdf.set_text_color(0, 255, 65)
+        pdf.cell(20, 8, "ID", 1, 0, 'C', True)
+        pdf.cell(55, 8, "Vulnerabilidade", 1, 0, 'L', True)
+        pdf.cell(45, 8, "Ativo / Modulo", 1, 0, 'L', True)
+        pdf.cell(25, 8, "Severidade", 1, 0, 'C', True)
+        pdf.cell(20, 8, "CVSS", 1, 0, 'C', True)
+        pdf.cell(25, 8, "Status", 1, 1, 'C', True)
+        
         pdf.set_font("Helvetica", "", 8)
-        for v in vulns[:15]:
-            pdf.cell(15, 7, str(v.internal_id), 1, 0, 'C')
-            pdf.cell(25, 7, v.asset_type[:12], 1, 0, 'C')
-            pdf.cell(60, 7, v.asset_name[:32], 1, 0, 'L')
-            pdf.cell(50, 7, v.vuln_type[:28], 1, 0, 'L')
-            pdf.cell(20, 7, v.severity, 1, 0, 'C')
-            pdf.cell(20, 7, v.status[:10], 1, 1, 'C')
-
-        pdf.ln(6)
-
-        # 4. Trilha de Auditoria
-        pdf.set_font("Helvetica", "B", 14)
-        pdf.set_text_color(30, 41, 59)
-        pdf.cell(0, 8, "4. Trilha de Auditoria e Governanca Recente", ln=1)
-        pdf.ln(2)
-
-        pdf.set_font("Helvetica", "", 9)
-        if not audits:
-            pdf.cell(0, 6, "Nenhuma acao de auditoria registrada ainda.", ln=1)
-        else:
-            for a in audits[:5]:
-                pdf.cell(0, 6, f"[{a.timestamp}] {a.operator} -> {a.action}: {a.details[:80]}", ln=1)
+        pdf.set_text_color(226, 232, 240)
+        
+        for v in vulns:
+            pdf.cell(20, 7, f"#{v.internal_id}", 1, 0, 'C')
+            pdf.cell(55, 7, str(v.vuln_type)[:30], 1, 0, 'L')
+            pdf.cell(45, 7, str(v.asset_name)[:25], 1, 0, 'L')
+            
+            if v.severity == "CRITICAL":
+                pdf.set_text_color(239, 68, 68)
+            elif v.severity == "HIGH":
+                pdf.set_text_color(245, 158, 11)
+            else:
+                pdf.set_text_color(16, 185, 129)
+                
+            pdf.cell(25, 7, str(v.severity), 1, 0, 'C')
+            pdf.set_text_color(226, 232, 240)
+            pdf.cell(20, 7, f"{v.cvss_score:.1f}", 1, 0, 'C')
+            pdf.cell(25, 7, str(v.status), 1, 1, 'C')
 
         pdf.output(output_path)
         return output_path
+
+    @classmethod
+    def generate_csv_inventory(cls, db: Session) -> str:
+        """Gera o arquivo CSV de exportação de inventário de vulnerabilidades."""
+        vulns = db.query(Vulnerability).all()
+        output = io.StringIO()
+        writer = csv.writer(output, quoting=csv.QUOTE_MINIMAL)
+
+        writer.writerow([
+            "ID_Interno", "Nome_Ativo", "Tipo_Ativo", "Tipo_Vulnerabilidade",
+            "Severidade", "CVSS_Score", "Status", "CVE_ID", "Linha_Codigo",
+            "Categoria_OWASP", "Data_Identificacao", "Data_Remediado"
+        ])
+
+        for v in vulns:
+            writer.writerow([
+                f"#{v.internal_id}",
+                v.asset_name,
+                v.asset_type,
+                v.vuln_type,
+                v.severity,
+                f"{v.cvss_score:.1f}" if v.cvss_score else "5.0",
+                v.status,
+                v.cve_id or "N/A",
+                v.line_number or 0,
+                v.owasp_category or "A03:2021",
+                v.created_at or "",
+                v.updated_at or ""
+            ])
+
+        return output.getvalue()
+
+    @classmethod
+    def generate_cyclonedx_sbom(cls, db: Session) -> Dict[str, Any]:
+        """Gera o SBOM no padrão internacional CycloneDX v1.5 JSON para auditoria corporativa."""
+        vulns = db.query(Vulnerability).all()
+
+        components = []
+        vulnerabilities_list = []
+
+        for v in vulns:
+            comp_name = v.asset_name.split(":")[0].replace("/", "-")
+            comp_version = "1.0.0"
+            if "==" in v.asset_name:
+                parts = v.asset_name.split("==")
+                comp_name = parts[0]
+                comp_version = parts[1]
+
+            purl = f"pkg:generic/{comp_name}@{comp_version}"
+
+            components.append({
+                "type": "library" if v.asset_type == "PACKAGE" else "application",
+                "name": comp_name,
+                "version": comp_version,
+                "purl": purl,
+                "scope": "required"
+            })
+
+            if v.severity in ["CRITICAL", "HIGH", "MEDIUM"]:
+                vulnerabilities_list.append({
+                    "id": v.cve_id or f"NEURO-{v.internal_id}",
+                    "source": {"name": "NeuroSec ASPM 4.0 Threat Radar"},
+                    "ratings": [{
+                        "score": v.cvss_score,
+                        "severity": v.severity.lower(),
+                        "method": "CVSSv31"
+                    }],
+                    "description": v.vuln_type,
+                    "affects": [{"ref": purl}]
+                })
+
+        cyclonedx_doc = {
+            "bomFormat": "CycloneDX",
+            "specVersion": "1.5",
+            "serialNumber": f"urn:uuid:neurosec-aspm-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}",
+            "version": 1,
+            "metadata": {
+                "timestamp": datetime.utcnow().isoformat() + "Z",
+                "tools": [{
+                    "vendor": "NeuroSec Enterprise",
+                    "name": "NeuroSec ASPM",
+                    "version": "4.0.0"
+                }],
+                "component": {
+                    "type": "application",
+                    "name": "Enterprise Target Stack",
+                    "version": "4.0"
+                }
+            },
+            "components": components,
+            "vulnerabilities": vulnerabilities_list
+        }
+
+        return cyclonedx_doc
