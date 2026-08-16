@@ -1,0 +1,94 @@
+// Floating AI Security Copilot Chat Drawer
+const NeuroCopilot = {
+    isOpen: false,
+
+    init() {
+        const toggleBtn = document.getElementById("copilotToggleBtn");
+        const closeBtn = document.getElementById("copilotCloseBtn");
+        const form = document.getElementById("copilotForm");
+        const input = document.getElementById("copilotInput");
+
+        if (toggleBtn) {
+            toggleBtn.addEventListener("click", () => this.toggle());
+        }
+        if (closeBtn) {
+            closeBtn.addEventListener("click", () => this.close());
+        }
+        if (form && input) {
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const text = input.value.trim();
+                if (!text) return;
+
+                this.addMessage(text, "user");
+                input.value = "";
+
+                const botMsgId = this.addMessage("Pensando e analisando com a IA...", "bot", true);
+
+                try {
+                    const res = await NeuroAPI.post("/copilot/chat", { message: text });
+                    this.updateBotMessage(botMsgId, res.reply);
+                } catch (err) {
+                    this.updateBotMessage(botMsgId, `Erro ao contatar o Copilot: ${err.message}`);
+                }
+            });
+        }
+    },
+
+    toggle() {
+        const drawer = document.getElementById("copilotDrawer");
+        if (!drawer) return;
+        this.isOpen = !this.isOpen;
+        if (this.isOpen) drawer.classList.add("open");
+        else drawer.classList.remove("open");
+    },
+
+    open() {
+        const drawer = document.getElementById("copilotDrawer");
+        if (drawer) {
+            this.isOpen = true;
+            drawer.classList.add("open");
+        }
+    },
+
+    close() {
+        const drawer = document.getElementById("copilotDrawer");
+        if (drawer) {
+            this.isOpen = false;
+            drawer.classList.remove("open");
+        }
+    },
+
+    addMessage(text, sender = "bot", isTemp = false) {
+        const container = document.getElementById("copilotMessages");
+        if (!container) return null;
+
+        const msgDiv = document.createElement("div");
+        const msgId = "msg_" + Date.now();
+        msgDiv.id = msgId;
+        msgDiv.className = `chat-msg chat-${sender}`;
+        msgDiv.innerText = text;
+
+        container.appendChild(msgDiv);
+        container.scrollTop = container.scrollHeight;
+        return msgId;
+    },
+
+    updateBotMessage(msgId, text) {
+        const el = document.getElementById(msgId);
+        if (el) {
+            el.innerText = text;
+            const container = document.getElementById("copilotMessages");
+            if (container) container.scrollTop = container.scrollHeight;
+        }
+    },
+
+    sendQuickPrompt(promptText) {
+        this.open();
+        const input = document.getElementById("copilotInput");
+        if (input) {
+            input.value = promptText;
+            document.getElementById("copilotForm")?.dispatchEvent(new Event("submit"));
+        }
+    }
+};

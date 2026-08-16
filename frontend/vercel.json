@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "neurosec-aspm",
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
