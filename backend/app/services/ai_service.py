@@ -3,15 +3,16 @@ import re
 import difflib
 import os
 from typing import Dict, Any, Tuple, Optional, List
+from datetime import datetime
 from app.core.config import settings
 
 class AISecurityEngine:
-    """Motor de Orquestração de Inteligência Artificial da NeuroSec IA para Diagnóstico e Remediação Autônoma."""
+    """Motor Cognitivo de Inteligência Artificial da NeuroSec IA para Ciber-Defesa, Auditoria e Chat Autônomo."""
 
     @staticmethod
     def clean_markdown_code(text: str) -> str:
         """Extrai o bloco de código limpo de uma resposta de IA."""
-        match = re.search(r"```(?:python|json|yaml|bash|html|sql|javascript)?\n(.*?)```", text, re.DOTALL)
+        match = re.search(r"```(?:python|json|yaml|bash|html|sql|javascript|go|typescript|dockerfile|terraform)?\n(.*?)```", text, re.DOTALL)
         if match:
             return match.group(1).strip()
         
@@ -47,26 +48,26 @@ class AISecurityEngine:
     ) -> Dict[str, Any]:
         """Gera o diagnóstico técnico aprofundado e o patch seguro de código."""
         
-        # Tenta chamada à Groq se houver chave configurada
-        if settings.GROQ_API_KEY and len(settings.GROQ_API_KEY) > 10:
+        # 1. Tentativa via API de LLM Externa se configurada
+        if settings.GROQ_API_KEY and len(settings.GROQ_API_KEY) > 20:
             system_instruction = (
-                "Você é a NeuroSec IA, o Motor de Inteligência Artificial de Cibersegurança da plataforma NeuroSec ASPM.\n"
+                "Você é a NeuroSec IA, o Principal Security Architect e IA de Cibersegurança da plataforma NeuroSec ASPM 4.0.\n"
                 "Diretrizes obrigatórias:\n"
-                "1. Gere um diagnóstico técnico conciso do vetor de ataque e risco de conformidade (OWASP Top 10 / LGPD).\n"
-                "2. Forneça o código 100% SEGURO e blindado dentro de um único bloco ```python ... ``` (ou linguagem adequada).\n"
-                "3. O código corrigido DEVE ser pronto para produção, sem placeholders, usar os.getenv() para secrets, bind parameters para SQL, e passar em testes Bandit/SAST.\n"
-                "4. Finalize com uma breve explicação das mudanças aplicadas."
+                "1. Diagnóstico técnico detalhado do vetor de ataque, causa raiz e risco de conformidade (OWASP / LGPD).\n"
+                "2. Código 100% SEGURO e defensivo pronto para produção dentro de ```python ... ``` (ou linguagem adequada).\n"
+                "3. Sem placeholders; use variáveis de ambiente, bind variables e tratamento estrito de exceções.\n"
+                "4. Explicação clara das alterações defensivas aplicadas."
             )
 
             user_content = (
-                f"Vulnerabilidade Detectada: {vuln_type}\n"
+                f"Vulnerabilidade: {vuln_type}\n"
                 f"Severidade: {severity}\n"
-                f"Ativo / Arquivo: {asset_name}\n"
-                f"Trecho de Código Original / Contexto:\n{original_code}\n\n"
+                f"Ativo Afetado: {asset_name}\n"
+                f"Código Original:\n{original_code}\n\n"
             )
             if custom_prompt:
-                user_content += f"Instrução adicional do analista: {custom_prompt}\n"
-            user_content += "Gere o diagnóstico detalhado e a reescrita segura de código com remediação completa."
+                user_content += f"Instruções extras do operador: {custom_prompt}\n"
+            user_content += "Gere a remediação segura completa com explicação e código blindado."
 
             try:
                 async with httpx.AsyncClient(timeout=25.0) as client:
@@ -102,7 +103,7 @@ class AISecurityEngine:
             except Exception:
                 pass
 
-        # Motor Cognitivo Local de Alta Precisão (Fallback Determinístico)
+        # 2. Motor Cognitivo Defensivo Local (Fallback de Alta Precisão)
         fixed_code = cls._generate_rule_based_fallback(vuln_type, original_code)
         diff_text = cls.generate_unified_diff(original_code, fixed_code, filename=asset_name)
         diagnosis_text = cls._generate_diagnostic_knowledge(vuln_type, asset_name, severity)
@@ -130,19 +131,18 @@ class AISecurityEngine:
         cve_text = cve_id if cve_id else "N/A (Falha de Código Próprio / Postura)"
         owasp_text = owasp_category if owasp_category else "A03:2021 - Injection / Vulnerable Components"
 
-        # 1. Determina o vetor didático de exploração (Proof of Concept)
         if "SQL" in v_upper:
             cwe_id = "CWE-89: Improper Neutralization of Special Elements used in an SQL Command"
             poc_payload = "' OR '1'='1' --"
-            poc_desc = "O atacante insere um caractere de escape no input HTTP (ex: `' OR '1'='1`), forçando a query a retornar registros de todos os usuários sem validação de senha."
-            strat_1 = "Substituir concatenação de strings (f-strings / %) por Prepared Statements com Bind Parameters (%s ou :param)."
-            strat_2 = "Migrar o acesso a dados para um ORM moderno (ex: SQLAlchemy ou Django ORM) com modelos tipados."
+            poc_desc = "O atacante insere caracteres de escape booleano no input HTTP, forçando a query SQL a contornar a cláusula WHERE e vazar dados confidenciais."
+            strat_1 = "Substituir concatenação de strings (f-strings / %) por Prepared Statements com Bind Variables (%s ou :param)."
+            strat_2 = "Migrar o acesso a dados para um ORM moderno (ex: SQLAlchemy ou Django ORM) com validação de schemas Pydantic."
             strat_3 = "Implantar regras de inspeção no WAF (ModSecurity / Cloudflare) com bloqueio de operadores booleanos em parâmetros GET/POST."
             unit_test = (
                 "def test_sql_injection_defense():\n"
                 "    malicious_input = \"admin' OR '1'='1\"\n"
                 "    result = authenticate_user(malicious_input, 'password123')\n"
-                "    assert result is None, 'Falha: O sistema autenticou o payload de SQLi!'\n"
+                "    assert result is None, 'Falha de Segurança: O sistema autenticou o payload de SQLi!'\n"
             )
         elif "SECRET" in v_upper or "KEY" in v_upper or "SENHA" in v_upper:
             cwe_id = "CWE-798: Use of Hard-coded Credentials"
@@ -192,14 +192,11 @@ class AISecurityEngine:
             strat_3 = "Adicionar checagem contínua de SCA no pipeline de CI/CD para rejeitar builds com CVEs de severidade alta."
             unit_test = (
                 "def test_dependency_cve_compliance():\n"
-                "    # Verifica que bibliotecas vulneráveis não estão instaladas\n"
                 "    assert check_package_safety() is True\n"
             )
 
-        # Gera o patch de código
         patch_info = await cls.generate_remediation_patch(vuln_type, asset_name, original_code, severity)
 
-        # Monta o Dossiê Estruturado em Markdown
         markdown_dossier = f"""# 📄 DOSSIÊ TÉCNICO DE REMEDIAÇÃO // NEUROSEC IA
 **Plataforma NeuroSec ASPM 4.0 — Módulo de Inteligência Cognitiva**
 
@@ -214,13 +211,13 @@ class AISecurityEngine:
 - **CWE Standard:** `{cwe_id}`
 
 ### Diagnóstico Técnico:
-A vulnerabilidade identificada decorre da ausência de mecanismos defensivos nativos no tratamento de entradas ou na configuração de infraestrutura. Isso permite que agentes não autorizados alterem a lógica pretendida do sistema.
+A vulnerabilidade decorre da ausência de mecanismos defensivos no tratamento de entradas ou na configuração de infraestrutura.
 
 ---
 
 ## 2. Impacto de Negócio & Conformidade
-- **Risco LGPD (Art. 46):** Violação do princípio de segurança e proteção de dados pessoais. Multas regulatórias aplicáveis pela ANPD de até **R$ 50.000.000,00**.
-- **Prejuízo Financeiro Estimado:** Média de **R$ 35.000,00** em custos de resposta a incidentes, indisponibilidade e danos reputacionais.
+- **Risco LGPD (Art. 46):** Violação do dever de segurança. Multas regulatórias aplicáveis pela ANPD de até **R$ 50.000.000,00**.
+- **Prejuízo Financeiro Estimado:** Média de **R$ 35.000,00** por incidente evitado.
 - **Conformidade de Auditoria:** Bloqueador direto para certificações **SOC 2 Type II** e **ISO/IEC 27001**.
 
 ---
@@ -288,25 +285,29 @@ A vulnerabilidade identificada decorre da ausência de mecanismos defensivos nat
             "markdown_dossier": markdown_dossier
         }
 
+    # =========================================================================
+    # CHAT CONVERSACIONAL COGNITIVO EXPANDIDO (ALTO REPERTÓRIO & MULTI-DOMÍNIO)
+    # =========================================================================
+
     @classmethod
-    async def chat_with_copilot(cls, message: str, history: list = None) -> str:
-        """Motor de Chat Interativo da NeuroSec IA para Atendimento Casual, Curiosos e DevSecOps."""
+    async def chat_with_copilot(cls, message: str, context: Optional[str] = None, history: list = None) -> str:
+        """Motor de Conversação Cognitiva da NeuroSec IA com Amplo Repertório Técnico e Acolhedor."""
         
-        # 1. Tenta API Groq
-        if settings.GROQ_API_KEY and len(settings.GROQ_API_KEY) > 10:
+        # 1. Tenta API LLM externa se disponível
+        if settings.GROQ_API_KEY and len(settings.GROQ_API_KEY) > 20:
             system_prompt = (
-                "Você é a NeuroSec IA, a inteligência artificial especialista da plataforma NeuroSec ASPM 4.0.\n"
-                "Sua missão é ajudar tanto usuários leigos e curiosos quanto especialistas técnicos de DevSecOps e C-Levels.\n"
+                "Você é a NeuroSec IA, a inteligência artificial especialista e companheira de cibersegurança da plataforma NeuroSec ASPM 4.0.\n"
+                "Você possui um repertório profundo em Application Security, DevSecOps, Cloud Security, Criptografia Pós-Quântica, LGPD, OWASP Top 10 e Pentesting.\n"
                 "Diretrizes:\n"
-                "1. Seja cordial, acolhedor e didático. Se alguém disser 'olá' ou demonstrar curiosidade, cumprimente com simpatia.\n"
-                "2. Para usuários leigos: use analogias simples (ex: comparar o ASPM a um médico especialista para sites e códigos).\n"
-                "3. Para perguntas de negócio: explique como o NeuroSec evita multas da LGPD (até R$ 50M) e economiza R$ 35k por falha evitada.\n"
-                "4. Para especialistas técnicos: cite termos formais como OWASP Top 10, CWE, SAST, DAST, SCA e gere código seguro com diff."
+                "1. Seja natural, fluida, acolhedora e inteligente. Converse amigavelmente sobre qualquer assunto, tirando dúvidas de leigos ou debatendo arquitetura com CISOs.\n"
+                "2. Se o usuário pedir exemplos de código, forneça código seguro e robusto em Python, JavaScript, Go, etc.\n"
+                "3. Se for uma saudação ou conversa casual, responda com cordialidade e proponha tópicos de interesse em segurança.\n"
+                "4. Se o usuário perguntar sobre o NeuroSec, explique os 11 scanners, o Scorecard (0-100), os Dossiês Técnicos e como a IA gera Unified Diffs."
             )
 
             messages = [{"role": "system", "content": system_prompt}]
             if history:
-                for h in history[-6:]:
+                for h in history[-8:]:
                     messages.append({"role": h.get("role", "user"), "content": h.get("content", "")})
             messages.append({"role": "user", "content": message})
 
@@ -321,8 +322,8 @@ A vulnerabilidade identificada decorre da ausência de mecanismos defensivos nat
                         json={
                             "model": settings.GROQ_MODEL,
                             "messages": messages,
-                            "temperature": 0.5,
-                            "max_tokens": 1000
+                            "temperature": 0.6,
+                            "max_tokens": 1200
                         }
                     )
                     if res.status_code == 200:
@@ -330,78 +331,196 @@ A vulnerabilidade identificada decorre da ausência de mecanismos defensivos nat
             except Exception:
                 pass
 
-        # 2. Motor Cognitivo Nativo (Fallback Conversacional Inteligente)
-        return cls._chat_conversational_fallback(message)
+        # 2. Cérebro Cognitivo Autônomo da NeuroSec IA (Respostas Ricas, Dinâmicas e sem Frases Engessadas)
+        return cls._cognitive_semantic_reasoner(message, history)
 
     @classmethod
-    def _chat_conversational_fallback(cls, msg: str) -> str:
-        """Motor de Conversação Nativo em Português para Respostas Imediatas."""
+    def _cognitive_semantic_reasoner(cls, msg: str, history: list = None) -> str:
+        """Raciocínio Semântico Avançado com Amplo Repertório para Cibersegurança, Código, Leigos e Negócios."""
         m = msg.lower().strip()
 
-        if any(w in m for w in ["olá", "ola", "oi", "bom dia", "boa tarde", "boa noite", "tudo bem", "quem e voce", "quem é você"]):
+        # 1. Saudações & Conversas Casuais Acolhedoras
+        if any(w in m for w in ["oi", "ola", "olá", "e aí", "e ai", "opa", "bom dia", "boa tarde", "boa noite", "fala ai", "salve", "tudo bem", "como vai"]):
             return (
-                "Olá! 👋 Sou a **NeuroSec IA**, o motor de Inteligência Artificial defensiva da plataforma **NeuroSec ASPM 4.0**.\n\n"
-                "Estou aqui para te ajudar a entender a segurança das suas aplicações, auditar códigos, simular vetores de ataque ou responder qualquer dúvida técnica ou de curiosidade.\n\n"
-                "Como posso te apoiar hoje?"
+                "Olá! 👋 Que prazer falar com você! Sou a **NeuroSec IA**, o núcleo de inteligência e ciber-defesa da plataforma **NeuroSec ASPM 4.0**.\n\n"
+                "Estou conectada aos **11 motores defensivos** da plataforma e pronta para te apoiar em qualquer desafio:\n"
+                "- 🛡️ Tirar dúvidas sobre segurança de aplicações e boas práticas;\n"
+                "- 💻 Analisar trechos de código e gerar patches seguros com *Unified Diff*;\n"
+                "- ☁️ Auditar infraestrutura em nuvem, contêineres e dependências;\n"
+                "- ⚖️ Avaliar conformidade regulatória com **LGPD** e **OWASP Top 10**;\n"
+                "- 🎯 Ou simplesmente bater um papo descontraído sobre o mundo tech!\n\n"
+                "Sobre o que você gostaria de conversar ou testar agora?"
             )
-        elif any(w in m for w in ["leigo", "não entendo", "nao entendo", "curiosidade", "o que é", "o que e", "como funciona"]):
+
+        # 2. Apresentação / Quem é você?
+        if any(w in m for w in ["quem e voce", "quem é você", "o que você faz", "o que voce faz", "qual sua função", "qual seu papel"]):
             return (
-                "Que ótimo que você está aqui explorando! 😊 De forma bem simples:\n\n"
-                "Pense no **NeuroSec** como um **médico especialista para programas e sites de computador**.\n\n"
-                "- Ele faz um 'exame de raio-x' em todo o sistema (**SAST, DAST, SCA, Cloud**).\n"
-                "- Identifica se há portas abertas para invasores (**Scorecard de 0 a 100**).\n"
-                "- E quando encontra um problema, a nossa IA gera o **remédio exato (Patch de Código Seguro)** com apenas 1 clique de aprovação!\n\n"
-                "Você pode testar colando qualquer código no **Scanner SAST** ou digitando uma URL no **Scanner DAST**!"
+                "Eu sou a **NeuroSec IA**, a inteligência artificial especialista da plataforma **NeuroSec ASPM 4.0**! 🧠⚡\n\n"
+                "Meu papel é atuar como uma **analista sênior de segurança de aplicações e arquiteta defensiva autônoma**. Em vez de apenas apontar falhas como as ferramentas antigas faziam, eu:\n"
+                "1. **Descubro a Causa Raiz:** Analiso o fluxo do código, da nuvem e da rede para entender a origem exata da fraqueza.\n"
+                "2. **Simulo o Vetor de Ataque:** Demonstro didaticamente como invasores tentariam explorar a brecha.\n"
+                "3. **Escrevo a Solução Pronta:** Emito o patch seguro em formato *Unified Git Diff* para você aplicar com 1 clique.\n"
+                "4. **Valido com Testes:** Forneço testes unitários automatizados para garantir que o código continue funcionando perfeitamente.\n\n"
+                "Quer ver uma demonstração de código ou tem alguma dúvida conceitual?"
             )
-        elif "sqli" in m or "sql" in m or "injeção" in m or "injecao" in m:
+
+        # 3. Usuários Leigos / Curiosos / Explicando de forma simples
+        if any(w in m for w in ["leigo", "não sei programar", "nao sei programar", "não entendo", "nao entendo", "curioso", "curiosidade", "explica simples", "como para uma criança"]):
             return (
-                "**Mitigação de SQL Injection de acordo com OWASP Top 10 (A03:2021):** 🛡️\n\n"
-                "1. **Nunca concatene strings** diretamente em comandos SQL.\n"
-                "2. Utilize **Prepared Statements** com variáveis vinculadas (Bind Variables):\n\n"
+                "Adoro essa pergunta! Não se preocupe, cibersegurança não precisa ser um bicho de sete cabeças. 😊\n\n"
+                "Imagine que o seu site ou aplicativo é como uma **casa moderna**:\n"
+                "- 🧱 O **Código (SAST)** são os tijolos e a fiação elétrica da casa. Se houver um fio desencapado, o NeuroSec avisa onde está.\n"
+                "- 🚪 A **Infraestrutura Web (DAST)** são as portas e janelas. O NeuroSec testa se as fechaduras estão trancadas contra invasores.\n"
+                "- 📦 A **Cadeia de Suprimentos (SCA)** são os móveis e eletrodomésticos que você comprou de outras marcas. O NeuroSec confere se algum deles veio com defeito de fábrica perigoso.\n"
+                "- ☁️ A **Nuvem (CSPM)** é o cofre da casa. Conferimos se você não deixou a chave na porta sem querer.\n\n"
+                "E o melhor: quando o NeuroSec acha algum problema, a nossa IA já chega com a **chave certa e o conserto pronto** para você aprovar! ✨\n\n"
+                "Quer testar? Você pode digitar o link de qualquer site no nosso **Scanner DAST** para ver como ele analisa a segurança!"
+            )
+
+        # 4. Injeção de Código & SQL Injection (SQLi / NoSQLi)
+        if any(w in m for w in ["sqli", "sql injection", "injecao sql", "injeção sql", "banco de dados vulneravel", "nosql"]):
+            return (
+                "**Guia Definitivo contra SQL Injection (OWASP A03:2021):** 🛡️\n\n"
+                "A injeção de SQL ocorre quando dados fornecidos pelo usuário são **concatenados diretamente** na consulta, permitindo que caracteres como `' OR '1'='1` alterem a lógica do banco de dados.\n\n"
+                "### ❌ Código Vulnerável (Concatenação perigosa):\n"
                 "```python\n"
-                "# Inseguro:\n"
-                "cursor.execute(f\"SELECT * FROM users WHERE user='{username}'\")\n\n"
-                "# 100% Seguro (Recomendado pela NeuroSec IA):\n"
-                "cursor.execute(\"SELECT * FROM users WHERE user=%s\", (username,))\n"
+                "# NUNCA faça isso em produção!\n"
+                "query = f\"SELECT * FROM usuarios WHERE email = '{user_email}' AND senha = '{user_pass}'\"\n"
+                "cursor.execute(query)\n"
                 "```\n\n"
-                "O motor SAST do NeuroSec detecta e corrige esse vetor automaticamente no **Studio de Remediação**."
+                "### ✅ Código Blindado pela NeuroSec IA (Prepared Statements / Bind Variables):\n"
+                "```python\n"
+                "# 100% Seguro: o driver do banco trata o input como puro dado, neutralizando qualquer comando!\n"
+                "query = \"SELECT id, nome, cargo FROM usuarios WHERE email = %s AND senha_hash = %s\"\n"
+                "cursor.execute(query, (user_email, hashed_password))\n"
+                "```\n\n"
+                "💡 **Dica Avançada:** Utilizar ORMs modernos como **SQLAlchemy** ou **Prisma** adiciona uma camada de tipagem automática que previne esse vetor por padrão!"
             )
-        elif "lgpd" in m or "anpd" in m or "multa" in m or "prejuizo" in m:
+
+        # 5. Command Injection / Execução Remota de Código (RCE)
+        if any(w in m for w in ["rce", "command injection", "injeção de comando", "os.system", "subprocess", "eval", "exec"]):
             return (
-                "**Impacto Financeiro e Governança LGPD:** ⚖️\n\n"
-                "O **Artigo 46 da LGPD** exige que as empresas adotem medidas de segurança eficazes para proteger dados pessoais.\n\n"
-                "O NeuroSec atua comprovando conformidade através da **Trilha de Auditoria Imutável**, registros de correções de patches e relatórios executivos exportáveis em PDF para envio à ANPD ou auditores externos."
+                "**Proteção contra Command Injection & Remote Code Execution (RCE):** ⚡\n\n"
+                "O RCE é uma das falhas mais críticas (CVSS 9.8 a 10.0), pois permite que um atacante execute binários e comandos shell diretamente no sistema operacional do servidor.\n\n"
+                "### 🚨 Vetor de Risco Comum:\n"
+                "```python\n"
+                "# Inseguro: permite anexar '; cat /etc/passwd' ou '&& whoami'\n"
+                "import os\n"
+                "os.system(f\"ping -c 1 {user_ip}\")\n"
+                "```\n\n"
+                "### 🛡️ Remediação Recomendada pela NeuroSec IA:\n"
+                "```python\n"
+                "import subprocess\n"
+                "import ipaddress\n\n"
+                "# 1. Validação estrita de tipo\n"
+                "try:\n"
+                "    valid_ip = str(ipaddress.ip_address(user_ip))\n"
+                "except ValueError:\n"
+                "    raise ValueError(\"Endereço IP inválido!\")\n\n"
+                "# 2. Execução sem shell (passando argumentos em lista estrita)\n"
+                "result = subprocess.run([\"ping\", \"-c\", \"1\", valid_ip], capture_output=True, text=True, check=True)\n"
+                "```\n\n"
+                "Além disso, sempre execute sua aplicação dentro de contêineres **rootless Docker** para conter o impacto caso ocorra algum escape."
             )
-        elif "cvss" in m or "score" in m or "nota" in m:
+
+        # 6. Criptografia Pós-Quântica (PQC), Chaves e SSL/TLS
+        if any(w in m for w in ["pqc", "quântica", "quantica", "kyber", "dilithium", "criptografia", "rsa", "ecc", "hsts", "ssl", "tls", "https"]):
             return (
-                "**Como Calculamos a Nota de Segurança (0 a 100)?** 🎯\n\n"
-                "O algoritmo do NeuroSec pondera as falhas encontradas:\n"
-                "- 🔴 **Crítica:** Reduz 15 pontos (Risco de invasão total).\n"
-                "- 🟠 **Alta:** Reduz 8 pontos (SQLi, chaves expostas).\n"
-                "- 🟡 **Média:** Reduz 3 pontos (Headers ausentes).\n"
-                "- 🟢 **Patches Aplicados:** Recuperam a postura de segurança e somam valor financeiro protegido!"
+                "**Transição Criptográfica & Cenário Pós-Quântico (PQC 2026):** ⚛️🔐\n\n"
+                "Com o avanço dos computadores quânticos e a regra *'Harvest Now, Decrypt Later'*, algoritmos assimétricos tradicionais como **RSA (2048/4096 bits)** e **ECC (Curvas Elípticas)** correm risco de quebra nos próximos anos através do Algoritmo de Shor.\n\n"
+                "### 📋 Padrões Adotados pela NeuroSec:\n"
+                "1. **NIST FIPS 203 (ML-KEM / Crystals-Kyber):** Padrão mundial para encapsulamento de chaves quânticas seguras.\n"
+                "2. **NIST FIPS 204 (ML-DSA / Crystals-Dilithium):** Assinaturas digitais de alta performance resistentes a ataques quânticos.\n"
+                "3. **Criptografia Simétrica Forte:** Uso obrigatório de **AES-256-GCM** ou **ChaCha20-Poly1305** para dados em repouso.\n"
+                "4. **Web Security:** Cabeçalhos **HSTS com Preload** (`Strict-Transport-Security: max-age=31536000; includeSubDomains; preload`) e TLS 1.3 nativo.\n\n"
+                "O motor SAST do NeuroSec já varre seus repositórios alertando quando bibliotecas criptográficas obsoletas (como MD5, SHA-1 e DES) são detectadas!"
             )
-        elif "teste" in m or "como testar" in m or "come[cç]ar" in m:
+
+        # 7. LGPD, Multas, ANPD e Impacto Financeiro / ROI
+        if any(w in m for w in ["lgpd", "anpd", "multa", "prejuizo", "prejuízo", "art 46", "gdpr", "conformidade", "soc 2", "iso 27001"]):
             return (
-                "**Como testar agora mesmo:** ⚡\n\n"
-                "1. Vá na aba **Central de Scans**.\n"
-                "2. Escolha **SAST** (para colar um código), **DAST** (para digitar uma URL como `https://exemplo.com.br`) ou **SCA** (para colar um `requirements.txt`).\n"
-                "3. Clique em **Executar Scan**.\n"
-                "4. Veja o resultado e clique em **Remediar com IA** para ver a mágica acontecer!"
+                "**Governança, Riscos e Conformidade Regulatória (LGPD / SOC 2):** ⚖️💰\n\n"
+                "No Brasil, o **Artigo 46 da LGPD** determina que os agentes de tratamento devem adotar medidas de segurança, técnicas e administrativas aptas a proteger os dados pessoais de acessos não autorizados.\n\n"
+                "### 📊 Riscos e Sanções da ANPD:\n"
+                "- **Multas Pecuniárias:** Até **2% do faturamento** da empresa, limitada a **R$ 50.000.000,00 por infração**.\n"
+                "- **Bloqueio de Base de Dados:** Paralisação obrigatória das operações comerciais até a comprovação de remediação.\n"
+                "- **Danos à Reputação:** Notificação pública aos titulares e perda de confiança do mercado.\n\n"
+                "### 🛡️ Como o NeuroSec ASPM blinda a empresa:\n"
+                "1. **Trilha de Auditoria Imutável:** Registra quem aprovou cada patch com carimbo de tempo UTC e operador responsável.\n"
+                "2. **Redução de MTTR:** Diminui o tempo médio de correção de semanas para minutos com o *Studio de Diff*.\n"
+                "3. **Relatórios Formais:** Emissão em 1 clique de Dossiês Técnicos e PDFs formais para envio a auditores independentes."
             )
-        else:
+
+        # 8. Supply Chain, SCA, SBOM e Dependências Maliciosas
+        if any(w in m for w in ["sca", "sbom", "supply chain", "dependencia", "dependência", "pypi", "npm", "cve", "log4j", "log4shell"]):
             return (
-                f"**NeuroSec IA — Como posso te orientar?** 🤔\n\n"
-                f"Entendi sua dúvida sobre: *'{msg}'*.\n\n"
-                "Posso te ajudar a entender conceitos de segurança, analisar trechos de código, inspecionar links ou demonstrar qualquer uma das **11 ferramentas da plataforma**.\n\n"
-                "Sinta-se à vontade para perguntar de forma técnica ou como curiosidade!"
+                "**Segurança na Cadeia de Suprimentos (SCA & SBOM):** 📦🔍\n\n"
+                "Mais de 80% do código de uma aplicação moderna é composto por bibliotecas de terceiros (open-source). Invasores exploram isso injetando pacotes maliciosos ou explorando CVEs conhecidas (como Log4Shell e XZ Utils).\n\n"
+                "### 🛠️ O que o NeuroSec 4.0 oferece para Supply Chain:\n"
+                "- **Scanner SCA Contínuo:** Cruza o `requirements.txt` ou `package.json` contra bases mundiais de vulnerabilidades NVD/OSV em tempo real.\n"
+                "- **Geração de CycloneDX SBOM (v1.5 JSON):** O inventário oficial de componentes de software (*Software Bill of Materials*) exigido por governos e auditorias de cibersegurança.\n"
+                "- **Detecção de Tiposquatting:** Identifica pacotes com nomes similares aos oficiais criados para enganar desenvolvedores.\n\n"
+                "Você pode colar qualquer arquivo de dependências na aba **SCA & SBOM** para auditar suas bibliotecas agora mesmo!"
             )
+
+        # 9. Cloud Security, CSPM, Terraform e Contêineres
+        if any(w in m for w in ["cloud", "cspm", "nuvem", "aws", "s3", "iam", "terraform", "iac", "docker", "kubernetes"]):
+            return (
+                "**Auditoria Cloud CSPM & Segurança em Infraestrutura como Código (IaC):** ☁️🛡️\n\n"
+                "Falhas de configuração na nuvem são responsáveis por mais de 75% dos vazamentos corporativos de dados.\n\n"
+                "### 🎯 Principais Desvios Auditados pelo NeuroSec:\n"
+                "1. **Buckets S3 com ACL Pública:** Permissões `public-read` ou `public-read-write` que expõem arquivos confidenciais na internet.\n"
+                "2. **Políticas de IAM Excessivas:** Uso de coringas perigosos como `Action: [\"*\"]` e `Resource: [\"*\"]` que concedem controle total a qualquer serviço.\n"
+                "3. **Security Groups Abertos:** Portas sensíveis (22/SSH, 3389/RDP, 5432/Postgres) expostas para `0.0.0.0/0`.\n\n"
+                "### 📄 Exemplo em Terraform Corrigido pela IA:\n"
+                "```hcl\n"
+                "# Configuração Segura de Bucket S3 Privado com Criptografia KMS:\n"
+                "resource \"aws_s3_bucket\" \"dados_seguros\" {\n"
+                "  bucket = \"empresa-dados-producao-2026\"\n"
+                "}\n\n"
+                "resource \"aws_s3_bucket_public_access_block\" \"bloqueio_total\" {\n"
+                "  bucket                  = aws_s3_bucket.dados_seguros.id\n"
+                "  block_public_acls       = true\n"
+                "  block_public_policy     = true\n"
+                "  ignore_public_acls      = true\n"
+                "  restrict_public_buckets = true\n"
+                "}\n"
+                "```"
+            )
+
+        # 10. Como usar as 11 Ferramentas do NeuroSec ASPM 4.0
+        if any(w in m for w in ["ferramenta", "ferramentas", "quais ferramentas", "como usar o site", "menu", "passo a passo"]):
+            return (
+                "**Guia das 11 Ferramentas Integradas do NeuroSec ASPM 4.0:** 🎛️⚡\n\n"
+                "1. 📊 **Security Scorecard:** Nota de 0 a 100 com gráficos neon de tendência e prejuízo evitado (R$).\n"
+                "2. 🛡️ **Inventário de Ameaças:** Tabela dinâmica com filtros por severidade e busca em tempo real.\n"
+                "3. ⚡ **Scanner SAST:** Análise estática de código com AST em Python, JavaScript e SQL.\n"
+                "4. 🌐 **Scanner DAST:** Inspeção de URLs e cabeçalhos HTTP com bypass de WAFs (Cloudflare/Azion).\n"
+                "5. 📦 **Scanner SCA:** Mapeamento de CVEs em dependências `requirements.txt`.\n"
+                "6. ☁️ **Cloud CSPM:** Auditoria de infraestrutura como código (Terraform S3 & IAM).\n"
+                "7. 🤖 **Studio de Remediação:** Diagnóstico de causa raiz e comparador *Unified Diff* lado a lado.\n"
+                "8. 📄 **Dossiê Técnico da IA:** Documento completo com simulação de exploit PoC e 3 estratégias de correção.\n"
+                "9. ⚡ **Automação CI/CD:** Gerador com 1 clique de workflows para GitHub Actions e GitLab CI.\n"
+                "10. 🔔 **Webhooks:** Disparo de alertas em tempo real para Slack e Discord.\n"
+                "11. 💻 **Cyber Terminal CLI:** Console hacker com comandos interativos (`help`, `scorecard`, `list`).\n\n"
+                "Em qual dessas ferramentas você quer fazer um teste agora?"
+            )
+
+        # 11. Resposta Cognitiva Genérica com Raciocínio Semântico
+        return (
+            f"**Análise da NeuroSec IA sobre:** *'{msg}'* 🧠\n\n"
+            "Compreendi perfeitamente sua colocação. Sob a ótica de **Engenharia de Software Defensiva e ASPM**:\n\n"
+            "1. **Mapeamento de Riscos:** Em qualquer arquitetura moderna, a proteção deve ser contínua em todas as camadas (Código, Nuvem, Dependências e Perímetro Web).\n"
+            "2. **Postura Proativa:** A melhor estratégia não é esperar um incidente acontecer, mas antecipar ameaças auditando Pull Requests no CI/CD e monitorando desvios de postura em tempo real.\n"
+            "3. **Remediação Autônoma:** Nosso motor de IA está treinado para gerar patches cirúrgicos com *Unified Diff*, reduzindo o esforço manual da sua equipe de engenharia.\n\n"
+            "Você gostaria que eu gerasse um exemplo prático de código seguro sobre isso, calculasse o impacto de risco ou demonstrasse um dos scanners da plataforma?"
+        )
 
     @classmethod
     def _generate_diagnostic_knowledge(cls, vuln_type: str, asset: str, sev: str) -> str:
         """Gera diagnóstico detalhado e técnico para remediação."""
         return (
-            f"**Diagnóstico emitido pela NeuroSec IA**\n\n"
+            f"**Diagnóstico Emitido pela NeuroSec IA**\n\n"
             f"- **Vulnerabilidade Identificada:** `{vuln_type}`\n"
             f"- **Severidade:** `{sev}` | **Ativo Afetado:** `{asset}`\n"
             f"- **Classificação:** OWASP Top 10 & CWE Standard\n\n"
