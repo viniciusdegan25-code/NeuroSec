@@ -1,4 +1,4 @@
-// Floating AI Security Copilot Chat Drawer
+// Floating NeuroSec IA Chat Drawer
 const NeuroCopilot = {
     isOpen: false,
 
@@ -23,13 +23,13 @@ const NeuroCopilot = {
                 this.addMessage(text, "user");
                 input.value = "";
 
-                const botMsgId = this.addMessage("Pensando e analisando com a IA...", "bot", true);
+                const botMsgId = this.addMessage("Pensando e analisando com a NeuroSec IA...", "bot", true);
 
                 try {
                     const res = await NeuroAPI.post("/copilot/chat", { message: text });
                     this.updateBotMessage(botMsgId, res.reply);
                 } catch (err) {
-                    this.updateBotMessage(botMsgId, `Erro ao contatar o Copilot: ${err.message}`);
+                    this.updateBotMessage(botMsgId, `Erro ao contatar a NeuroSec IA: ${err.message}`);
                 }
             });
         }
@@ -67,7 +67,12 @@ const NeuroCopilot = {
         const msgId = "msg_" + Date.now();
         msgDiv.id = msgId;
         msgDiv.className = `chat-msg chat-${sender}`;
-        msgDiv.innerText = text;
+        
+        if (sender === "bot") {
+            msgDiv.innerHTML = this.formatMarkdown(text);
+        } else {
+            msgDiv.innerText = text;
+        }
 
         container.appendChild(msgDiv);
         container.scrollTop = container.scrollHeight;
@@ -77,10 +82,28 @@ const NeuroCopilot = {
     updateBotMessage(msgId, text) {
         const el = document.getElementById(msgId);
         if (el) {
-            el.innerText = text;
+            el.innerHTML = this.formatMarkdown(text);
             const container = document.getElementById("copilotMessages");
             if (container) container.scrollTop = container.scrollHeight;
         }
+    },
+
+    formatMarkdown(text) {
+        if (!text) return "";
+        let escaped = text
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+        
+        // Formata blocos de código ```
+        escaped = escaped.replace(/```([\s\S]*?)```/g, '<pre style="background:rgba(0,0,0,0.5); padding:8px; border-radius:6px; font-family:monospace; margin:6px 0; overflow-x:auto;"><code>$1</code></pre>');
+        // Formata código inline `
+        escaped = escaped.replace(/`([^`]+)`/g, '<code style="background:rgba(0,0,0,0.4); padding:2px 5px; border-radius:4px; font-family:monospace; color:var(--cyan-neon);">$1</code>');
+        // Formata negrito **
+        escaped = escaped.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+        // Quebras de linha
+        escaped = escaped.replace(/\n/g, '<br>');
+        return escaped;
     },
 
     sendQuickPrompt(promptText) {

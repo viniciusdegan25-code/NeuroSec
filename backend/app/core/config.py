@@ -1,5 +1,9 @@
 import os
 from typing import List
+from dotenv import load_dotenv
+
+# Carrega arquivo .env local caso exista
+load_dotenv()
 
 try:
     from pydantic_settings import BaseSettings
@@ -15,10 +19,10 @@ except ImportError:
 
 class Settings(SettingsBase):
     PROJECT_NAME: str = "NeuroSec ASPM Enterprise"
-    VERSION: str = "3.0.0"
+    VERSION: str = "3.5.0"
     API_V1_STR: str = "/api/v1"
     
-    # AI & Groq Configuration
+    # AI & Groq Configuration (Lido via variável de ambiente de forma 100% segura)
     GROQ_API_KEY: str = os.getenv("GROQ_API_KEY", "")
     GROQ_MODEL: str = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
     GROQ_URL: str = "https://api.groq.com/openai/v1/chat/completions"
