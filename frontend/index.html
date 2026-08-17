@@ -27,8 +27,8 @@
 
             <nav>
                 <ul class="nav-links">
+                    <li><a href="/ferramentas" class="nav-link">Nossas Ferramentas</a></li>
                     <li><a href="/noticias" class="nav-link">Threat Intel 2026</a></li>
-                    <li><a href="#pilares" class="nav-link">Pilares de Defesa</a></li>
                     <li><a href="/avaliacao" class="nav-link">Para Empresas</a></li>
                 </ul>
             </nav>
@@ -41,7 +41,7 @@
 
     <!-- Main Content -->
     <main>
-        <!-- Hero Section with Live Threat Radar HUD & Breaking Cyber News -->
+        <!-- Hero Section with Live Threat Radar HUD & Real Cyber News -->
         <section class="hero-section">
             <div class="container">
                 <div class="hero-grid">
@@ -66,9 +66,9 @@
                                 <span>Solicitar Avaliação Enterprise</span>
                                 <span>📋</span>
                             </a>
-                            <a href="/noticias" class="btn-secondary-dark" style="font-size: 15px; padding: 14px 26px;">
-                                <span>Threat Intel 2026</span>
-                                <span>📰</span>
+                            <a href="/ferramentas" class="btn-secondary-dark" style="font-size: 15px; padding: 14px 26px;">
+                                <span>Nossas Ferramentas</span>
+                                <span>🎛️</span>
                             </a>
                         </div>
 
@@ -88,47 +88,57 @@
                         </div>
                     </div>
 
-                    <!-- Right Column: Live Interactive Threat Radar HUD & Cyber Intel News -->
+                    <!-- Right Column: Live Interactive Threat Radar HUD with Real Cyber News & Sources -->
                     <div class="threat-radar-hud">
                         <!-- HUD Header -->
                         <div class="radar-hud-header">
                             <div class="radar-status-indicator">
                                 <span class="pulsing-dot"></span>
-                                <span>RADAR DE AMEAÇAS // CENÁRIO 2026</span>
+                                <span>RADAR DE AMEAÇAS REAIS // FONTES OFICIAIS</span>
                             </div>
-                            <span class="radar-threat-level">Status: Sentinela Ativo</span>
+                            <a href="/noticias" target="_blank" class="radar-threat-level" style="text-decoration:none; color:var(--matrix-green);">Ver Todas as Notícias ➔</a>
                         </div>
 
-                        <!-- Live Threat Bulletins Feed -->
+                        <!-- Live Real Threat Bulletins Feed -->
                         <div class="radar-feed-list">
-                            <!-- Bulletin 1 -->
-                            <a href="/noticias" class="radar-feed-item">
+                            <!-- Real News 1: XZ Utils Backdoor -->
+                            <a href="/noticias?id=xz" target="_blank" class="radar-feed-item">
                                 <div class="radar-item-top">
-                                    <span class="radar-tag radar-tag-red">🚨 Zero-Day Alert 2026</span>
-                                    <span class="radar-time">Ao Vivo • Urgente</span>
+                                    <span class="radar-tag radar-tag-red">🚨 CRÍTICA // CVSS 10.0</span>
+                                    <span class="radar-time">Fonte: CISA / NIST</span>
                                 </div>
-                                <div class="radar-item-title">Ataque de Injeção de Código em Supply-Chain (PyPI / NPM)</div>
-                                <div class="radar-item-desc">Linhagem polimórfica com bypass de sandbox em tempo de execução. O motor SCA do NeuroSec neutraliza a linhagem.</div>
+                                <div class="radar-item-title">Ataque de Backdoor em Supply-Chain no XZ Utils (CVE-2024-3094)</div>
+                                <div class="radar-item-desc">Injeção ofuscada em liblzma para RCE e bypass de autenticação no OpenSSH. O motor SCA do NeuroSec neutraliza a linhagem.</div>
                             </a>
 
-                            <!-- Bulletin 2 -->
-                            <a href="/noticias" class="radar-feed-item">
+                            <!-- Real News 2: Polyfill.io Hijack -->
+                            <a href="/noticias?id=polyfill" target="_blank" class="radar-feed-item">
                                 <div class="radar-item-top">
-                                    <span class="radar-tag radar-tag-indigo">⚛️ Criptografia Pós-Quântica (PQC)</span>
-                                    <span class="radar-time">NIST 2026</span>
+                                    <span class="radar-tag radar-tag-orange" style="background:rgba(249,115,22,0.15); color:#F97316; border:1px solid rgba(249,115,22,0.3); font-size:10px; padding:2px 8px; border-radius:4px; font-weight:700;">⚠️ ALTA // 100k+ SITES</span>
+                                    <span class="radar-time">Fonte: Cloudflare Alert</span>
                                 </div>
-                                <div class="radar-item-title">Transição Obrigatória para Algoritmos NIST Kyber & Dilithium</div>
-                                <div class="radar-item-desc">Chaves RSA e ECC legadas em risco iminente de quebra. Auditoria SAST mapeia algoritmos obsoletos.</div>
+                                <div class="radar-item-title">Comprometimento do CDN Polyfill.io Injeta Scripts Maliciosos</div>
+                                <div class="radar-item-desc">Sequestro de tráfego web via CDN de terceiros. O motor DAST e auditoria de cabeçalhos CSP do NeuroSec bloqueiam o vetor.</div>
                             </a>
 
-                            <!-- Bulletin 3 -->
-                            <a href="/noticias" class="radar-feed-item">
+                            <!-- Real News 3: NIST PQC Standards -->
+                            <a href="/noticias?id=pqc" target="_blank" class="radar-feed-item">
                                 <div class="radar-item-top">
-                                    <span class="radar-tag radar-tag-green">⚖️ Regulação & Conformidade</span>
-                                    <span class="radar-time">ANPD / LGPD</span>
+                                    <span class="radar-tag radar-tag-indigo">⚛️ PQC // NIST FIPS 203/204</span>
+                                    <span class="radar-time">Fonte: NIST.gov</span>
                                 </div>
-                                <div class="radar-item-title">Fiscalização Rígida de ASPM com Multas de até R$ 50 Milhões</div>
-                                <div class="radar-item-desc">Exigência de rastreabilidade de código e Trilha de Auditoria SOC 2 imutável para evitar sanções.</div>
+                                <div class="radar-item-title">NIST Oficializa Padrões de Criptografia Pós-Quântica (ML-KEM/DSA)</div>
+                                <div class="radar-item-desc">Transição mandatória de chaves RSA e ECC para resistência quântica. Auditoria SAST mapeia algoritmos legados.</div>
+                            </a>
+
+                            <!-- Real News 4: ANPD Sanctions -->
+                            <a href="/noticias?id=anpd" target="_blank" class="radar-feed-item">
+                                <div class="radar-item-top">
+                                    <span class="radar-tag radar-tag-green">⚖️ LGPD // MULTAS DE ATÉ R$ 50M</span>
+                                    <span class="radar-time">Fonte: ANPD Oficial</span>
+                                </div>
+                                <div class="radar-item-title">ANPD Aplica Sanções por Falhas de Postura e Governança</div>
+                                <div class="radar-item-desc">Exigência de rastreabilidade de código e logs imutáveis (Art. 46). Trilha de Auditoria SOC 2 do NeuroSec garante conformidade total.</div>
                             </a>
                         </div>
 
@@ -142,58 +152,12 @@
             </div>
         </section>
 
-        <!-- Pulse of the Security Matrix (2026 Threat Intel Feed) -->
-        <section class="pulse-section" id="threat-intel">
-            <div class="container">
-                <div class="section-header">
-                    <span class="section-tag">// THREAT INTELLIGENCE FEED 2026</span>
-                    <h2 class="section-title">Pulse of the Security Matrix</h2>
-                    <p class="section-desc">Monitoramento em tempo real dos vetores de ataque emergentes, ameaças de cadeia de suprimentos e diretrizes regulatórias globais.</p>
-                </div>
-
-                <div class="pulse-grid">
-                    <!-- Card 1 -->
-                    <article class="pulse-card">
-                        <div class="pulse-meta">
-                            <span class="pulse-badge badge-zero-day">Zero-Day Alert</span>
-                            <span class="pulse-date">Agosto 2026</span>
-                        </div>
-                        <h3 class="pulse-title">Supply-Chain Attack: Injeção de Código em Pacotes Python e NPM</h3>
-                        <p class="pulse-summary">Nova variante avançada de dependências maliciosas escapa de sandboxes tradicionais. O motor SCA do NeuroSec já mapeia e neutraliza a linhagem.</p>
-                        <a href="/noticias" class="pulse-link">Ler Análise Completa & Patch →</a>
-                    </article>
-
-                    <!-- Card 2 -->
-                    <article class="pulse-card">
-                        <div class="pulse-meta">
-                            <span class="pulse-badge badge-quantum">Criptografia PQC</span>
-                            <span class="pulse-date">Agosto 2026</span>
-                        </div>
-                        <h3 class="pulse-title">Transição para Computação Pós-Quântica (PQC) Acelerada</h3>
-                        <p class="pulse-summary">Algoritmos RSA e ECC tradicionais entram em rota de obsolescência. NeuroSec audita seus repositórios para conformidade NIST Kyber/Dilithium.</p>
-                        <a href="/noticias" class="pulse-link">Conhecer Diretrizes PQC →</a>
-                    </article>
-
-                    <!-- Card 3 -->
-                    <article class="pulse-card">
-                        <div class="pulse-meta">
-                            <span class="pulse-badge badge-compliance">Regulação & LGPD</span>
-                            <span class="pulse-date">Agosto 2026</span>
-                        </div>
-                        <h3 class="pulse-title">Endurecimento Fiscal da ANPD e Multas de até R$ 50M</h3>
-                        <p class="pulse-summary">Empresas sem rastreabilidade de código e logs imutáveis sofrem sanções severas. A Trilha de Auditoria SOC 2 do NeuroSec garante conformidade total.</p>
-                        <a href="/noticias" class="pulse-link">Ver Impacto de Governança →</a>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <!-- Pillars of Defense -->
+        <!-- Pillars of Defense (Architecture 360°) -->
         <section class="section-container" id="pilares" style="padding: 90px 0; background: var(--bg-primary);">
             <div class="container">
                 <div class="section-header">
                     <span class="section-tag">// ARQUITETURA DEFENSIVA 360°</span>
-                    <h2 class="section-title">Navigate Your Digital Reality</h2>
+                    <h2 class="section-title">Proteção Unificada do Código à Nuvem</h2>
                     <p class="section-desc">Estrutura multidimensional desenvolvida para DevSecOps, Líderes de Segurança e Conselhos de Administração.</p>
                 </div>
 
@@ -202,18 +166,21 @@
                         <div style="font-size: 28px; margin-bottom: 16px;">⚡</div>
                         <h3 style="font-size: 18px; color: #fff; margin-bottom: 10px;">Code-to-Cloud Protection</h3>
                         <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6;">Varreduras integradas de SAST com AST em código-fonte, DAST com inspeção de cabeçalhos RFC e CSPM para infraestrutura Terraform.</p>
+                        <a href="/ferramentas" style="display:inline-block; margin-top:14px; color:var(--matrix-green); font-size:13px; text-decoration:none; font-weight:600;">Conhecer Motores SAST & DAST →</a>
                     </div>
 
                     <div class="pulse-card" style="background: var(--bg-card);">
                         <div style="font-size: 28px; margin-bottom: 16px;">📦</div>
                         <h3 style="font-size: 18px; color: #fff; margin-bottom: 10px;">Supply Chain & SBOM</h3>
                         <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6;">Inventário automatizado de dependências, identificação de bibliotecas obsoletas e alerta em tempo real para CVEs de criticidade máxima.</p>
+                        <a href="/ferramentas" style="display:inline-block; margin-top:14px; color:var(--matrix-green); font-size:13px; text-decoration:none; font-weight:600;">Ver Detalhes do SCA & SBOM →</a>
                     </div>
 
                     <div class="pulse-card" style="background: var(--bg-card);">
                         <div style="font-size: 28px; margin-bottom: 16px;">🤖</div>
                         <h3 style="font-size: 18px; color: #fff; margin-bottom: 10px;">Autonomous Remediation</h3>
                         <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6;">A NeuroSec IA diagnostica a causa raiz da vulnerabilidade e gera o patch exato em formato Unified Git Diff com 1 clique de aprovação.</p>
+                        <a href="/ferramentas" style="display:inline-block; margin-top:14px; color:var(--matrix-green); font-size:13px; text-decoration:none; font-weight:600;">Explorar o Studio de IA →</a>
                     </div>
                 </div>
             </div>

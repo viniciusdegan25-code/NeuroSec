@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Threat Intelligence Feed 2026 — NeuroSec ASPM 4.0</title>
-    <meta name="description" content="Boletim de Inteligência de Ameaças Cibernéticas e Notícias de Segurança em Tempo Real - Cenário 2026.">
+    <title>Threat Intel & Notícias de Segurança // NeuroSec ASPM 4.0</title>
+    <meta name="description" content="Portal de Inteligência de Ameaças Reais com fontes verificadas (CISA, NIST, ANPD, Cloudflare), análises técnicas profundas e orientações de mitigação.">
     <link rel="stylesheet" href="/css/matrix.css">
     <link rel="stylesheet" href="/css/styles.css">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 8 L85 24 L85 58 Q85 82 50 94 Q15 82 15 58 L15 24 Z' fill='%2300FF41'/></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 8 C35 8 18 20 15 45 C12 65 25 85 50 95 C75 85 88 65 85 45 C82 20 65 8 50 8 Z' fill='%2300FF88'/></svg>">
 </head>
 <body>
     <canvas id="matrixCanvas"></canvas>
@@ -17,136 +17,305 @@
     <header class="neo-nav">
         <div class="container neo-nav-content">
             <a href="/" class="brand-logo">
-                <div class="cobra-badge" data-cobra-shield="24"></div>
+                <div class="cobra-badge" data-cobra-shield="28"></div>
                 <div class="brand-text-wrapper">
                     <span class="brand-title">NeuroSec <span class="highlight">ASPM</span></span>
-                    <span class="brand-version" style="color:var(--matrix-green); font-size:10px; font-weight:700;">THREAT INTELLIGENCE 2026</span>
+                    <span class="brand-version" style="color:var(--matrix-green); font-size:10px; font-weight:700;">THREAT INTELLIGENCE & NEWS</span>
                 </div>
             </a>
 
             <nav>
                 <ul class="nav-links">
-                    <li><a href="/" class="nav-link">Home</a></li>
-                    <li><a href="/dashboard" class="nav-link">Cockpit / Dashboard</a></li>
+                    <li><a href="/ferramentas" class="nav-link">Nossas Ferramentas</a></li>
                     <li><a href="/noticias" class="nav-link active">Threat Intel 2026</a></li>
                     <li><a href="/avaliacao" class="nav-link">Para Empresas</a></li>
                 </ul>
             </nav>
 
             <div class="nav-actions">
-                <a href="/dashboard" class="btn-secondary-dark">Acessar Plataforma 🚀</a>
-                <a href="/avaliacao" class="btn-primary-matrix">Solicitar Avaliação</a>
+                <a href="/" class="btn-secondary-dark">← Voltar à Home</a>
+                <a href="/dashboard" class="btn-primary-matrix">Acessar Plataforma 🚀</a>
             </div>
         </div>
     </header>
 
+    <!-- Main Content -->
     <main style="padding: 130px 0 80px 0;">
         <div class="container">
-            <div class="section-header">
+            <!-- Header Section -->
+            <div style="text-align: center; max-width: 860px; margin: 0 auto 50px auto;">
                 <div class="hero-pill" style="margin: 0 auto 16px auto;">
                     <span class="pulsing-dot"></span>
-                    <span>BOLETIM DE INTELIGÊNCIA EM TEMPO REAL</span>
+                    <span>BOLETINS REAIS // FONTES OFICIAIS (CISA / NIST / ANPD)</span>
                 </div>
-                <h1 class="section-title" style="font-size: 42px;">Pulse of the Security Matrix</h1>
-                <p class="section-desc">Análises detalhadas de novos vetores de ataque, linhagens de malware autônomo, conformidade regulatória e avisos criptográficos do cenário 2026.</p>
+                <h1 style="font-size: 38px; font-weight: 800; color: #fff; margin-bottom: 16px;">
+                    Radar de Ameaças & <span style="color:var(--matrix-green); text-shadow: 0 0 20px rgba(0,255,65,0.3);">Notícias de Cibersegurança</span>
+                </h1>
+                <p style="font-size: 16px; color: var(--text-muted); line-height: 1.6;">
+                    Acompanhe incidentes cibernéticos reais que moldam a segurança global. Cada notícia inclui <strong>análise técnica da falha</strong>, <strong>fonte oficial verificada</strong> e <strong>como o NeuroSec neutraliza o vetor de ataque</strong>.
+                </p>
             </div>
 
             <!-- News Grid -->
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 40px;">
-                <!-- News 1 -->
-                <article class="pulse-card">
-                    <div class="pulse-meta">
-                        <span class="pulse-badge badge-zero-day">Zero-Day Alert</span>
-                        <span class="pulse-date">16/08/2026</span>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px;">
+
+                <!-- Card 1: XZ Utils Backdoor -->
+                <article class="pulse-card" id="card-xz-utils" style="padding: 28px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                            <span style="font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 4px; background: rgba(239,68,68,0.15); color: #EF4444; border: 1px solid rgba(239,68,68,0.3);">🚨 CRÍTICA // CVSS 10.0</span>
+                            <span style="font-size: 12px; color: var(--text-dim);">CVE-2024-3094</span>
+                        </div>
+                        <h2 style="font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 12px; line-height: 1.4;">
+                            Ataque de Injeção de Backdoor em Supply-Chain no XZ Utils (liblzma)
+                        </h2>
+                        <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 18px;">
+                            Um agente malicioso utilizou técnicas de engenharia social ao longo de dois anos para obter permissão de mantenedor no pacote de compressão XZ Utils. O backdoor foi injetado nos arquivos de build oficiais para permitir bypass de autenticação e Execução Remota de Código (RCE) no OpenSSH.
+                        </p>
+                        
+                        <!-- Real Source Badge -->
+                        <div style="background: rgba(7,9,14,0.7); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 12px; margin-bottom: 18px; font-size: 13px;">
+                            <span style="color: var(--text-dim); display: block; font-size: 11px; text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">Fonte Oficial:</span>
+                            <a href="https://www.cisa.gov/news-events/alerts/2024/03/29/reported-supply-chain-compromise-xz-utils-cve-2024-3094" target="_blank" rel="noopener noreferrer" style="color: var(--cyan-neon); text-decoration: none; font-weight: 600; word-break: break-all;">
+                                CISA Alert // Reported Supply Chain Compromise in XZ Utils ↗
+                            </a>
+                        </div>
                     </div>
-                    <h3 class="pulse-title">Linhagens Polimórficas em Pacotes NPM & PyPI</h3>
-                    <p class="pulse-summary">Ataques de Supply-Chain utilizam ofuscação dinâmica em runtime para burlar linters convencionais. O motor SCA do NeuroSec realiza análise semântica de lockfiles.</p>
-                    <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 12px; color: var(--text-dim);">Autor: SecOps Intel</span>
-                        <a href="/dashboard" class="pulse-link">Escanear com SCA →</a>
+
+                    <div style="border-top: 1px solid var(--border-subtle); padding-top: 16px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 12px; color: var(--matrix-green);">🛡️ Mitigado pelo SCA do NeuroSec</span>
+                        <button class="btn-secondary-dark" style="font-size: 12px; padding: 6px 14px;" onclick="openNewsModal('xz')">Ver Análise Completa ➔</button>
                     </div>
                 </article>
 
-                <!-- News 2 -->
-                <article class="pulse-card">
-                    <div class="pulse-meta">
-                        <span class="pulse-badge badge-quantum">PQC Cryptography</span>
-                        <span class="pulse-date">15/08/2026</span>
+                <!-- Card 2: Polyfill.io Supply Chain Attack -->
+                <article class="pulse-card" id="card-polyfill" style="padding: 28px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                            <span style="font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 4px; background: rgba(249,115,22,0.15); color: #F97316; border: 1px solid rgba(249,115,22,0.3);">⚠️ ALTA // SUPPLY-CHAIN</span>
+                            <span style="font-size: 12px; color: var(--text-dim);">100.000+ Sites Afetados</span>
+                        </div>
+                        <h2 style="font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 12px; line-height: 1.4;">
+                            Comprometimento do CDN Polyfill.io Injeta Scripts Maliciosos Globalmente
+                        </h2>
+                        <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 18px;">
+                            Após a compra do domínio oficial `polyfill.io` por uma operadora terceirizada, a rede CDN passou a injetar scripts JavaScript maliciosos e ofuscados diretamente nos navegadores dos usuários, sequestrando tráfego web e redirecionando para páginas falsas.
+                        </p>
+                        
+                        <!-- Real Source Badge -->
+                        <div style="background: rgba(7,9,14,0.7); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 12px; margin-bottom: 18px; font-size: 13px;">
+                            <span style="color: var(--text-dim); display: block; font-size: 11px; text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">Fonte Oficial:</span>
+                            <a href="https://blog.cloudflare.com/polyfill-io-now-available-on-cloudflare-cdnjs/" target="_blank" rel="noopener noreferrer" style="color: var(--cyan-neon); text-decoration: none; font-weight: 600; word-break: break-all;">
+                                Cloudflare Security // Polyfill.io CDN Hijack & Mitigation ↗
+                            </a>
+                        </div>
                     </div>
-                    <h3 class="pulse-title">Transição Obrigatória para Algoritmos NIST Kyber & Dilithium</h3>
-                    <p class="pulse-summary">Com a maturidade de processadores quânticos de 1000+ qubits, chaves RSA 2048 e ECC são consideradas em risco. O scanner SAST mapeia algoritmos obsoletos em segundos.</p>
-                    <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 12px; color: var(--text-dim);">Autor: Lab Criptográfico</span>
-                        <a href="/dashboard" class="pulse-link">Auditar Código →</a>
+
+                    <div style="border-top: 1px solid var(--border-subtle); padding-top: 16px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 12px; color: var(--matrix-green);">🛡️ Mitigado pelo DAST & CSP Audit</span>
+                        <button class="btn-secondary-dark" style="font-size: 12px; padding: 6px 14px;" onclick="openNewsModal('polyfill')">Ver Análise Completa ➔</button>
                     </div>
                 </article>
 
-                <!-- News 3 -->
-                <article class="pulse-card">
-                    <div class="pulse-meta">
-                        <span class="pulse-badge badge-compliance">Regulação LGPD</span>
-                        <span class="pulse-date">14/08/2026</span>
+                <!-- Card 3: NIST PQC Standards -->
+                <article class="pulse-card" id="card-pqc" style="padding: 28px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                            <span style="font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 4px; background: rgba(99,102,241,0.15); color: #A5B4FC; border: 1px solid var(--border-ai);">⚛️ PADRÃO OFICIAL // PQC</span>
+                            <span style="font-size: 12px; color: var(--text-dim);">NIST FIPS 203 / 204</span>
+                        </div>
+                        <h2 style="font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 12px; line-height: 1.4;">
+                            NIST Publica Padrões Finais de Criptografia Pós-Quântica (ML-KEM & ML-DSA)
+                        </h2>
+                        <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 18px;">
+                            O Instituto Nacional de Padrões e Tecnologia dos EUA oficializou os padrões mundiais de criptografia pós-quântica (Kyber e Dilithium). Infraestruturas críticas e sistemas bancários devem iniciar a migração imediata de chaves RSA e ECC para resistir a futuros computadores quânticos.
+                        </p>
+                        
+                        <!-- Real Source Badge -->
+                        <div style="background: rgba(7,9,14,0.7); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 12px; margin-bottom: 18px; font-size: 13px;">
+                            <span style="color: var(--text-dim); display: block; font-size: 11px; text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">Fonte Oficial:</span>
+                            <a href="https://www.nist.gov/news-events/news/2024/08/nist-releases-first-3-finalized-post-quantum-encryption-standards" target="_blank" rel="noopener noreferrer" style="color: var(--cyan-neon); text-decoration: none; font-weight: 600; word-break: break-all;">
+                                NIST.gov // Post-Quantum Cryptography Final Standards ↗
+                            </a>
+                        </div>
                     </div>
-                    <h3 class="pulse-title">ANPD Aplica Novas Diretrizes de Responsabilidade em ASPM</h3>
-                    <p class="pulse-summary">A comprovação de rastreabilidade de código e logs imutáveis passa a ser requisito para evitar multas de até 2% do faturamento (teto de R$ 50 milhões).</p>
-                    <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 12px; color: var(--text-dim);">Autor: Jurídico & Compliance</span>
-                        <a href="/dashboard" class="pulse-link">Ver Trilha Audit →</a>
+
+                    <div style="border-top: 1px solid var(--border-subtle); padding-top: 16px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 12px; color: var(--matrix-green);">🛡️ Mapeado pelo SAST do NeuroSec</span>
+                        <button class="btn-secondary-dark" style="font-size: 12px; padding: 6px 14px;" onclick="openNewsModal('pqc')">Ver Análise Completa ➔</button>
                     </div>
                 </article>
 
-                <!-- News 4 -->
-                <article class="pulse-card">
-                    <div class="pulse-meta">
-                        <span class="pulse-badge badge-zero-day">Nuvem & IaC</span>
-                        <span class="pulse-date">12/08/2026</span>
+                <!-- Card 4: ANPD Sanctions -->
+                <article class="pulse-card" id="card-anpd" style="padding: 28px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                            <span style="font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 4px; background: rgba(16,185,129,0.15); color: #10B981; border: 1px solid rgba(16,185,129,0.3);">⚖️ REGULAÇÃO // LGPD BRASIL</span>
+                            <span style="font-size: 12px; color: var(--text-dim);">Art. 46 / ANPD</span>
+                        </div>
+                        <h2 style="font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 12px; line-height: 1.4;">
+                            ANPD Aplica Sanções Administrativas por Desvios de Postura de Segurança em Aplicações
+                        </h2>
+                        <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 18px;">
+                            A Autoridade Nacional de Proteção de Dados intensifica a fiscalização contra empresas que não mantêm trilhas de auditoria imutáveis, inventários de software atualizados ou que deixam vulnerabilidades conhecidas sem remediação documentada.
+                        </p>
+                        
+                        <!-- Real Source Badge -->
+                        <div style="background: rgba(7,9,14,0.7); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 12px; margin-bottom: 18px; font-size: 13px;">
+                            <span style="color: var(--text-dim); display: block; font-size: 11px; text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">Fonte Oficial:</span>
+                            <a href="https://www.gov.br/anpd/pt-br" target="_blank" rel="noopener noreferrer" style="color: var(--cyan-neon); text-decoration: none; font-weight: 600; word-break: break-all;">
+                                Portal Oficial ANPD // Guia Orientativo de Segurança da Informação ↗
+                            </a>
+                        </div>
                     </div>
-                    <h3 class="pulse-title">Misconfigurations em Terraform e Vazamentos em Buckets S3</h3>
-                    <p class="pulse-summary">Políticas de IAM permissivas (`Action: *`) continuam sendo a causa primária de exfiltração de dados em nuvem. Nosso CSPM identifica desvios antes do deploy.</p>
-                    <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 12px; color: var(--text-dim);">Autor: Cloud Defense</span>
-                        <a href="/dashboard" class="pulse-link">Auditar Terraform →</a>
+
+                    <div style="border-top: 1px solid var(--border-subtle); padding-top: 16px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 12px; color: var(--matrix-green);">🛡️ Trilha SOC 2 & PDF Compliance</span>
+                        <button class="btn-secondary-dark" style="font-size: 12px; padding: 6px 14px;" onclick="openNewsModal('anpd')">Ver Análise Completa ➔</button>
                     </div>
                 </article>
 
-                <!-- News 5 -->
-                <article class="pulse-card">
-                    <div class="pulse-meta">
-                        <span class="pulse-badge badge-quantum">IA Ofensiva</span>
-                        <span class="pulse-date">10/08/2026</span>
-                    </div>
-                    <h3 class="pulse-title">Ataques Cibernéticos Orquestrados por Modelos de Linguagem Autônomos</h3>
-                    <p class="pulse-summary">A resposta para ameaças impulsionadas por IA exige contramedidas de IA defensiva. A <strong>NeuroSec IA</strong> gera Unified Git Diffs defensivos instantaneamente.</p>
-                    <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 12px; color: var(--text-dim);">Autor: Pesquisa IA</span>
-                        <a href="/dashboard" class="pulse-link">Conversar com IA →</a>
-                    </div>
-                </article>
+            </div>
 
-                <!-- News 6 -->
-                <article class="pulse-card">
-                    <div class="pulse-meta">
-                        <span class="pulse-badge badge-compliance">OWASP 2026</span>
-                        <span class="pulse-date">08/08/2026</span>
+            <!-- News Modal -->
+            <div class="modal-backdrop" id="newsModal">
+                <div class="modal-card" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
+                    <div class="modal-header">
+                        <h3 id="newsModalTitle" style="font-size: 18px; font-weight: 700; color: #fff;">Dossiê de Inteligência</h3>
+                        <button class="modal-close-btn" onclick="closeNewsModal();">✕</button>
                     </div>
-                    <h3 class="pulse-title">Atualização das Métricas de MTTR e Redução de Risco Financeiro</h3>
-                    <p class="pulse-summary">Empresas com ASPM ativo registraram redução de 85% no MTTR e economia média estimada em mais de R$ 35.000 por vulnerabilidade remediada antes da produção.</p>
-                    <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 12px; color: var(--text-dim);">Autor: ROI Analyst</span>
-                        <a href="/dashboard" class="pulse-link">Ver Scorecard →</a>
+                    <div class="modal-body" id="newsModalBody" style="line-height: 1.7; font-size: 14px; color: #cbd5e1;"></div>
+                    <div class="modal-footer">
+                        <a id="newsModalSourceBtn" href="#" target="_blank" class="btn-secondary-dark">Abrir Fonte Oficial Externa ↗</a>
+                        <a href="/dashboard" class="btn-primary-matrix">Escanear Aplicação no Cockpit 🚀</a>
                     </div>
-                </article>
+                </div>
+            </div>
+
+            <!-- CTA Bottom -->
+            <div style="text-align: center; margin-top: 60px; padding: 40px; background: linear-gradient(135deg, rgba(0,255,65,0.08), rgba(99,102,241,0.1)); border: 1px solid var(--border-matrix); border-radius: 14px;">
+                <h3 style="font-size: 26px; font-weight: 800; color: #fff; margin-bottom: 12px;">Deseja proteger sua empresa contra ameaças reais como estas?</h3>
+                <p style="font-size: 15px; color: var(--text-muted); margin-bottom: 24px;">Execute uma auditoria 360° em menos de 1 minuto na plataforma NeuroSec ASPM 4.0.</p>
+                <div style="display: flex; gap: 16px; justify-content: center;">
+                    <a href="/dashboard" class="btn-primary-matrix" style="font-size: 15px; padding: 14px 30px;">Acessar Plataforma 🚀</a>
+                    <a href="/avaliacao" class="btn-secondary-dark" style="font-size: 15px; padding: 14px 26px;">Solicitar Avaliação Enterprise 📋</a>
+                </div>
             </div>
         </div>
     </main>
 
-    <footer style="padding: 30px 0; border-top: 1px solid var(--border-subtle); background: var(--bg-primary); text-align: center;">
-        <div class="container" style="font-size: 13px; color: var(--text-dim);">
-            © 2026 NeuroSec Enterprise Technologies. Feed de Inteligência Ciber-Defensiva.
+    <!-- Footer -->
+    <footer style="padding: 40px 0; border-top: 1px solid var(--border-subtle); background: var(--bg-primary);">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div class="cobra-badge" data-cobra-shield="22"></div>
+                <span style="font-size: 14px; font-weight: 700; color: #fff;">NeuroSec ASPM 4.0 // The Autonomous Cyber Defense Matrix</span>
+            </div>
+            <div style="font-size: 13px; color: var(--text-dim);">
+                © 2026 NeuroSec Enterprise Technologies. Todos os direitos reservados.
+            </div>
         </div>
     </footer>
 
+    <!-- Scripts -->
     <script src="/js/cobra-logo.js"></script>
     <script src="/js/api.js"></script>
+    <script>
+        const newsData = {
+            xz: {
+                title: "Ataque de Backdoor em Supply-Chain no XZ Utils (CVE-2024-3094)",
+                sourceUrl: "https://www.cisa.gov/news-events/alerts/2024/03/29/reported-supply-chain-compromise-xz-utils-cve-2024-3094",
+                body: `
+                    <div style="padding:14px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); border-radius:8px; margin-bottom:18px;">
+                        <strong style="color:#EF4444;">Severidade Máxima (CVSS 10.0) // Vetor: Remote Code Execution & Auth Bypass</strong>
+                    </div>
+                    <h4 style="color:#fff; margin-bottom:8px;">O que aconteceu? (Visão Técnica e Didática)</h4>
+                    <p>O ataque ao XZ Utils é considerado um dos marcos mais sofisticados da história da segurança em software de código aberto. Um atacante usando a persona "Jia Tan" passou cerca de dois anos contribuindo com melhorias legítimas no repositório open-source para ganhar a confiança dos mantenedores originais.</p>
+                    <p>Ao receber privilégios de release, inseriu arquivos de teste ofuscados contendo um payload binário que, durante a compilação do tarball oficial, interceptava chamadas de função da biblioteca <code>liblzma</code>. Como o serviço <code>OpenSSH (sshd)</code> em diversas distribuições Linux (como Debian e Fedora) carregava essa biblioteca, o backdoor permitia que o invasor executasse comandos com privilégios de root sem precisar de senha.</p>
+                    
+                    <h4 style="color:var(--matrix-green); margin:18px 0 8px 0;">Como o NeuroSec ASPM 4.0 Protege sua Aplicação:</h4>
+                    <ul style="padding-left:20px; line-height:1.8;">
+                        <li><strong>Scanner SCA & CycloneDX SBOM:</strong> Cruza todas as versões de pacotes contra o NVD, impedindo versões comprometidas (5.6.0 e 5.6.1).</li>
+                        <li><strong>Verificação Criptográfica de Hashes:</strong> Bloqueia builds onde os arquivos de lockfile ou tarball apresentem divergências de assinatura.</li>
+                        <li><strong>Automação CI/CD Gate:</strong> Rejeita Pull Requests automaticamente antes que dependências de supply-chain com CVSS 10.0 cheguem a servidores de staging ou produção.</li>
+                    </ul>
+                `
+            },
+            polyfill: {
+                title: "Comprometimento do CDN Polyfill.io (Injeção de Scripts Maliciosos)",
+                sourceUrl: "https://blog.cloudflare.com/polyfill-io-now-available-on-cloudflare-cdnjs/",
+                body: `
+                    <div style="padding:14px; background:rgba(249,115,22,0.1); border:1px solid rgba(249,115,22,0.3); border-radius:8px; margin-bottom:18px;">
+                        <strong style="color:#F97316;">Severidade Alta (CVSS 8.8) // Vetor: Supply Chain Client-Side Injection</strong>
+                    </div>
+                    <h4 style="color:#fff; margin-bottom:8px;">O que aconteceu?</h4>
+                    <p>O serviço <code>polyfill.io</code>, amplamente utilizado por desenvolvedores para fornecer compatibilidade de recursos modernos do JavaScript em navegadores antigos, foi vendido para uma entidade de terceiros. Imediatamente após a transferência, o domínio começou a responder com scripts JavaScript maliciosos dinamicamente ofuscados, direcionando usuários móveis para golpes financeiros e capturando dados de navegação em mais de 100.000 websites.</p>
+                    
+                    <h4 style="color:var(--matrix-green); margin:18px 0 8px 0;">Como o NeuroSec ASPM 4.0 Protege sua Aplicação:</h4>
+                    <ul style="padding-left:20px; line-height:1.8;">
+                        <li><strong>Scanner DAST & Auditoria de Headers CSP:</strong> Detecta ausência de diretivas estritas de <code>Content-Security-Policy (default-src 'self')</code>, alertando quando scripts externos são carregados de fontes não confiáveis.</li>
+                        <li><strong>Recomendação de Vendor Bundling:</strong> O Studio de Remediação gera patches para incorporar bibliotecas essenciais diretamente no bundle local da aplicação, eliminando a dependência de CDNs públicos não autenticados.</li>
+                    </ul>
+                `
+            },
+            pqc: {
+                title: "Padrões Oficiais de Criptografia Pós-Quântica pelo NIST (FIPS 203 & 204)",
+                sourceUrl: "https://www.nist.gov/news-events/news/2024/08/nist-releases-first-3-finalized-post-quantum-encryption-standards",
+                body: `
+                    <div style="padding:14px; background:rgba(99,102,241,0.1); border:1px solid var(--border-ai); border-radius:8px; margin-bottom:18px;">
+                        <strong style="color:#A5B4FC;">Padrão Mundial // Transição para Resistência Quântica</strong>
+                    </div>
+                    <h4 style="color:#fff; margin-bottom:8px;">O que representa este marco?</h4>
+                    <p>O NIST publicou os padrões finais de algoritmos criptográficos pós-quânticos: <strong>FIPS 203 (ML-KEM, baseado no Crystals-Kyber)</strong> para troca e encapsulamento de chaves e <strong>FIPS 204 (ML-DSA, baseado no Crystals-Dilithium)</strong> para assinaturas digitais. Esses algoritmos são baseados em problemas de reticulados matemáticos (Lattice-based cryptography), que computadores quânticos não conseguem quebrar.</p>
+                    
+                    <h4 style="color:var(--matrix-green); margin:18px 0 8px 0;">Como o NeuroSec ASPM 4.0 Prepara sua Empresa:</h4>
+                    <ul style="padding-left:20px; line-height:1.8;">
+                        <li><strong>Scanner SAST PQC-Ready:</strong> Identifica chaves e cifras legadas (RSA 1024/2048, ECC P-256) em código-fonte e certificados.</li>
+                        <li><strong>Consultoria Cognitiva com a NeuroSec IA:</strong> Orienta a migração para esquemas híbridos TLS 1.3 com chaves pós-quânticas.</li>
+                    </ul>
+                `
+            },
+            anpd: {
+                title: "Fiscalização Rigorosa da ANPD e Conformidade com o Artigo 46 da LGPD",
+                sourceUrl: "https://www.gov.br/anpd/pt-br",
+                body: `
+                    <div style="padding:14px; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); border-radius:8px; margin-bottom:18px;">
+                        <strong style="color:#10B981;">Regulação & Governança // Multas de até R$ 50 Milhões</strong>
+                    </div>
+                    <h4 style="color:#fff; margin-bottom:8px;">Exigências Regulatórias da LGPD</h4>
+                    <p>O Artigo 46 da Lei Geral de Proteção de Dados (Lei 13.709/2018) estabelece o dever de segurança contínua para evitar acessos não autorizados a dados pessoais. A ANPD intensificou auditorias exigindo comprovação formal de que as empresas corrigem vulnerabilidades tempestivamente e possuem rastreabilidade de código.</p>
+                    
+                    <h4 style="color:var(--matrix-green); margin:18px 0 8px 0;">Como o NeuroSec ASPM 4.0 Garante Conformidade Total:</h4>
+                    <ul style="padding-left:20px; line-height:1.8;">
+                        <li><strong>Trilha de Auditoria SOC 2 / ISO 27001:</strong> Registro imutável de cada varredura, achado e aprovação de patch com carimbo de tempo UTC.</li>
+                        <li><strong>Relatórios Executivos em PDF em 1 Clique:</strong> Emissão de dossiês formais para apresentação perante auditores externos e a diretoria.</li>
+                    </ul>
+                `
+            }
+        };
+
+        function openNewsModal(key) {
+            const data = newsData[key];
+            if (!data) return;
+
+            document.getElementById("newsModalTitle").innerText = data.title;
+            document.getElementById("newsModalBody").innerHTML = data.body;
+            document.getElementById("newsModalSourceBtn").href = data.sourceUrl;
+            document.getElementById("newsModal").classList.add("open");
+        }
+
+        function closeNewsModal() {
+            document.getElementById("newsModal").classList.remove("open");
+        }
+
+        // Auto-abrir modal se houver parâmetro ?id= na URL
+        document.addEventListener("DOMContentLoaded", () => {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get("id");
+            if (id && newsData[id]) {
+                openNewsModal(id);
+            }
+        });
+    </script>
 </body>
 </html>

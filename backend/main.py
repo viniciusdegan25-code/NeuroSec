@@ -168,11 +168,20 @@ if os.path.exists(frontend_path):
             return FileResponse(page)
         return FileResponse(os.path.join(frontend_path, "index.html"))
 
-    # 3. Rota do Portal de Inteligência de Ameaças 2026 (Multi-Page)
+    # 3. Rota do Portal de Notícias Reais & Threat Intelligence (Multi-Page)
     @app.get("/noticias")
     @app.get("/threat-intel")
     def serve_noticias_page():
         page = os.path.join(frontend_path, "noticias.html")
+        if os.path.exists(page):
+            return FileResponse(page)
+        return FileResponse(os.path.join(frontend_path, "index.html"))
+
+    # 4. Rota "Nossas Ferramentas" (Guia Técnico e Didático dos 11 Motores)
+    @app.get("/ferramentas")
+    @app.get("/nossas-ferramentas")
+    def serve_ferramentas_page():
+        page = os.path.join(frontend_path, "ferramentas.html")
         if os.path.exists(page):
             return FileResponse(page)
         return FileResponse(os.path.join(frontend_path, "index.html"))

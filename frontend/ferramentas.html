@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nossas Ferramentas // NeuroSec ASPM 4.0 — 11 Motores de Defesa Cognitiva</title>
+    <meta name="description" content="Conheça a arquitetura multidimensional dos 11 motores de segurança do NeuroSec ASPM 4.0. Didático para leigos e em profundidade técnica para líderes de DevSecOps.">
+    <link rel="stylesheet" href="/css/matrix.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 8 C35 8 18 20 15 45 C12 65 25 85 50 95 C75 85 88 65 85 45 C82 20 65 8 50 8 Z' fill='%2300FF88'/></svg>">
+</head>
+<body>
+    <canvas id="matrixCanvas"></canvas>
+    <div class="ambient-glow-top"></div>
+
+    <!-- Navigation Header -->
+    <header class="neo-nav">
+        <div class="container neo-nav-content">
+            <a href="/" class="brand-logo">
+                <div class="cobra-badge" data-cobra-shield="28"></div>
+                <div class="brand-text-wrapper">
+                    <span class="brand-title">NeuroSec <span class="highlight">ASPM</span></span>
+                    <span class="brand-version" style="color:var(--matrix-green); font-size:10px; font-weight:700;">AUTONOMOUS CYBER DEFENSE</span>
+                </div>
+            </a>
+
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="/ferramentas" class="nav-link active">Nossas Ferramentas</a></li>
+                    <li><a href="/noticias" class="nav-link">Threat Intel 2026</a></li>
+                    <li><a href="/avaliacao" class="nav-link">Para Empresas</a></li>
+                </ul>
+            </nav>
+
+            <div class="nav-actions">
+                <a href="/" class="btn-secondary-dark">← Voltar à Home</a>
+                <a href="/dashboard" class="btn-primary-matrix">Acessar Plataforma 🚀</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main style="padding: 130px 0 80px 0;">
+        <div class="container">
+            <!-- Header Section -->
+            <div style="text-align: center; max-width: 860px; margin: 0 auto 60px auto;">
+                <div class="hero-pill" style="margin: 0 auto 16px auto;">
+                    <span class="pulsing-dot"></span>
+                    <span>ARQUITETURA DE CIBER-DEFESA 360° // 11 FERRAMENTAS</span>
+                </div>
+                <h1 style="font-size: 38px; font-weight: 800; color: #fff; margin-bottom: 16px; line-height: 1.2;">
+                    Nossas Ferramentas de <span style="color:var(--matrix-green); text-shadow: 0 0 20px rgba(0,255,65,0.3);">Segurança Autônoma</span>
+                </h1>
+                <p style="font-size: 16px; color: var(--text-muted); line-height: 1.6;">
+                    O <strong>NeuroSec ASPM 4.0</strong> unifica proteção em todas as camadas da sua aplicação. Explicamos cada uma das 11 ferramentas tanto de forma <strong>didática para quem está conhecendo</strong> quanto em <strong>profundidade técnica para especialistas de DevSecOps</strong>.
+                </p>
+            </div>
+
+            <!-- 11 Tools Interactive Grid -->
+            <div style="display: flex; flex-direction: column; gap: 24px;">
+
+                <!-- Ferramenta 1: SAST -->
+                <article class="pulse-card" style="padding: 28px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+                        <div style="display: flex; align-items: center; gap: 14px;">
+                            <div style="font-size: 32px; background: rgba(0,255,65,0.1); border: 1px solid var(--border-matrix); padding: 10px; border-radius: 10px;">⚡</div>
+                            <div>
+                                <span style="font-size: 11px; font-weight: 700; color: var(--matrix-green); text-transform: uppercase;">Ferramenta 1 // Camada de Código</span>
+                                <h2 style="font-size: 22px; font-weight: 800; color: #fff;">Scanner SAST (Static Application Security Testing)</h2>
+                            </div>
+                        </div>
+                        <span style="font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: rgba(0,255,65,0.15); color: #00FF41; border: 1px solid var(--border-matrix);">Shift-Left Code Audit</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 14px; line-height: 1.6;">
+                        <div style="background: rgba(7,9,14,0.6); padding: 18px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+                            <strong style="color: var(--matrix-green); display: block; margin-bottom: 6px;">💡 O que faz e pra que serve (Técnico):</strong>
+                            Analisa o código-fonte linha por linha utilizando Árvores de Sintaxe Abstrata (AST) para Python, JavaScript e consultas SQL. Detecta injeções SQL, execução de comandos shell inseguros (RCE via `os.system` / `eval`) e chaves de API expostas em texto plano antes de qualquer build.
+                        </div>
+                        <div style="background: rgba(99,102,241,0.06); padding: 18px; border-radius: 8px; border: 1px solid var(--border-ai);">
+                            <strong style="color: #A5B4FC; display: block; margin-bottom: 6px;">👶 De forma Didática:</strong>
+                            Pense no SAST como um <strong>raio-x da fiação elétrica da casa</strong> antes de fechar as paredes. Ele encontra fios desencapados no código onde invasores poderiam causar um curto-circuito.
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Ferramenta 2: DAST -->
+                <article class="pulse-card" style="padding: 28px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+                        <div style="display: flex; align-items: center; gap: 14px;">
+                            <div style="font-size: 32px; background: rgba(0,240,255,0.1); border: 1px solid rgba(0,240,255,0.3); padding: 10px; border-radius: 10px;">🌐</div>
+                            <div>
+                                <span style="font-size: 11px; font-weight: 700; color: #00F0FF; text-transform: uppercase;">Ferramenta 2 // Perímetro Web & APIs</span>
+                                <h2 style="font-size: 22px; font-weight: 800; color: #fff;">Scanner DAST (Dynamic Application Security Testing)</h2>
+                            </div>
+                        </div>
+                        <span style="font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: rgba(0,240,255,0.15); color: #00F0FF; border: 1px solid rgba(0,240,255,0.3);">WAF & Edge Bypass Proof</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 14px; line-height: 1.6;">
+                        <div style="background: rgba(7,9,14,0.6); padding: 18px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+                            <strong style="color: #00F0FF; display: block; margin-bottom: 6px;">💡 O que faz e pra que serve (Técnico):</strong>
+                            Dispara sondagens HTTP/HTTPS contra endpoints reais em execução. Avalia conformidade com cabeçalhos RFC defensivos (`Strict-Transport-Security`, `Content-Security-Policy`, `X-Frame-Options`), expiração de certificados TLS e respostas de erro, utilizando cabeçalhos modernos para navegar por trás de WAFs como Cloudflare, Azion e Akamai.
+                        </div>
+                        <div style="background: rgba(99,102,241,0.06); padding: 18px; border-radius: 8px; border: 1px solid var(--border-ai);">
+                            <strong style="color: #A5B4FC; display: block; margin-bottom: 6px;">👶 De forma Didática:</strong>
+                            É o <strong>teste de maçaneta</strong>. Ele vai até a porta da frente do site e checa se as fechaduras estão trancadas e se alguém consegue espiar pelo buraco da fechadura.
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Ferramenta 3: SCA & SBOM -->
+                <article class="pulse-card" style="padding: 28px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+                        <div style="display: flex; align-items: center; gap: 14px;">
+                            <div style="font-size: 32px; background: rgba(99,102,241,0.1); border: 1px solid var(--border-ai); padding: 10px; border-radius: 10px;">📦</div>
+                            <div>
+                                <span style="font-size: 11px; font-weight: 700; color: #A5B4FC; text-transform: uppercase;">Ferramenta 3 // Cadeia de Suprimentos</span>
+                                <h2 style="font-size: 22px; font-weight: 800; color: #fff;">Scanner SCA & SBOM (Software Composition Analysis)</h2>
+                            </div>
+                        </div>
+                        <span style="font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: rgba(99,102,241,0.15); color: #A5B4FC; border: 1px solid var(--border-ai);">CycloneDX v1.5 JSON</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 14px; line-height: 1.6;">
+                        <div style="background: rgba(7,9,14,0.6); padding: 18px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+                            <strong style="color: #A5B4FC; display: block; margin-bottom: 6px;">💡 O que faz e pra que serve (Técnico):</strong>
+                            Mapeia manifestos de dependências (`requirements.txt`, `package.json`), cruzando cada biblioteca e versão contra bases mundiais de vulnerabilidades NVD/OSV. Gera o inventário de software oficial (CycloneDX SBOM) exigido por órgãos reguladores.
+                        </div>
+                        <div style="background: rgba(0,255,65,0.06); padding: 18px; border-radius: 8px; border: 1px solid var(--border-matrix);">
+                            <strong style="color: var(--matrix-green); display: block; margin-bottom: 6px;">👶 De forma Didática:</strong>
+                            É a <strong>inspeção de alfândega</strong> das peças compradas fora. Mais de 80% do código de um app vem de outros programadores; o SCA confere se nenhuma dessas peças veio com malware ou defeito de fábrica.
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Ferramenta 4: Cloud CSPM -->
+                <article class="pulse-card" style="padding: 28px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+                        <div style="display: flex; align-items: center; gap: 14px;">
+                            <div style="font-size: 32px; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); padding: 10px; border-radius: 10px;">☁️</div>
+                            <div>
+                                <span style="font-size: 11px; font-weight: 700; color: #F59E0B; text-transform: uppercase;">Ferramenta 4 // Nuvem & Infraestrutura</span>
+                                <h2 style="font-size: 22px; font-weight: 800; color: #fff;">Cloud CSPM-lite (Cloud Security Posture Management)</h2>
+                            </div>
+                        </div>
+                        <span style="font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: rgba(245,158,11,0.15); color: #F59E0B; border: 1px solid rgba(245,158,11,0.3);">Terraform & IaC Linter</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 14px; line-height: 1.6;">
+                        <div style="background: rgba(7,9,14,0.6); padding: 18px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+                            <strong style="color: #F59E0B; display: block; margin-bottom: 6px;">💡 O que faz e pra que serve (Técnico):</strong>
+                            Audita scripts de Infraestrutura como Código (Terraform / CloudFormation / JSON) para AWS, Azure e GCP, identificando Buckets S3 com permissões públicas de leitura/escrita, políticas de IAM com permissão total (`*`) e Security Groups abertos para a internet (`0.0.0.0/0`).
+                        </div>
+                        <div style="background: rgba(99,102,241,0.06); padding: 18px; border-radius: 8px; border: 1px solid var(--border-ai);">
+                            <strong style="color: #A5B4FC; display: block; margin-bottom: 6px;">👶 De forma Didática:</strong>
+                            É a <strong>auditoria do cofre da empresa</strong>. Ela garante que ninguém deixou o armário de documentos confidenciais destrancado no meio do corredor.
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Ferramenta 5: Scorecard Executivo -->
+                <article class="pulse-card" style="padding: 28px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+                        <div style="display: flex; align-items: center; gap: 14px;">
+                            <div style="font-size: 32px; background: rgba(0,255,65,0.1); border: 1px solid var(--border-matrix); padding: 10px; border-radius: 10px;">📊</div>
+                            <div>
+                                <span style="font-size: 11px; font-weight: 700; color: var(--matrix-green); text-transform: uppercase;">Ferramenta 5 // Métricas Executivas C-Level</span>
+                                <h2 style="font-size: 22px; font-weight: 800; color: #fff;">Security Scorecard (0 a 100) & Prejuízo Evitado (R$)</h2>
+                            </div>
+                        </div>
+                        <span style="font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: rgba(0,255,65,0.15); color: #00FF41; border: 1px solid var(--border-matrix);">Chart.js Neon Analytics</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 14px; line-height: 1.6;">
+                        <div style="background: rgba(7,9,14,0.6); padding: 18px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+                            <strong style="color: var(--matrix-green); display: block; margin-bottom: 6px;">💡 O que faz e pra que serve (Técnico):</strong>
+                            Aplica um algoritmo matemático ponderado que avalia severidades (Crítica, Alta, Média), MTTR (tempo médio de resposta) e calcula o ROI de segurança através da estimativa de Prejuízo Financeiro Evitado (R$ 35k por vulnerabilidade remediada). Apresenta gráficos neon de tendência e rosca por camada.
+                        </div>
+                        <div style="background: rgba(99,102,241,0.06); padding: 18px; border-radius: 8px; border: 1px solid var(--border-ai);">
+                            <strong style="color: #A5B4FC; display: block; margin-bottom: 6px;">👶 De forma Didática:</strong>
+                            É o <strong>painel de instrumentos e nota do boletim</strong>. Ele traduz termos técnicos complicados em uma nota simples de 0 a 100 e mostra em reais quanto dinheiro a empresa economizou ao se proteger.
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Ferramenta 6: Inventário de Ameaças -->
+                <article class="pulse-card" style="padding: 28px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+                        <div style="display: flex; align-items: center; gap: 14px;">
+                            <div style="font-size: 32px; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); padding: 10px; border-radius: 10px;">🛡️</div>
+                            <div>
+                                <span style="font-size: 11px; font-weight: 700; color: #EF4444; text-transform: uppercase;">Ferramenta 6 // Gestão de Vulnerabilidades</span>
+                                <h2 style="font-size: 22px; font-weight: 800; color: #fff;">Inventário Dinâmico de Ameaças</h2>
+                            </div>
+                        </div>
+                        <span style="font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: rgba(239,68,68,0.15); color: #EF4444; border: 1px solid rgba(239,68,68,0.3);">Filtros em Tempo Real</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 14px; line-height: 1.6;">
+                        <div style="background: rgba(7,9,14,0.6); padding: 18px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+                            <strong style="color: #EF4444; display: block; margin-bottom: 6px;">💡 O que faz e pra que serve (Técnico):</strong>
+                            Tabela unificada que centraliza achados de código, rede, nuvem e dependências. Oferece busca instantânea por CVE, ativo e severidade, com acesso com 1 clique para gerar Dossiês Técnicos de IA ou aprovar patches.
+                        </div>
+                        <div style="background: rgba(0,255,65,0.06); padding: 18px; border-radius: 8px; border: 1px solid var(--border-matrix);">
+                            <strong style="color: var(--matrix-green); display: block; margin-bottom: 6px;">👶 De forma Didática:</strong>
+                            É o <strong>prontuário médico central</strong> do sistema. Ele lista todos os pontos fracos da empresa por ordem de gravidade para que a equipe saiba exatamente o que resolver primeiro.
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Ferramenta 7: Studio de Remediação com IA -->
+                <article class="pulse-card" style="padding: 28px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+                        <div style="display: flex; align-items: center; gap: 14px;">
+                            <div style="font-size: 32px; background: rgba(99,102,241,0.1); border: 1px solid var(--border-ai); padding: 10px; border-radius: 10px;">🤖</div>
+                            <div>
+                                <span style="font-size: 11px; font-weight: 700; color: #A5B4FC; text-transform: uppercase;">Ferramenta 7 // Autonomia Cognitiva</span>
+                                <h2 style="font-size: 22px; font-weight: 800; color: #fff;">Studio de Remediação & Unified Git Diff</h2>
+                            </div>
+                        </div>
+                        <span style="font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: rgba(99,102,241,0.15); color: #A5B4FC; border: 1px solid var(--border-ai);">Unified Diff 1-Click</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 14px; line-height: 1.6;">
+                        <div style="background: rgba(7,9,14,0.6); padding: 18px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+                            <strong style="color: #A5B4FC; display: block; margin-bottom: 6px;">💡 O que faz e pra que serve (Técnico):</strong>
+                            O motor da NeuroSec IA reescreve cirurgicamente o trecho vulnerável aplicando práticas defensivas (parameterized queries, sanitização estrita, os.getenv) e gera um patch em formato padrão Unified Git Diff (`+` adições em verde, `-` remoções em vermelho).
+                        </div>
+                        <div style="background: rgba(0,255,65,0.06); padding: 18px; border-radius: 8px; border: 1px solid var(--border-matrix);">
+                            <strong style="color: var(--matrix-green); display: block; margin-bottom: 6px;">👶 De forma Didática:</strong>
+                            É o <strong>cirurgião robótico</strong>. Enquanto as ferramentas antigas só reclamavam que havia um problema, a nossa IA já chega com a correção pronta e pergunta se você quer aplicar agora com 1 clique!
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Ferramenta 8: Dossiê Técnico da IA -->
+                <article class="pulse-card" style="padding: 28px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+                        <div style="display: flex; align-items: center; gap: 14px;">
+                            <div style="font-size: 32px; background: rgba(0,255,65,0.1); border: 1px solid var(--border-matrix); padding: 10px; border-radius: 10px;">📄</div>
+                            <div>
+                                <span style="font-size: 11px; font-weight: 700; color: var(--matrix-green); text-transform: uppercase;">Ferramenta 8 // Inteligência Defensiva & Aprendizado</span>
+                                <h2 style="font-size: 22px; font-weight: 800; color: #fff;">Dossiê Técnico Autônomo da NeuroSec IA</h2>
+                            </div>
+                        </div>
+                        <span style="font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: rgba(0,255,65,0.15); color: #00FF41; border: 1px solid var(--border-matrix);">PoC & 3 Estratégias</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 14px; line-height: 1.6;">
+                        <div style="background: rgba(7,9,14,0.6); padding: 18px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+                            <strong style="color: var(--matrix-green); display: block; margin-bottom: 6px;">💡 O que faz e pra que serve (Técnico):</strong>
+                            Relatório completo e estruturado emitido para cada falha: diagnóstico de causa raiz (CWE/OWASP), simulação do vetor de ataque (Proof of Concept didático), matriz de 3 abordagens de mitigação (Hotfix de código, Refatoração de arquitetura e Regra de WAF), código seguro e teste unitário defensivo em pytest.
+                        </div>
+                        <div style="background: rgba(99,102,241,0.06); padding: 18px; border-radius: 8px; border: 1px solid var(--border-ai);">
+                            <strong style="color: #A5B4FC; display: block; margin-bottom: 6px;">👶 De forma Didática:</strong>
+                            É o <strong>manual de instruções e perícia completa</strong>. Ele explica exatamente como o invasor tentou invadir, dá 3 opções de conserto e deixa um teste pronto para garantir que a casa nunca mais seja invadida.
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Ferramenta 9: Central de IA Dedicada -->
+                <article class="pulse-card" style="padding: 28px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+                        <div style="display: flex; align-items: center; gap: 14px;">
+                            <div style="font-size: 32px; background: rgba(99,102,241,0.1); border: 1px solid var(--border-ai); padding: 10px; border-radius: 10px;">🧠</div>
+                            <div>
+                                <span style="font-size: 11px; font-weight: 700; color: #A5B4FC; text-transform: uppercase;">Ferramenta 9 // Workspace Cognitivo</span>
+                                <h2 style="font-size: 22px; font-weight: 800; color: #fff;">Central de IA Dedicada (Workspace AppSec)</h2>
+                            </div>
+                        </div>
+                        <span style="font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: rgba(99,102,241,0.15); color: #A5B4FC; border: 1px solid var(--border-ai);">ChatGPT-Style Workspace</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 14px; line-height: 1.6;">
+                        <div style="background: rgba(7,9,14,0.6); padding: 18px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+                            <strong style="color: #A5B4FC; display: block; margin-bottom: 6px;">💡 O que faz e pra que serve (Técnico):</strong>
+                            Interface de chat em tela cheia com repertório cognitivo em AppSec, Criptografia Pós-Quântica (PQC), conformidade LGPD (Art. 46) e arquitetura em nuvem. Permite colar snippets para auditoria e debater soluções de segurança complexas.
+                        </div>
+                        <div style="background: rgba(0,255,65,0.06); padding: 18px; border-radius: 8px; border: 1px solid var(--border-matrix);">
+                            <strong style="color: var(--matrix-green); display: block; margin-bottom: 6px;">👶 De forma Didática:</strong>
+                            É como ter um <strong>professor e especialista sênior em segurança digital sentado ao seu lado</strong>, pronto para responder qualquer dúvida de forma simples ou super técnica.
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Ferramenta 10: Automação CI/CD -->
+                <article class="pulse-card" style="padding: 28px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+                        <div style="display: flex; align-items: center; gap: 14px;">
+                            <div style="font-size: 32px; background: rgba(0,255,65,0.1); border: 1px solid var(--border-matrix); padding: 10px; border-radius: 10px;">⚡</div>
+                            <div>
+                                <span style="font-size: 11px; font-weight: 700; color: var(--matrix-green); text-transform: uppercase;">Ferramenta 10 // Pipeline DevSecOps</span>
+                                <h2 style="font-size: 22px; font-weight: 800; color: #fff;">Automação CI/CD (GitHub Actions & GitLab CI Gate)</h2>
+                            </div>
+                        </div>
+                        <span style="font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: rgba(0,255,65,0.15); color: #00FF41; border: 1px solid var(--border-matrix);">DevSecOps Gate</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 14px; line-height: 1.6;">
+                        <div style="background: rgba(7,9,14,0.6); padding: 18px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+                            <strong style="color: var(--matrix-green); display: block; margin-bottom: 6px;">💡 O que faz e pra que serve (Técnico):</strong>
+                            Gera workflows de automação contínua para GitHub Actions e GitLab CI. Toda vez que um desenvolvedor abre um Pull Request ou dá `git push`, o pipeline audita o código automaticamente e bloqueia o merge se encontrar vulnerabilidades críticas.
+                        </div>
+                        <div style="background: rgba(99,102,241,0.06); padding: 18px; border-radius: 8px; border: 1px solid var(--border-ai);">
+                            <strong style="color: #A5B4FC; display: block; margin-bottom: 6px;">👶 De forma Didática:</strong>
+                            É a <strong>catraca com detector de metais</strong> na entrada do prédio. Ela não deixa nenhum arquivo com problemas entrar na versão oficial da empresa.
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Ferramenta 11: Cyber Terminal CLI & Auditoria SOC 2 -->
+                <article class="pulse-card" style="padding: 28px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+                        <div style="display: flex; align-items: center; gap: 14px;">
+                            <div style="font-size: 32px; background: rgba(0,240,255,0.1); border: 1px solid rgba(0,240,255,0.3); padding: 10px; border-radius: 10px;">💻</div>
+                            <div>
+                                <span style="font-size: 11px; font-weight: 700; color: #00F0FF; text-transform: uppercase;">Ferramenta 11 // Governança & Terminal</span>
+                                <h2 style="font-size: 22px; font-weight: 800; color: #fff;">Cyber Terminal CLI & Trilha de Auditoria SOC 2</h2>
+                            </div>
+                        </div>
+                        <span style="font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: rgba(0,240,255,0.15); color: #00F0FF; border: 1px solid rgba(0,240,255,0.3);">SOC 2 / ISO 27001</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 14px; line-height: 1.6;">
+                        <div style="background: rgba(7,9,14,0.6); padding: 18px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+                            <strong style="color: #00F0FF; display: block; margin-bottom: 6px;">💡 O que faz e pra que serve (Técnico):</strong>
+                            Console de linha de comando com comandos rápidos (`scorecard`, `list`, `help`) integrado a uma base de auditoria imutável que registra todas as aprovações de patch com operador, data/hora UTC e detalhes para comprovação formal perante a ANPD e auditores SOC 2.
+                        </div>
+                        <div style="background: rgba(0,255,65,0.06); padding: 18px; border-radius: 8px; border: 1px solid var(--border-matrix);">
+                            <strong style="color: var(--matrix-green); display: block; margin-bottom: 6px;">👶 De forma Didática:</strong>
+                            É a <strong>caixa-preta inviolável</strong> do sistema. Ela grava tudo o que aconteceu e quem aprovou cada conserto para provar que a empresa segue rigorosamente a lei.
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+
+            <!-- CTA Bottom -->
+            <div style="text-align: center; margin-top: 60px; padding: 40px; background: linear-gradient(135deg, rgba(0,255,65,0.08), rgba(99,102,241,0.1)); border: 1px solid var(--border-matrix); border-radius: 14px;">
+                <h3 style="font-size: 26px; font-weight: 800; color: #fff; margin-bottom: 12px;">Pronto para testar todas as 11 ferramentas na prática?</h3>
+                <p style="font-size: 15px; color: var(--text-muted); margin-bottom: 24px;">Acesse o Cockpit interativo e experimente a potência da ciber-defesa autônoma com a NeuroSec IA.</p>
+                <div style="display: flex; gap: 16px; justify-content: center;">
+                    <a href="/dashboard" class="btn-primary-matrix" style="font-size: 15px; padding: 14px 30px;">Acessar o Cockpit Agora 🚀</a>
+                    <a href="/avaliacao" class="btn-secondary-dark" style="font-size: 15px; padding: 14px 26px;">Solicitar Avaliação Enterprise 📋</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer style="padding: 40px 0; border-top: 1px solid var(--border-subtle); background: var(--bg-primary);">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div class="cobra-badge" data-cobra-shield="22"></div>
+                <span style="font-size: 14px; font-weight: 700; color: #fff;">NeuroSec ASPM 4.0 // The Autonomous Cyber Defense Matrix</span>
+            </div>
+            <div style="font-size: 13px; color: var(--text-dim);">
+                © 2026 NeuroSec Enterprise Technologies. Todos os direitos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/js/cobra-logo.js"></script>
+    <script src="/js/api.js"></script>
+</body>
+</html>
