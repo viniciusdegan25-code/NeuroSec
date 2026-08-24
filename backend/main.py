@@ -129,6 +129,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.middleware("http")
+async def add_no_cache_headers(request, call_next):
+    response = await call_next(request)
+    # Impede que o navegador sirva páginas ou scripts antigos em cache
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
+
 # Roteador Principal v1
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
@@ -151,60 +160,55 @@ if os.path.exists(frontend_path):
         
     app.mount("/static", StaticFiles(directory=frontend_path), name="static")
 
+    def _serve_file_no_cache(file_path: str):
+        if os.path.exists(file_path):
+            return FileResponse(
+                file_path,
+                headers={
+                    "Cache-Control": "no-cache, no-store, must-revalidate",
+                    "Pragma": "no-cache",
+                    "Expires": "0"
+                }
+            )
+        return FileResponse(os.path.join(frontend_path, "index.html"))
+
     # 1. Rota Comercial Hub Principal (Multi-Page)
     @app.get("/")
     def serve_frontend_root():
         index_file = os.path.join(frontend_path, "index.html")
-        if os.path.exists(index_file):
-            return FileResponse(index_file)
-        return {"message": "NeuroSec ASPM 4.0 Backend API is running."}
+        return _serve_file_no_cache(index_file)
 
     # 2. Rota de Solicitação de Avaliação / Onboarding (Multi-Page)
     @app.get("/avaliacao")
     @app.get("/solicitar-avaliacao")
     def serve_avaliacao_page():
-        page = os.path.join(frontend_path, "avaliacao.html")
-        if os.path.exists(page):
-            return FileResponse(page)
-        return FileResponse(os.path.join(frontend_path, "index.html"))
+        return _serve_file_no_cache(os.path.join(frontend_path, "avaliacao.html"))
 
     # 3. Rota do Portal de Notícias Reais & Threat Intelligence (Multi-Page)
     @app.get("/noticias")
     @app.get("/threat-intel")
     def serve_noticias_page():
-        page = os.path.join(frontend_path, "noticias.html")
-        if os.path.exists(page):
-            return FileResponse(page)
-        return FileResponse(os.path.join(frontend_path, "index.html"))
+        return _serve_file_no_cache(os.path.join(frontend_path, "noticias.html"))
 
     # 4. Rota "Nossas Ferramentas" (Guia Técnico e Didático dos 11 Motores)
     @app.get("/ferramentas")
     @app.get("/nossas-ferramentas")
     def serve_ferramentas_page():
-        page = os.path.join(frontend_path, "ferramentas.html")
-        if os.path.exists(page):
-            return FileResponse(page)
-        return FileResponse(os.path.join(frontend_path, "index.html"))
+        return _serve_file_no_cache(os.path.join(frontend_path, "ferramentas.html"))
 
-    # 4. Rota do Dashboard / Cockpit SPA Logado (Single Page Application)
+    # 5. Rota do Dashboard / Cockpit SPA Logado (Single Page Application)
     @app.get("/dashboard")
     @app.get("/app")
     @app.get("/cockpit")
     def serve_dashboard_spa():
-        page = os.path.join(frontend_path, "dashboard.html")
-        if os.path.exists(page):
-            return FileResponse(page)
-        return FileResponse(os.path.join(frontend_path, "index.html"))
+        return _serve_file_no_cache(os.path.join(frontend_path, "dashboard.html"))
 
-    # 5. Rota de Autenticação Segura & MFA (Login Screen)
+    # 6. Rota de Autenticação Segura & MFA (Login Screen)
     @app.get("/login")
     @app.get("/entrar")
     @app.get("/auth")
     def serve_login_page():
-        page = os.path.join(frontend_path, "login.html")
-        if os.path.exists(page):
-            return FileResponse(page)
-        return FileResponse(os.path.join(frontend_path, "index.html"))
+        return _serve_file_no_cache(os.path.join(frontend_path, "login.html"))
 
 @app.get("/health", summary="Healthcheck da API")
 def healthcheck():

@@ -1,12 +1,11 @@
-// NeuroSec API Client Layer - Cloud & Local Hybrid Router
+// NeuroSec API Client Layer - Cloud & Local Hybrid Router (v4.5.0)
 const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
 const isRender = window.location.hostname.includes("onrender.com");
 
-const API_BASE = isRender
+// Se está rodando no Render ou no backend local, usa caminho relativo '/api/v1' que é 100% autônomo
+const API_BASE = (isRender || (isLocal && window.location.port === "8000"))
     ? "/api/v1"
-    : (isLocal 
-        ? (window.location.port === "8000" ? "/api/v1" : "http://127.0.0.1:8000/api/v1")
-        : "https://neurosec-api.onrender.com/api/v1");
+    : (isLocal ? "http://127.0.0.1:8000/api/v1" : "https://neurosec-api.onrender.com/api/v1");
 
 const NeuroAPI = {
     _getHeaders(extraHeaders = {}) {
@@ -31,7 +30,11 @@ const NeuroAPI = {
             return await res.json();
         } catch (err) {
             console.error(`Erro GET ${endpoint}:`, err);
-            NeuroUI.toast(`Erro na requisição: ${err.message}`, "error");
+            if (err.message && err.message.includes("Failed to fetch")) {
+                NeuroUI.toast("⏳ Conectando ao servidor em nuvem (Render)...", "info");
+            } else {
+                NeuroUI.toast(`Erro na requisição: ${err.message}`, "error");
+            }
             throw err;
         }
     },
