@@ -1,11 +1,13 @@
-// NeuroSec API Client Layer - Cloud & Local Hybrid Router (v4.5.0)
+// NeuroSec API Client Layer - Cloud & Local Hybrid Router with Auto-Failover (v4.5.1)
 const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
 const isRender = window.location.hostname.includes("onrender.com");
 
-// Se está rodando no Render ou no backend local, usa caminho relativo '/api/v1' que é 100% autônomo
-const API_BASE = (isRender || (isLocal && window.location.port === "8000"))
+const CLOUD_API_BASE = "https://neurosec-api.onrender.com/api/v1";
+
+// Se está rodando no Render ou no backend local porta 8000, usa caminho relativo '/api/v1'
+let activeApiBase = (isRender || (isLocal && window.location.port === "8000"))
     ? "/api/v1"
-    : (isLocal ? "http://127.0.0.1:8000/api/v1" : "https://neurosec-api.onrender.com/api/v1");
+    : (isLocal ? "http://127.0.0.1:8000/api/v1" : CLOUD_API_BASE);
 
 const NeuroAPI = {
     _getHeaders(extraHeaders = {}) {
@@ -17,9 +19,25 @@ const NeuroAPI = {
         return headers;
     },
 
+    async _fetchWithFailover(endpoint, options = {}) {
+        try {
+            const res = await fetch(`${activeApiBase}${endpoint}`, options);
+            return res;
+        } catch (err) {
+            // Se falhou ao tentar o backend local ou relativo e não era a nuvem direta, tenta o Render Cloud automaticamente
+            if (activeApiBase !== CLOUD_API_BASE) {
+                console.warn(`[NeuroSec Auto-Failover] Falha ao conectar em ${activeApiBase}. Redirecionando para a Nuvem Render...`);
+                activeApiBase = CLOUD_API_BASE;
+                const cloudRes = await fetch(`${CLOUD_API_BASE}${endpoint}`, options);
+                return cloudRes;
+            }
+            throw err;
+        }
+    },
+
     async get(endpoint) {
         try {
-            const res = await fetch(`${API_BASE}${endpoint}`, {
+            const res = await this._fetchWithFailover(endpoint, {
                 headers: this._getHeaders()
             });
             if (!res.ok) {
@@ -31,7 +49,7 @@ const NeuroAPI = {
         } catch (err) {
             console.error(`Erro GET ${endpoint}:`, err);
             if (err.message && err.message.includes("Failed to fetch")) {
-                NeuroUI.toast("⏳ Conectando ao servidor em nuvem (Render)...", "info");
+                NeuroUI.toast("⏳ Conectando ao cluster em nuvem...", "info");
             } else {
                 NeuroUI.toast(`Erro na requisição: ${err.message}`, "error");
             }
@@ -41,7 +59,7 @@ const NeuroAPI = {
 
     async post(endpoint, body = {}) {
         try {
-            const res = await fetch(`${API_BASE}${endpoint}`, {
+            const res = await this._fetchWithFailover(endpoint, {
                 method: "POST",
                 headers: this._getHeaders(),
                 body: JSON.stringify(body)
@@ -61,7 +79,7 @@ const NeuroAPI = {
 
     async patch(endpoint, body = {}) {
         try {
-            const res = await fetch(`${API_BASE}${endpoint}`, {
+            const res = await this._fetchWithFailover(endpoint, {
                 method: "PATCH",
                 headers: this._getHeaders(),
                 body: JSON.stringify(body)
@@ -81,7 +99,7 @@ const NeuroAPI = {
 
     async put(endpoint, body = {}) {
         try {
-            const res = await fetch(`${API_BASE}${endpoint}`, {
+            const res = await this._fetchWithFailover(endpoint, {
                 method: "PUT",
                 headers: this._getHeaders(),
                 body: JSON.stringify(body)
@@ -101,7 +119,7 @@ const NeuroAPI = {
 
     async delete(endpoint) {
         try {
-            const res = await fetch(`${API_BASE}${endpoint}`, {
+            const res = await this._fetchWithFailover(endpoint, {
                 method: "DELETE",
                 headers: this._getHeaders()
             });

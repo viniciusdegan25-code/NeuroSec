@@ -205,28 +205,28 @@ const NeuroClients = {
             const vectorsContainer = document.getElementById("cockpitFinancialVectors");
             if (vectorsContainer) {
                 vectorsContainer.innerHTML = `
-                    <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-subtle); padding:14px; border-radius:8px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-subtle); padding:16px; border-radius:8px;">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:6px;">
                             <span style="font-size:12px; font-weight:700; color:#E2E8F0;">1. Risco LGPD (Vazamento)</span>
-                            <span style="font-family:var(--font-mono); font-weight:800; color:#EF4444; font-size:13px;">${finData.data_breach_risk_brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                            <span style="font-family:var(--font-mono); font-weight:800; color:#EF4444; font-size:13px; white-space:nowrap;">${finData.data_breach_risk_brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
                         </div>
-                        <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">Custo médio setorial de R$ ${finData.cost_per_record_brl.toFixed(2)} por registro vazado (${c.industry}).</p>
+                        <p style="font-size:11px; color:var(--text-muted); margin-top:6px; line-height:1.4;">Custo médio setorial de R$ ${finData.cost_per_record_brl.toFixed(2)} por registro vazado (${c.industry}).</p>
                     </div>
 
-                    <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-subtle); padding:14px; border-radius:8px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-subtle); padding:16px; border-radius:8px;">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:6px;">
                             <span style="font-size:12px; font-weight:700; color:#E2E8F0;">2. Risco de Interrupção / Downtime</span>
-                            <span style="font-family:var(--font-mono); font-weight:800; color:#F97316; font-size:13px;">${finData.downtime_risk_brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                            <span style="font-family:var(--font-mono); font-weight:800; color:#F97316; font-size:13px; white-space:nowrap;">${finData.downtime_risk_brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
                         </div>
-                        <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">Custo de paralisação de R$ ${finData.downtime_cost_per_hour.toLocaleString('pt-BR')}/hora por RCE ou falhas de nuvem.</p>
+                        <p style="font-size:11px; color:var(--text-muted); margin-top:6px; line-height:1.4;">Custo de paralisação de R$ ${finData.downtime_cost_per_hour.toLocaleString('pt-BR')}/hora por RCE ou falhas de nuvem.</p>
                     </div>
 
-                    <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-subtle); padding:14px; border-radius:8px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-subtle); padding:16px; border-radius:8px;">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:6px;">
                             <span style="font-size:12px; font-weight:700; color:#E2E8F0;">3. Sanções & Multas Regulatórias</span>
-                            <span style="font-family:var(--font-mono); font-weight:800; color:#EAB308; font-size:13px;">${finData.regulatory_fine_risk_brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                            <span style="font-family:var(--font-mono); font-weight:800; color:#EAB308; font-size:13px; white-space:nowrap;">${finData.regulatory_fine_risk_brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
                         </div>
-                        <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">Teto legal de 2% do faturamento da empresa (ANPD / LGPD Art. 52).</p>
+                        <p style="font-size:11px; color:var(--text-muted); margin-top:6px; line-height:1.4;">Teto legal de 2% do faturamento da empresa (ANPD / LGPD Art. 52).</p>
                     </div>
                 `;
             }
@@ -240,16 +240,16 @@ const NeuroClients = {
                 const sec = matrix.sector_standard || { name: "Norma Setorial", score: 100, status: "CONFORME", controls: [] };
 
                 const getBadge = (score) => {
-                    if (score >= 80) return `<span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:4px; background:rgba(0,255,65,0.15); color:var(--matrix-green); border:1px solid var(--matrix-green);">CONFORME ●</span>`;
-                    if (score >= 50) return `<span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:4px; background:rgba(249,115,22,0.15); color:#F97316; border:1px solid #F97316;">PARCIAL ▲</span>`;
-                    return `<span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:4px; background:rgba(239,68,68,0.15); color:#EF4444; border:1px solid #EF4444;">NÃO CONFORME ✕</span>`;
+                    if (score >= 80) return `<span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:4px; background:rgba(0,255,65,0.15); color:var(--matrix-green); border:1px solid var(--matrix-green); white-space:nowrap;">CONFORME ●</span>`;
+                    if (score >= 50) return `<span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:4px; background:rgba(249,115,22,0.15); color:#F97316; border:1px solid #F97316; white-space:nowrap;">PARCIAL ▲</span>`;
+                    return `<span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:4px; background:rgba(239,68,68,0.15); color:#EF4444; border:1px solid #EF4444; white-space:nowrap;">NÃO CONFORME ✕</span>`;
                 };
 
                 const getBarColor = (score) => score >= 80 ? "var(--matrix-green)" : (score >= 50 ? "#F97316" : "#EF4444");
 
                 complianceContainer.innerHTML = `
                     <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-subtle); padding:16px; border-radius:8px; display:flex; flex-direction:column; gap:10px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
                             <span style="font-size:13px; font-weight:700; color:#fff;">ISO/IEC 27001:2022</span>
                             ${getBadge(iso.score)}
                         </div>
@@ -260,18 +260,18 @@ const NeuroClients = {
                         <div style="background:rgba(255,255,255,0.06); height:6px; border-radius:3px; overflow:hidden;">
                             <div style="width:${iso.score}%; height:100%; background:${getBarColor(iso.score)}; transition:width 0.5s ease;"></div>
                         </div>
-                        <div style="display:flex; flex-direction:column; gap:4px; margin-top:4px;">
+                        <div style="display:flex; flex-direction:column; gap:6px; margin-top:4px;">
                             ${(iso.controls || []).map(c => `
-                                <div style="font-size:11px; display:flex; justify-content:space-between; color:${c.status === 'PASS' ? '#94A3B8' : '#EF4444'};">
-                                    <span>${c.id} - ${c.name}</span>
-                                    <span>${c.status === 'PASS' ? '✓' : '✕'}</span>
+                                <div style="font-size:11px; display:flex; justify-content:space-between; align-items:flex-start; gap:8px; color:${c.status === 'PASS' ? '#94A3B8' : '#EF4444'};">
+                                    <span style="word-break:break-word;">${c.id} - ${c.name}</span>
+                                    <span style="font-weight:700; white-space:nowrap;">${c.status === 'PASS' ? '✓' : '✕'}</span>
                                 </div>
                             `).join('')}
                         </div>
                     </div>
 
                     <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-subtle); padding:16px; border-radius:8px; display:flex; flex-direction:column; gap:10px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
                             <span style="font-size:13px; font-weight:700; color:#fff;">LGPD / ANPD (Lei 13.709)</span>
                             ${getBadge(lgpd.score)}
                         </div>
@@ -282,19 +282,19 @@ const NeuroClients = {
                         <div style="background:rgba(255,255,255,0.06); height:6px; border-radius:3px; overflow:hidden;">
                             <div style="width:${lgpd.score}%; height:100%; background:${getBarColor(lgpd.score)}; transition:width 0.5s ease;"></div>
                         </div>
-                        <div style="display:flex; flex-direction:column; gap:4px; margin-top:4px;">
+                        <div style="display:flex; flex-direction:column; gap:6px; margin-top:4px;">
                             ${(lgpd.controls || []).map(c => `
-                                <div style="font-size:11px; display:flex; justify-content:space-between; color:${c.status === 'PASS' ? '#94A3B8' : '#EF4444'};">
-                                    <span>${c.id} - ${c.name}</span>
-                                    <span>${c.status === 'PASS' ? '✓' : '✕'}</span>
+                                <div style="font-size:11px; display:flex; justify-content:space-between; align-items:flex-start; gap:8px; color:${c.status === 'PASS' ? '#94A3B8' : '#EF4444'};">
+                                    <span style="word-break:break-word;">${c.id} - ${c.name}</span>
+                                    <span style="font-weight:700; white-space:nowrap;">${c.status === 'PASS' ? '✓' : '✕'}</span>
                                 </div>
                             `).join('')}
                         </div>
                     </div>
 
                     <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-subtle); padding:16px; border-radius:8px; display:flex; flex-direction:column; gap:10px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-size:13px; font-weight:700; color:#fff;">${sec.name}</span>
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+                            <span style="font-size:13px; font-weight:700; color:#fff; word-break:break-word;">${sec.name}</span>
                             ${getBadge(sec.score)}
                         </div>
                         <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted);">
@@ -304,11 +304,11 @@ const NeuroClients = {
                         <div style="background:rgba(255,255,255,0.06); height:6px; border-radius:3px; overflow:hidden;">
                             <div style="width:${sec.score}%; height:100%; background:${getBarColor(sec.score)}; transition:width 0.5s ease;"></div>
                         </div>
-                        <div style="display:flex; flex-direction:column; gap:4px; margin-top:4px;">
+                        <div style="display:flex; flex-direction:column; gap:6px; margin-top:4px;">
                             ${(sec.controls || []).map(c => `
-                                <div style="font-size:11px; display:flex; justify-content:space-between; color:${c.status === 'PASS' ? '#94A3B8' : '#EF4444'};">
-                                    <span>${c.id} - ${c.name}</span>
-                                    <span>${c.status === 'PASS' ? '✓' : '✕'}</span>
+                                <div style="font-size:11px; display:flex; justify-content:space-between; align-items:flex-start; gap:8px; color:${c.status === 'PASS' ? '#94A3B8' : '#EF4444'};">
+                                    <span style="word-break:break-word;">${c.id} - ${c.name}</span>
+                                    <span style="font-weight:700; white-space:nowrap;">${c.status === 'PASS' ? '✓' : '✕'}</span>
                                 </div>
                             `).join('')}
                         </div>
@@ -321,11 +321,9 @@ const NeuroClients = {
             const assetsList = document.getElementById("cockpitAssetsList");
             if (assetsList) {
                 assetsList.innerHTML = assets.length > 0 ? assets.map(a => `
-                    <div style="display:flex; justify-content:space-between; align-items:center; background:#030712; border:1px solid var(--border-subtle); padding:10px 14px; border-radius:6px; font-family:var(--font-mono); font-size:12px;">
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <span style="color:#00F0FF;">${a.name}</span>
-                        </div>
-                        <span style="color:var(--text-muted); font-size:11px; background:rgba(255,255,255,0.04); padding:2px 8px; border-radius:4px;">[${a.asset_type}] ${a.criticality}</span>
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; background:#030712; border:1px solid var(--border-subtle); padding:10px 14px; border-radius:6px; font-family:var(--font-mono); font-size:12px;">
+                        <span style="color:#00F0FF; word-break:break-all; flex:1; min-width:180px;">${a.name}</span>
+                        <span style="color:var(--text-muted); font-size:11px; background:rgba(255,255,255,0.04); padding:2px 8px; border-radius:4px; white-space:nowrap;">[${a.asset_type}] ${a.criticality}</span>
                     </div>
                 `).join("") : `<div style="color:var(--text-muted); font-size:12px; padding:10px;">Nenhum ativo associado diretamente.</div>`;
             }
@@ -335,12 +333,12 @@ const NeuroClients = {
             const vulnsList = document.getElementById("cockpitVulnsList");
             if (vulnsList) {
                 vulnsList.innerHTML = vulns.length > 0 ? vulns.map(v => `
-                    <div style="display:flex; justify-content:space-between; align-items:center; background:#030712; border:1px solid var(--border-subtle); padding:10px 14px; border-radius:6px; font-size:12px;">
-                        <div>
-                            <div style="color:#fff; font-weight:700;">${v.vuln_type}</div>
-                            <span style="display:block; font-size:11px; color:var(--text-muted); font-family:var(--font-mono); margin-top:2px;">${v.asset_name}</span>
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px; background:#030712; border:1px solid var(--border-subtle); padding:10px 14px; border-radius:6px; font-size:12px;">
+                        <div style="flex:1; min-width:180px;">
+                            <div style="color:#fff; font-weight:700; word-break:break-word;">${v.vuln_type}</div>
+                            <span style="display:block; font-size:11px; color:var(--text-muted); font-family:var(--font-mono); margin-top:2px; word-break:break-all;">${v.asset_name}</span>
                         </div>
-                        <div style="text-align:right;">
+                        <div style="text-align:right; white-space:nowrap;">
                             <span style="font-size:11px; font-weight:700; color:${v.severity === 'CRITICAL' ? '#EF4444' : (v.severity === 'HIGH' ? '#F97316' : '#EAB308')};">${v.severity}</span>
                             <span style="display:block; font-size:10px; color:var(--text-dim); text-transform:uppercase;">${v.status}</span>
                         </div>

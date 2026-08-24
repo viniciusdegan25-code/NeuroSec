@@ -881,7 +881,7 @@ jobs:
                         </div>
 
                         <!-- Grid de Scorecard & Gráficos Neon do Cliente (Estilo Security Scorecard) -->
-                        <div style="display:grid; grid-template-columns: 320px 1fr; gap:24px; margin-bottom:24px;">
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:24px; margin-bottom:24px;">
                             <!-- Gauge Score do Cliente -->
                             <div class="pulse-card" style="text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:28px 20px;">
                                 <span class="section-tag">// SCORECARD DA ORGANIZAÇÃO</span>
@@ -897,76 +897,78 @@ jobs:
                             </div>
 
                             <!-- 4 Big KPI Cards de Postura & Finanças -->
-                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+                            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:16px;">
                                 <div class="pulse-card" style="border-left:4px solid var(--matrix-green);">
                                     <span style="font-size:11px; font-weight:700; color:var(--matrix-green); text-transform:uppercase;">Prejuízo Financeiro Evitado (ROI)</span>
-                                    <div style="font-size:24px; font-weight:900; color:var(--matrix-green); font-family:var(--font-mono); margin:6px 0;" id="cockpitLossAvoided">R$ --</div>
+                                    <div style="font-size:22px; font-weight:900; color:var(--matrix-green); font-family:var(--font-mono); margin:6px 0;" id="cockpitLossAvoided">R$ --</div>
                                     <span style="font-size:12px; color:var(--text-muted);"><span id="cockpitRemediatedCount">0</span> vulnerabilidades blindadas</span>
                                 </div>
                                 <div class="pulse-card" style="border-left:4px solid #EF4444;">
                                     <span style="font-size:11px; font-weight:700; color:#EF4444; text-transform:uppercase;">Exposição Financeira em Aberto</span>
-                                    <div style="font-size:24px; font-weight:900; color:#EF4444; font-family:var(--font-mono); margin:6px 0;" id="cockpitExposure">R$ --</div>
+                                    <div style="font-size:22px; font-weight:900; color:#EF4444; font-family:var(--font-mono); margin:6px 0;" id="cockpitExposure">R$ --</div>
                                     <span style="font-size:12px; color:var(--text-muted);"><span id="cockpitOpenVulnsCount">0</span> falhas ativas no ambiente</span>
                                 </div>
                                 <div class="pulse-card" style="border-left:4px solid var(--cyan-neon);">
                                     <span style="font-size:11px; font-weight:700; color:var(--cyan-neon); text-transform:uppercase;">Ativos Monitorados</span>
-                                    <div style="font-size:24px; font-weight:900; color:#fff; font-family:var(--font-mono); margin:6px 0;" id="cockpitAssetsCount">--</div>
+                                    <div style="font-size:22px; font-weight:900; color:#fff; font-family:var(--font-mono); margin:6px 0;" id="cockpitAssetsCount">--</div>
                                     <span style="font-size:12px; color:var(--text-muted);">Repositórios, URLs, Cloud & Deps</span>
                                 </div>
                                 <div class="pulse-card" style="border-left:4px solid #FDE047;">
                                     <span style="font-size:11px; font-weight:700; color:#FDE047; text-transform:uppercase;">Faturamento Estrutural</span>
-                                    <div style="font-size:24px; font-weight:900; color:#FDE047; font-family:var(--font-mono); margin:6px 0;" id="cockpitAnnualRevenue">R$ --</div>
+                                    <div style="font-size:22px; font-weight:900; color:#FDE047; font-family:var(--font-mono); margin:6px 0;" id="cockpitAnnualRevenue">R$ --</div>
                                     <span style="font-size:12px; color:var(--text-muted);"><span id="cockpitSensitiveRecords">--</span> titulares sensíveis LGPD</span>
                                 </div>
                             </div>
+                        </div>
+
                         <!-- Decomposição Financeira FAIR / NIST SP 800-30 / LGPD (PME Realista) -->
                         <div class="pulse-card" style="margin-bottom:24px; padding:22px;">
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border-subtle); padding-bottom:10px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border-subtle); padding-bottom:10px; flex-wrap:wrap; gap:8px;">
                                 <div>
                                     <span class="section-tag">// MODELO DE RISCO QUANTITATIVO FAIR & NIST 800-30 (PMEs)</span>
-                                    <h3 style="font-size:16px; font-weight:800; color:#fff;">Decomposição das Perdas Financeiras Estimadas por Vetor</h3>
+                                    <h3 style="font-size:16px; font-weight:800; color:#fff; margin-top:2px;">Decomposição das Perdas Financeiras Estimadas por Vetor</h3>
                                 </div>
-                                <span style="font-size:11px; color:var(--matrix-green); font-family:var(--font-mono);">PROPORCIONAL À ESCALA PME</span>
+                                <span style="font-size:11px; color:var(--matrix-green); font-family:var(--font-mono); font-weight:700;">PROPORCIONAL À ESCALA PME</span>
                             </div>
-                            <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:14px;" id="cockpitFinancialVectors">
+                            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:14px;" id="cockpitFinancialVectors">
                                 <!-- Preenchido dinamicamente pelo JS -->
                             </div>
                         </div>
 
                         <!-- MATRIZ DE CONFORMIDADE REGULATÓRIA (ISO 27001, LGPD, PCI-DSS / SETORIAL) -->
                         <div class="pulse-card" style="margin-bottom:24px; padding:22px; border:1px solid rgba(0,240,255,0.3);">
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid var(--border-subtle); padding-bottom:10px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid var(--border-subtle); padding-bottom:10px; flex-wrap:wrap; gap:8px;">
                                 <div>
                                     <span class="section-tag" style="color:var(--cyan-neon);">// AUDITORIA & CONFORMIDADE REGULATÓRIA CONTEXTUALIZADA</span>
-                                    <h3 style="font-size:16px; font-weight:800; color:#fff;">Matriz de Aderência a Frameworks & Normas Oficiais</h3>
+                                    <h3 style="font-size:16px; font-weight:800; color:#fff; margin-top:2px;">Matriz de Aderência a Frameworks & Normas Oficiais</h3>
                                 </div>
-                                <span style="font-size:11px; color:var(--cyan-neon); font-family:var(--font-mono);">MAPEADO POR FALHAS REAIS ●</span>
+                                <span style="font-size:11px; color:var(--cyan-neon); font-family:var(--font-mono); font-weight:700;">MAPEADO POR FALHAS REAIS ●</span>
                             </div>
-                            <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:16px;" id="cockpitComplianceCards">
+                            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:16px;" id="cockpitComplianceCards">
                                 <!-- Preenchido dinamicamente pelo JS com barras de progresso e controles auditados -->
                             </div>
                         </div>
 
                         <!-- Inventário de Ativos & Vulnerabilidades da Empresa -->
-                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom:24px;">
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:20px; margin-bottom:24px;">
                             <!-- Ativos do Cliente -->
                             <div class="pulse-card" style="padding:0; overflow:hidden;">
-                                <div style="padding:14px 18px; border-bottom:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center;">
+                                <div style="padding:14px 18px; border-bottom:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
                                     <span style="font-size:13px; font-weight:700; color:#fff;">📦 Ativos Vinculados em Monitoramento</span>
-                                    <span style="font-size:11px; color:var(--cyan-neon); font-family:var(--font-mono);" id="cockpitAssetsHeaderCount">-- ativos</span>
+                                    <span style="font-size:11px; color:var(--cyan-neon); font-family:var(--font-mono); font-weight:700;" id="cockpitAssetsHeaderCount">-- ativos</span>
                                 </div>
-                                <div id="cockpitAssetsList" style="padding:12px; display:flex; flex-direction:column; gap:8px; max-height:300px; overflow-y:auto;">
+                                <div id="cockpitAssetsList" style="padding:12px; display:flex; flex-direction:column; gap:8px; max-height:350px; overflow-y:auto;">
                                     <!-- Renderizado pelo JS -->
                                 </div>
                             </div>
 
                             <!-- Vulnerabilidades Ativas do Cliente -->
                             <div class="pulse-card" style="padding:0; overflow:hidden;">
-                                <div style="padding:14px 18px; border-bottom:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center;">
+                                <div style="padding:14px 18px; border-bottom:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
                                     <span style="font-size:13px; font-weight:700; color:#fff;">🛡️ Ameaças & Vulnerabilidades Detectadas</span>
-                                    <span style="font-size:11px; color:#EF4444; font-family:var(--font-mono);" id="cockpitVulnsHeaderCount">-- falhas</span>
+                                    <span style="font-size:11px; color:#EF4444; font-family:var(--font-mono); font-weight:700;" id="cockpitVulnsHeaderCount">-- falhas</span>
                                 </div>
-                                <div id="cockpitVulnsList" style="padding:12px; display:flex; flex-direction:column; gap:8px; max-height:300px; overflow-y:auto;">
+                                <div id="cockpitVulnsList" style="padding:12px; display:flex; flex-direction:column; gap:8px; max-height:350px; overflow-y:auto;">
                                     <!-- Renderizado pelo JS -->
                                 </div>
                             </div>
@@ -1001,20 +1003,20 @@ jobs:
     <div id="toastContainer" class="toast-container"></div>
 
     <!-- Scripts com Cache-Busting Universal -->
-    <script src="/js/cobra-logo.js?v=4.5.0"></script>
-    <script src="/js/api.js?v=4.5.0"></script>
-    <script src="/js/auth.js?v=4.5.0"></script>
-    <script src="/js/clients.js?v=4.5.0"></script>
-    <script src="/js/scorecard.js?v=4.5.0"></script>
-    <script src="/js/inventory.js?v=4.5.0"></script>
-    <script src="/js/scanners.js?v=4.5.0"></script>
-    <script src="/js/remediation.js?v=4.5.0"></script>
-    <script src="/js/cicd.js?v=4.5.0"></script>
-    <script src="/js/webhooks.js?v=4.5.0"></script>
-    <script src="/js/terminal.js?v=4.5.0"></script>
-    <script src="/js/audit.js?v=4.5.0"></script>
-    <script src="/js/central-ia.js?v=4.5.0"></script>
-    <script src="/js/dashboard.js?v=4.5.0"></script>
-    <script src="/js/copilot.js?v=4.5.0"></script>
+    <script src="/js/cobra-logo.js?v=4.5.1"></script>
+    <script src="/js/api.js?v=4.5.1"></script>
+    <script src="/js/auth.js?v=4.5.1"></script>
+    <script src="/js/clients.js?v=4.5.1"></script>
+    <script src="/js/scorecard.js?v=4.5.1"></script>
+    <script src="/js/inventory.js?v=4.5.1"></script>
+    <script src="/js/scanners.js?v=4.5.1"></script>
+    <script src="/js/remediation.js?v=4.5.1"></script>
+    <script src="/js/cicd.js?v=4.5.1"></script>
+    <script src="/js/webhooks.js?v=4.5.1"></script>
+    <script src="/js/terminal.js?v=4.5.1"></script>
+    <script src="/js/audit.js?v=4.5.1"></script>
+    <script src="/js/central-ia.js?v=4.5.1"></script>
+    <script src="/js/dashboard.js?v=4.5.1"></script>
+    <script src="/js/copilot.js?v=4.5.1"></script>
 </body>
 </html>
