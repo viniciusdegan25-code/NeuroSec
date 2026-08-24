@@ -1,4 +1,4 @@
-// NeuroSec ASPM 4.5 — Gestão de Clientes & Ambientes Corporativos (Multi-Tenant Hub)
+// NeuroSec ASPM 4.5 — Gestão de Clientes & Cockpit 360° Unificado (Multi-Tenant Hub)
 const NeuroClients = {
     allClients: [],
     currentClientId: null,
@@ -30,7 +30,7 @@ const NeuroClients = {
                 avgScoreEl.style.color = summary.average_score >= 80 ? "var(--matrix-green)" : (summary.average_score >= 60 ? "var(--warn-orange)" : "var(--crit-red)");
             }
 
-            // 2. Renderiza Tabela Dinâmica
+            // 2. Renderiza Tabela Dinâmica com Botão Único 360°
             this.filterAndRenderTable();
 
             // 3. Renderiza Diretório de Usuários / CISOs
@@ -79,44 +79,39 @@ const NeuroClients = {
 
             return `
                 <tr style="border-bottom: 1px solid var(--border-subtle);">
-                    <td style="padding:14px 12px;">
-                        <div style="font-weight:700; color:#fff; font-size:14px;">${c.name}</div>
+                    <td style="padding:16px 12px;">
+                        <div style="font-weight:800; color:#fff; font-size:14px;">${c.name}</div>
                         <div style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono); margin-top:2px;">
                             CNPJ: ${c.cnpj || 'N/A'} | Setor: <span style="color:var(--cyan-neon); font-weight:600;">${c.industry}</span>
                         </div>
                     </td>
-                    <td style="padding:14px 12px;">
+                    <td style="padding:16px 12px;">
                         <div style="color:#E2E8F0; font-size:13px; font-weight:600;">${c.contact_name}</div>
                         <div style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono);">${c.contact_email}</div>
                     </td>
-                    <td style="padding:14px 12px;">
+                    <td style="padding:16px 12px;">
                         <div style="font-family:var(--font-mono); font-size:12px; color:#FDE047; font-weight:700;">${revenueFormatted}/ano</div>
                         <div style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono); margin-top:2px;">👥 ${recordsFormatted} titulares LGPD</div>
                     </td>
-                    <td style="padding:14px 12px;">
+                    <td style="padding:16px 12px;">
                         <div style="font-family:var(--font-mono); font-size:13px; font-weight:800; color:#EF4444;">${exposureFormatted}</div>
                         <div style="font-size:10px; color:var(--text-muted); font-family:var(--font-mono);">${c.open_vulns_count} falhas ativas</div>
                     </td>
-                    <td style="padding:14px 12px;">
+                    <td style="padding:16px 12px;">
                         <div style="font-family:var(--font-mono); font-size:13px; font-weight:800; color:var(--matrix-green);">${lossAvoidedFormatted}</div>
                         <div style="font-size:10px; color:var(--text-muted); font-family:var(--font-mono);">Economia por remediação</div>
                     </td>
-                    <td style="padding:14px 12px; text-align:center;">
-                        <span style="font-family:var(--font-mono); font-size:16px; font-weight:800; color:${scoreColor};">${c.security_score}</span>
+                    <td style="padding:16px 12px; text-align:center;">
+                        <span style="font-family:var(--font-mono); font-size:18px; font-weight:900; color:${scoreColor};">${c.security_score}</span>
                         <span style="font-size:11px; color:var(--text-muted);">/100</span>
                     </td>
-                    <td style="padding:14px 12px; text-align:right;">
-                        <div style="display:inline-flex; gap:6px;">
-                            <button class="btn-primary-matrix" style="padding:5px 9px; font-size:11px;" onclick="NeuroClients.triggerScan(${c.id}, '${c.name}')" title="Disparar Varredura Autônoma para o Cliente">
-                                ⚡ Scan
+                    <td style="padding:16px 12px; text-align:right;">
+                        <div style="display:inline-flex; gap:8px; align-items:center;">
+                            <button class="btn-primary-matrix" style="padding:7px 14px; font-size:12px; font-weight:700; display:flex; align-items:center; gap:6px; box-shadow:0 0 10px rgba(0,255,65,0.2);" onclick="NeuroClients.openClientCockpit(${c.id})" title="Acessar o Painel Executivo 360°, Scorecard e Dossiê Financeiro">
+                                <span>📊</span>
+                                <span>Acessar Cockpit 360°</span>
                             </button>
-                            <button class="btn-ai-indigo" style="padding:5px 9px; font-size:11px;" onclick="NeuroClients.openFinancialView(${c.id})" title="Ver Dossiê e Breakdown de Risco Financeiro">
-                                💰 Análise Financeira
-                            </button>
-                            <button class="btn-secondary-dark" style="padding:5px 9px; font-size:11px; border-color:rgba(0,240,255,0.3); color:var(--cyan-neon);" onclick="NeuroClients.openDetailsView(${c.id})" title="Ver Ativos e Postura do Cliente">
-                                🔍 Ativos
-                            </button>
-                            <button class="btn-secondary-dark" style="padding:5px 9px; font-size:11px; color:#EF4444; border-color:rgba(239,68,68,0.3);" onclick="NeuroClients.deleteClient(${c.id}, '${c.name}')" title="Excluir Cliente">
+                            <button class="btn-secondary-dark" style="padding:7px 10px; font-size:12px; color:#EF4444; border-color:rgba(239,68,68,0.3);" onclick="NeuroClients.deleteClient(${c.id}, '${c.name}')" title="Excluir Organização">
                                 🗑️
                             </button>
                         </div>
@@ -148,6 +143,168 @@ const NeuroClients = {
         `).join("");
     },
 
+    async openClientCockpit(clientId) {
+        this.currentClientId = clientId;
+        const portfolioSec = document.getElementById("clientPortfolioSection");
+        const cockpitSec = document.getElementById("clientCockpitSection");
+
+        if (portfolioSec) portfolioSec.style.display = "none";
+        if (cockpitSec) {
+            cockpitSec.style.display = "block";
+            cockpitSec.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+
+        try {
+            NeuroUI.toast("Carregando Cockpit 360° e Dossiê Financeiro...", "info");
+            const [clientData, finData] = await Promise.all([
+                NeuroAPI.get(`/clients/${clientId}`),
+                NeuroAPI.get(`/clients/${clientId}/financial-analysis`)
+            ]);
+
+            const c = clientData.client;
+            const assets = clientData.assets || [];
+            const vulns = clientData.vulnerabilities || [];
+
+            // 1. Preenche Banner de Perfil Corporativo
+            document.getElementById("cockpitClientName").innerText = c.name;
+            document.getElementById("cockpitClientCnpj").innerText = c.cnpj || 'N/A';
+            document.getElementById("cockpitClientIndustry").innerText = c.industry;
+            document.getElementById("cockpitClientSla").innerText = c.sla_tier;
+            document.getElementById("cockpitContactName").innerText = c.contact_name;
+            document.getElementById("cockpitContactEmail").innerText = c.contact_email;
+            document.getElementById("cockpitContactPhone").innerText = c.contact_phone || '+55 (11) 90000-0000';
+
+            // 2. Scorecard Gauge & Classificação
+            const scoreDisplay = document.getElementById("cockpitScoreDisplay");
+            const gradeDisplay = document.getElementById("cockpitGradeDisplay");
+            const postureStatus = document.getElementById("cockpitPostureStatus");
+
+            if (scoreDisplay) scoreDisplay.innerText = finData.security_score;
+            if (gradeDisplay) {
+                gradeDisplay.innerText = `Classificação: Nível ${finData.grade}`;
+                const gradeColor = finData.security_score >= 80 ? "var(--matrix-green)" : (finData.security_score >= 60 ? "var(--warn-orange)" : "#EF4444");
+                scoreDisplay.style.color = gradeColor;
+                gradeDisplay.style.color = gradeColor;
+            }
+            if (postureStatus) {
+                postureStatus.innerText = finData.security_score >= 80 ? "Postura Forte & Blindada" : (finData.security_score >= 60 ? "Postura Moderada (Atenção)" : "Risco Crítico Imediato");
+            }
+
+            // 3. Big KPIs
+            document.getElementById("cockpitLossAvoided").innerText = finData.financial_loss_avoided_brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById("cockpitRemediatedCount").innerText = finData.remediated_vulns_count;
+
+            document.getElementById("cockpitExposure").innerText = finData.financial_exposure_risk_brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById("cockpitOpenVulnsCount").innerText = finData.open_vulns_count;
+
+            document.getElementById("cockpitAssetsCount").innerText = assets.length;
+            document.getElementById("cockpitAnnualRevenue").innerText = finData.annual_revenue_brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
+            document.getElementById("cockpitSensitiveRecords").innerText = finData.sensitive_records_count.toLocaleString('pt-BR');
+
+            // 4. Decomposição das Perdas por Vetor (FAIR/NIST/LGPD)
+            const vectorsContainer = document.getElementById("cockpitFinancialVectors");
+            if (vectorsContainer) {
+                vectorsContainer.innerHTML = `
+                    <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-subtle); padding:14px; border-radius:8px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-size:12px; font-weight:700; color:#E2E8F0;">1. Risco LGPD (Vazamento)</span>
+                            <span style="font-family:var(--font-mono); font-weight:800; color:#EF4444; font-size:13px;">${finData.data_breach_risk_brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                        </div>
+                        <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">Custo médio setorial de R$ ${finData.cost_per_record_brl.toFixed(2)} por registro vazado (${c.industry}).</p>
+                    </div>
+
+                    <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-subtle); padding:14px; border-radius:8px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-size:12px; font-weight:700; color:#E2E8F0;">2. Risco de Interrupção / Downtime</span>
+                            <span style="font-family:var(--font-mono); font-weight:800; color:#F97316; font-size:13px;">${finData.downtime_risk_brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                        </div>
+                        <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">Custo de paralisação de R$ ${finData.downtime_cost_per_hour.toLocaleString('pt-BR')}/hora por RCE ou Cloud.</p>
+                    </div>
+
+                    <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-subtle); padding:14px; border-radius:8px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-size:12px; font-weight:700; color:#E2E8F0;">3. Sanções & Multas Regulatórias</span>
+                            <span style="font-family:var(--font-mono); font-weight:800; color:#EAB308; font-size:13px;">${finData.regulatory_fine_risk_brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                        </div>
+                        <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">Proporcional ao faturamento com teto legal de R$ 50 Milhões (ANPD / BACEN).</p>
+                    </div>
+                `;
+            }
+
+            // 5. Ativos Monitorados
+            document.getElementById("cockpitAssetsHeaderCount").innerText = `${assets.length} ativos`;
+            const assetsList = document.getElementById("cockpitAssetsList");
+            if (assetsList) {
+                assetsList.innerHTML = assets.length > 0 ? assets.map(a => `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:#030712; border:1px solid var(--border-subtle); padding:10px 14px; border-radius:6px; font-family:var(--font-mono); font-size:12px;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span style="color:#00F0FF;">${a.name}</span>
+                        </div>
+                        <span style="color:var(--text-muted); font-size:11px; background:rgba(255,255,255,0.04); padding:2px 8px; border-radius:4px;">[${a.asset_type}] ${a.criticality}</span>
+                    </div>
+                `).join("") : `<div style="color:var(--text-muted); font-size:12px; padding:10px;">Nenhum ativo associado diretamente.</div>`;
+            }
+
+            // 6. Vulnerabilidades Detectadas
+            document.getElementById("cockpitVulnsHeaderCount").innerText = `${vulns.length} falhas`;
+            const vulnsList = document.getElementById("cockpitVulnsList");
+            if (vulnsList) {
+                vulnsList.innerHTML = vulns.length > 0 ? vulns.map(v => `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:#030712; border:1px solid var(--border-subtle); padding:10px 14px; border-radius:6px; font-size:12px;">
+                        <div>
+                            <div style="color:#fff; font-weight:700;">${v.vuln_type}</div>
+                            <span style="display:block; font-size:11px; color:var(--text-muted); font-family:var(--font-mono); margin-top:2px;">${v.asset_name}</span>
+                        </div>
+                        <div style="text-align:right;">
+                            <span style="font-size:11px; font-weight:700; color:${v.severity === 'CRITICAL' ? '#EF4444' : (v.severity === 'HIGH' ? '#F97316' : '#EAB308')};">${v.severity}</span>
+                            <span style="display:block; font-size:10px; color:var(--text-dim); text-transform:uppercase;">${v.status}</span>
+                        </div>
+                    </div>
+                `).join("") : `<div style="color:var(--matrix-green); font-size:12px; padding:10px; font-weight:700;">✓ Nenhuma vulnerabilidade crítica pendente para esta organização.</div>`;
+            }
+
+        } catch (err) {
+            NeuroUI.toast("Erro ao carregar Cockpit 360°: " + err.message, "error");
+        }
+    },
+
+    closeClientCockpit() {
+        this.currentClientId = null;
+        const portfolioSec = document.getElementById("clientPortfolioSection");
+        const cockpitSec = document.getElementById("clientCockpitSection");
+
+        if (cockpitSec) cockpitSec.style.display = "none";
+        if (portfolioSec) {
+            portfolioSec.style.display = "block";
+            portfolioSec.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        this.render();
+    },
+
+    async triggerCockpitScan() {
+        if (!this.currentClientId) return;
+        const btn = document.getElementById("btnCockpitTriggerScan");
+        if (btn) btn.disabled = true;
+
+        try {
+            NeuroUI.toast("Iniciando varredura profunda de segurança (SAST, DAST, SCA, Cloud)...", "info");
+            const res = await NeuroAPI.post(`/clients/${this.currentClientId}/scan`, {});
+            NeuroUI.toast(res.message, "success");
+            await this.openClientCockpit(this.currentClientId);
+        } catch (err) {
+            NeuroUI.toast("Erro na varredura: " + err.message, "error");
+        } finally {
+            if (btn) btn.disabled = false;
+        }
+    },
+
+    exportCurrentClientReport() {
+        if (!this.currentClientId) return;
+        const clientName = document.getElementById("cockpitClientName")?.innerText || "Cliente";
+        window.open(`/api/v1/reports/export/pdf`, "_blank");
+        NeuroUI.toast(`Gerando Dossiê Executivo de Postura em PDF para '${clientName}'...`, "success");
+    },
+
     toggleCreateForm(forceState) {
         const card = document.getElementById("clientInlineCreateCard");
         const btnText = document.getElementById("btnToggleCreateText");
@@ -171,14 +328,6 @@ const NeuroClients = {
         if (sec) {
             sec.scrollIntoView({ behavior: "smooth", block: "center" });
         }
-    },
-
-    openCreateModal() {
-        this.toggleCreateForm(true);
-    },
-
-    closeModal() {
-        this.toggleCreateForm(false);
     },
 
     async saveClient() {
@@ -212,18 +361,6 @@ const NeuroClients = {
         }
     },
 
-    async triggerScan(clientId, clientName) {
-        try {
-            NeuroUI.toast(`Iniciando varredura em lote nos ativos de '${clientName}'...`, "info");
-            const res = await NeuroAPI.post(`/clients/${clientId}/scan`, {});
-            NeuroUI.toast(res.message, "success");
-            await this.render();
-            if (typeof NeuroScorecard !== "undefined") NeuroScorecard.render();
-        } catch (err) {
-            NeuroUI.toast("Erro na varredura: " + err.message, "error");
-        }
-    },
-
     async deleteClient(clientId, clientName) {
         if (!confirm(`Deseja realmente remover a organização '${clientName}' da plataforma?`)) return;
         try {
@@ -233,183 +370,7 @@ const NeuroClients = {
         } catch (err) {
             NeuroUI.toast("Erro ao remover: " + err.message, "error");
         }
-    },
-
-    async openFinancialView(clientId) {
-        const card = document.getElementById("clientInlineFinancialCard");
-        const body = document.getElementById("clientFinancialViewBody");
-        const title = document.getElementById("clientFinancialViewTitle");
-
-        if (!card || !body) return;
-
-        card.style.display = "block";
-        card.scrollIntoView({ behavior: "smooth", block: "start" });
-        body.innerHTML = `<div style="text-align:center; padding:30px; color:var(--matrix-green); font-family:var(--font-mono);">Calculando modelo quantitativo FAIR & NIST SP 800-30 para a empresa...</div>`;
-
-        try {
-            const data = await NeuroAPI.get(`/clients/${clientId}/financial-analysis`);
-            if (title) title.innerText = `Dossiê de Impacto Financeiro // ${data.client_name}`;
-
-            const revenueFormatted = data.annual_revenue_brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            const exposureFormatted = data.financial_exposure_risk_brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            const lossAvoidedFormatted = data.financial_loss_avoided_brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            const dataBreachFormatted = data.data_breach_risk_brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            const downtimeFormatted = data.downtime_risk_brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            const regFineFormatted = data.regulatory_fine_risk_brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
-            body.innerHTML = `
-                <!-- Top Header KPI Summary -->
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:20px;">
-                    <div style="background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.3); border-radius:8px; padding:16px;">
-                        <span style="font-size:11px; font-weight:700; color:#EF4444; text-transform:uppercase;">Exposição Financeira em Risco</span>
-                        <div style="font-size:24px; font-weight:800; color:#EF4444; font-family:var(--font-mono); margin:4px 0;">${exposureFormatted}</div>
-                        <span style="font-size:12px; color:var(--text-muted);">${data.open_vulns_count} vulnerabilidades ativas no ambiente</span>
-                    </div>
-
-                    <div style="background:rgba(0,255,65,0.06); border:1px solid rgba(0,255,65,0.3); border-radius:8px; padding:16px;">
-                        <span style="font-size:11px; font-weight:700; color:var(--matrix-green); text-transform:uppercase;">Prejuízo Financeiro Evitado (ROI)</span>
-                        <div style="font-size:24px; font-weight:800; color:var(--matrix-green); font-family:var(--font-mono); margin:4px 0;">${lossAvoidedFormatted}</div>
-                        <span style="font-size:12px; color:var(--text-muted);">${data.remediated_vulns_count} falhas remediadas e blindadas</span>
-                    </div>
-                </div>
-
-                <!-- Structural Parameters of the Company -->
-                <div style="background:#07090E; border:1px solid var(--border-subtle); border-radius:8px; padding:16px; margin-bottom:16px;">
-                    <div style="font-size:12px; font-weight:700; color:var(--cyan-neon); text-transform:uppercase; margin-bottom:10px;">📋 Parâmetros Estruturais da Empresa</div>
-                    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; font-size:12px; font-family:var(--font-mono);">
-                        <div>
-                            <span style="color:var(--text-muted); display:block;">Faturamento Anual:</span>
-                            <strong style="color:#fff;">${revenueFormatted}</strong>
-                        </div>
-                        <div>
-                            <span style="color:var(--text-muted); display:block;">Registros / Titulares LGPD:</span>
-                            <strong style="color:#fff;">${data.sensitive_records_count.toLocaleString('pt-BR')} registros</strong>
-                        </div>
-                        <div>
-                            <span style="color:var(--text-muted); display:block;">Custo Downtime:</span>
-                            <strong style="color:#fff;">R$ ${data.downtime_cost_per_hour.toLocaleString('pt-BR')}/hora</strong>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Breakdown by Risk Vector -->
-                <div style="background:#07090E; border:1px solid var(--border-subtle); border-radius:8px; padding:16px; margin-bottom:16px;">
-                    <div style="font-size:12px; font-weight:700; color:#fff; text-transform:uppercase; margin-bottom:12px;">📊 Decomposição das Perdas por Vetor de Ataque</div>
-                    
-                    <div style="display:flex; flex-direction:column; gap:10px; font-size:12px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:rgba(255,255,255,0.02); border-radius:6px;">
-                            <div>
-                                <span style="font-weight:700; color:#E2E8F0;">1. Risco de Vazamento de Dados Sensíveis (LGPD)</span>
-                                <div style="font-size:11px; color:var(--text-muted);">Custo médio de R$ ${data.cost_per_record_brl.toFixed(2)} por registro vazado (Setor: ${data.industry})</div>
-                            </div>
-                            <span style="font-family:var(--font-mono); font-weight:700; color:#EF4444;">${dataBreachFormatted}</span>
-                        </div>
-
-                        <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:rgba(255,255,255,0.02); border-radius:6px;">
-                            <div>
-                                <span style="font-weight:700; color:#E2E8F0;">2. Custo de Interrupção Operacional & Downtime</span>
-                                <div style="font-size:11px; color:var(--text-muted);">Horas estimadas de paralisação por RCE, indisponibilidade ou falhas de Cloud</div>
-                            </div>
-                            <span style="font-family:var(--font-mono); font-weight:700; color:#F97316;">${downtimeFormatted}</span>
-                        </div>
-
-                        <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:rgba(255,255,255,0.02); border-radius:6px;">
-                            <div>
-                                <span style="font-weight:700; color:#E2E8F0;">3. Risco de Multas Regulatórias & Sanções (ANPD / BACEN)</span>
-                                <div style="font-size:11px; color:var(--text-muted);">Multas proporcionais ao faturamento com teto legal de R$ 50 Milhões</div>
-                            </div>
-                            <span style="font-family:var(--font-mono); font-weight:700; color:#EAB308;">${regFineFormatted}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Methodology Note -->
-                <div style="font-size:11px; color:var(--text-muted); line-height:1.5; font-style:italic;">
-                    📌 ${data.methodology}
-                </div>
-            `;
-        } catch (err) {
-            body.innerHTML = `<div style="color:var(--crit-red); padding:20px;">Erro ao carregar análise financeira: ${err.message}</div>`;
-        }
-    },
-
-    closeFinancialView() {
-        const card = document.getElementById("clientInlineFinancialCard");
-        if (card) card.style.display = "none";
-    },
-
-    async openDetailsView(clientId) {
-        const card = document.getElementById("clientInlineDetailsCard");
-        const body = document.getElementById("clientDetailsViewBody");
-        const title = document.getElementById("clientDetailsViewTitle");
-
-        if (!card || !body) return;
-
-        card.style.display = "block";
-        card.scrollIntoView({ behavior: "smooth", block: "start" });
-        body.innerHTML = `<div style="text-align:center; padding:30px; color:var(--matrix-green); font-family:var(--font-mono);">Carregando inventário de ativos e vulnerabilidades do cliente...</div>`;
-
-        try {
-            const data = await NeuroAPI.get(`/clients/${clientId}`);
-            const c = data.client;
-            const assets = data.assets || [];
-            const vulns = data.vulnerabilities || [];
-
-            if (title) title.innerText = `Ambiente & Ativos // ${c.name}`;
-
-            body.innerHTML = `
-                <div style="margin-bottom:20px; border-bottom:1px solid var(--border-subtle); padding-bottom:14px;">
-                    <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">
-                        CNPJ: <span style="color:#cbd5e1;">${c.cnpj || 'N/A'}</span> | 
-                        CISO Responsável: <span style="color:var(--cyan-neon); font-weight:700;">${c.contact_name}</span> (${c.contact_email}) | 
-                        Score Atual: <strong style="color:var(--matrix-green); font-family:var(--font-mono);">${c.security_score}/100</strong>
-                    </div>
-                </div>
-
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
-                    <div>
-                        <h3 style="font-size:13px; font-weight:700; color:var(--cyan-neon); margin-bottom:8px; text-transform:uppercase;">📦 Ativos Vinculados em Monitoramento (${assets.length})</h3>
-                        <div style="display:flex; flex-direction:column; gap:6px; max-height:260px; overflow-y:auto;">
-                            ${assets.length > 0 ? assets.map(a => `
-                                <div style="display:flex; justify-content:space-between; align-items:center; background:#030712; border:1px solid var(--border-subtle); padding:8px 12px; border-radius:6px; font-family:var(--font-mono); font-size:12px;">
-                                    <span style="color:#00F0FF;">${a.name}</span>
-                                    <span style="color:var(--text-muted); font-size:11px;">[${a.asset_type}] ${a.criticality}</span>
-                                </div>
-                            `).join("") : '<div style="color:var(--text-muted); font-size:12px;">Nenhum ativo associado diretamente ainda.</div>'}
-                        </div>
-                    </div>
-
-                    <div>
-                        <h3 style="font-size:13px; font-weight:700; color:#EF4444; margin-bottom:8px; text-transform:uppercase;">🛡️ Ameaças & Vulnerabilidades do Cliente (${vulns.length})</h3>
-                        <div style="display:flex; flex-direction:column; gap:6px; max-height:260px; overflow-y:auto;">
-                            ${vulns.length > 0 ? vulns.map(v => `
-                                <div style="display:flex; justify-content:space-between; align-items:center; background:#030712; border:1px solid var(--border-subtle); padding:8px 12px; border-radius:6px; font-size:12px;">
-                                    <div>
-                                        <span style="color:#fff; font-weight:600;">${v.vuln_type}</span>
-                                        <span style="display:block; font-size:11px; color:var(--text-muted); font-family:var(--font-mono);">${v.asset_name}</span>
-                                    </div>
-                                    <span style="font-size:11px; font-weight:700; color:${v.severity === 'CRITICAL' ? '#EF4444' : '#F97316'};">${v.severity}</span>
-                                </div>
-                            `).join("") : '<div style="color:var(--matrix-green); font-size:12px;">✓ Nenhuma vulnerabilidade crítica pendente para este cliente.</div>'}
-                        </div>
-                    </div>
-                </div>
-            `;
-        } catch (err) {
-            body.innerHTML = `<div style="color:var(--crit-red); padding:20px;">Erro ao carregar detalhes: ${err.message}</div>`;
-        }
-    },
-
-    closeDetailsView() {
-        const card = document.getElementById("clientInlineDetailsCard");
-        if (card) card.style.display = "none";
-    },
-
-    // Aliases para compatibilidade
-    openFinancialModal(id) { this.openFinancialView(id); },
-    closeFinancialModal() { this.closeFinancialView(); },
-    openDetailsModal(id) { this.openDetailsView(id); },
-    closeDetailsModal() { this.closeDetailsView(); }
+    }
 };
 
 document.addEventListener("DOMContentLoaded", () => {

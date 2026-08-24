@@ -630,226 +630,336 @@ jobs:
                      VIEW 14: GESTÃO DE CLIENTES & MULTI-TENANT HUB
                      ======================================================= -->
                 <!-- =======================================================
-                     VIEW 14: GESTÃO DE CLIENTES & MULTI-TENANT HUB (TELA PRÓPRIA INTEGRADA)
+                     VIEW 14: GESTÃO DE CLIENTES & COCKPIT 360° (TELA PRÓPRIA INTEGRADA)
                      ======================================================= -->
                 <section class="subtab-view" id="tab-clients">
-                    <div class="view-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
-                        <div>
-                            <span class="section-tag">// GESTÃO CORPORATIVA // NEUROSEC ASPM 4.5</span>
-                            <h2 style="font-size:22px; font-weight:800; color:#fff; margin-top:4px;">Gestão de Clientes & Ambientes Monitorados</h2>
-                            <p style="font-size:13px; color:var(--text-muted); margin-top:2px;">Painel de controle unificado para administração de postura de segurança, usuários e risco financeiro por organização parceira.</p>
+                    <!-- =======================================================
+                         SUB-VIEW A: PORTFÓLIO GLOBAL DE EMPRESAS
+                         ======================================================= -->
+                    <div id="clientPortfolioSection">
+                        <div class="view-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+                            <div>
+                                <span class="section-tag">// GESTÃO CORPORATIVA // NEUROSEC ASPM 4.5</span>
+                                <h2 style="font-size:22px; font-weight:800; color:#fff; margin-top:4px;">Gestão de Clientes & Ambientes Monitorados</h2>
+                                <p style="font-size:13px; color:var(--text-muted); margin-top:2px;">Selecione uma organização para abrir seu Cockpit 360°, Scorecard contextualizado e modelo financeiro FAIR.</p>
+                            </div>
+                            <div style="display:flex; gap:10px; align-items:center;">
+                                <button class="btn-secondary-dark" onclick="NeuroClients.toggleUsersSection();">
+                                    <span>👥 Usuários & CISOs</span>
+                                </button>
+                                <button class="btn-primary-matrix" onclick="NeuroClients.toggleCreateForm();">
+                                    <span id="btnToggleCreateText">+ Cadastrar Nova Empresa</span>
+                                </button>
+                            </div>
                         </div>
-                        <div style="display:flex; gap:10px; align-items:center;">
-                            <button class="btn-secondary-dark" onclick="NeuroClients.toggleUsersSection();">
-                                <span>👥 Usuários & CISOs</span>
+
+                        <!-- 1. CARD EMBUTIDO: CADASTRO / EDIÇÃO DE EMPRESA -->
+                        <div id="clientInlineCreateCard" class="pulse-card" style="display:none; margin-bottom:24px; padding:24px; border:1px solid rgba(0,255,65,0.4); background:rgba(7,14,26,0.95); animation:fadeIn 0.3s ease;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; border-bottom:1px solid var(--border-subtle); padding-bottom:12px;">
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <div class="cobra-badge" data-cobra-shield="20"></div>
+                                    <h3 style="font-size:16px; font-weight:800; color:#fff;" id="clientFormTitle">Cadastrar Nova Organização Parceira</h3>
+                                </div>
+                                <button class="btn-secondary-dark" style="padding:4px 10px; font-size:12px;" onclick="NeuroClients.toggleCreateForm(false);">✕ Fechar Formulário</button>
+                            </div>
+
+                            <input type="hidden" id="clientFormId" value="">
+                            
+                            <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:14px; margin-bottom:14px;">
+                                <div>
+                                    <label style="display:block; font-size:11px; font-weight:700; color:var(--matrix-green); text-transform:uppercase; margin-bottom:4px;">Razão Social / Nome da Empresa *</label>
+                                    <input type="text" id="clientFormName" class="form-input" placeholder="Ex: FinTech Prime Global S.A." required>
+                                </div>
+                                <div>
+                                    <label style="display:block; font-size:11px; font-weight:700; color:#cbd5e1; text-transform:uppercase; margin-bottom:4px;">CNPJ (Opcional)</label>
+                                    <input type="text" id="clientFormCnpj" class="form-input" placeholder="00.000.000/0001-00">
+                                </div>
+                                <div>
+                                    <label style="display:block; font-size:11px; font-weight:700; color:#cbd5e1; text-transform:uppercase; margin-bottom:4px;">Segmento / Setor</label>
+                                    <select id="clientFormIndustry" class="form-select">
+                                        <option value="FINTECH">Fintech / Banking</option>
+                                        <option value="HEALTHCARE">Saúde / Healthcare</option>
+                                        <option value="E_COMMERCE">E-Commerce & Varejo</option>
+                                        <option value="LOGISTICS">Logística & Frotas</option>
+                                        <option value="GOV">Governo & Setor Público</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap:14px; margin-bottom:14px;">
+                                <div>
+                                    <label style="display:block; font-size:11px; font-weight:700; color:#cbd5e1; text-transform:uppercase; margin-bottom:4px;">CISO / Responsável *</label>
+                                    <input type="text" id="clientFormContactName" class="form-input" placeholder="Nome do CISO" required>
+                                </div>
+                                <div>
+                                    <label style="display:block; font-size:11px; font-weight:700; color:#cbd5e1; text-transform:uppercase; margin-bottom:4px;">E-mail do Responsável *</label>
+                                    <input type="email" id="clientFormContactEmail" class="form-input" placeholder="ciso@empresa.com.br" required>
+                                </div>
+                                <div>
+                                    <label style="display:block; font-size:11px; font-weight:700; color:#cbd5e1; text-transform:uppercase; margin-bottom:4px;">Telefone / Plantão</label>
+                                    <input type="text" id="clientFormContactPhone" class="form-input" placeholder="+55 (11) 90000-0000">
+                                </div>
+                                <div>
+                                    <label style="display:block; font-size:11px; font-weight:700; color:#cbd5e1; text-transform:uppercase; margin-bottom:4px;">SLA Contratual</label>
+                                    <select id="clientFormSla" class="form-select">
+                                        <option value="ENTERPRISE_24_7">24/7 Enterprise Elite</option>
+                                        <option value="BUSINESS_CRITICAL">Business Critical</option>
+                                        <option value="STANDARD">Standard ASPM</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:14px; margin-bottom:14px; background:rgba(255,255,255,0.02); padding:14px; border-radius:8px; border:1px solid var(--border-subtle);">
+                                <div>
+                                    <label style="display:block; font-size:11px; font-weight:700; color:var(--cyan-neon); margin-bottom:4px;">Faturamento Anual (R$)</label>
+                                    <input type="number" id="clientFormRevenue" class="form-input" placeholder="50000000" value="50000000">
+                                </div>
+                                <div>
+                                    <label style="display:block; font-size:11px; font-weight:700; color:var(--cyan-neon); margin-bottom:4px;">Registros Sensíveis LGPD</label>
+                                    <input type="number" id="clientFormRecords" class="form-input" placeholder="100000" value="100000">
+                                </div>
+                                <div>
+                                    <label style="display:block; font-size:11px; font-weight:700; color:var(--cyan-neon); margin-bottom:4px;">Custo Downtime (R$/hora)</label>
+                                    <input type="number" id="clientFormDowntime" class="form-input" placeholder="25000" value="25000">
+                                </div>
+                            </div>
+
+                            <div style="margin-bottom:16px;">
+                                <label style="display:block; font-size:11px; font-weight:700; color:#cbd5e1; text-transform:uppercase; margin-bottom:4px;">Observações de Compliance & Escopo</label>
+                                <textarea id="clientFormNotes" class="form-textarea" rows="2" placeholder="Informações de conformidade, exigências BACEN/LGPD ou repositórios críticos..."></textarea>
+                            </div>
+
+                            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                                <button class="btn-secondary-dark" onclick="NeuroClients.toggleCreateForm(false);">Cancelar</button>
+                                <button class="btn-primary-matrix" onclick="NeuroClients.saveClient();">✓ Salvar Organização</button>
+                            </div>
+                        </div>
+
+                        <!-- 2. SUMMARY KPIS FINANCEIROS -->
+                        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; margin-bottom:24px;">
+                            <div class="pulse-card">
+                                <span style="font-size:11px; color:var(--text-dim); text-transform:uppercase; font-weight:700;">Empresas Monitoradas</span>
+                                <div style="font-size:26px; font-weight:800; color:#fff; font-family:var(--font-mono); margin:6px 0;" id="clientStatTotal">--</div>
+                                <span style="font-size:12px; color:var(--text-muted);">Organizações ativas na esteira</span>
+                            </div>
+                            <div class="pulse-card">
+                                <span style="font-size:11px; color:var(--text-dim); text-transform:uppercase; font-weight:700;">Prejuízo Evitado Acumulado</span>
+                                <div style="font-size:24px; font-weight:800; color:var(--matrix-green); font-family:var(--font-mono); margin:6px 0;" id="clientStatLossAvoided">R$ --</div>
+                                <span style="font-size:12px; color:var(--text-muted);">Economia total por remediações</span>
+                            </div>
+                            <div class="pulse-card">
+                                <span style="font-size:11px; color:var(--text-dim); text-transform:uppercase; font-weight:700;">Exposição Financeira em Aberto</span>
+                                <div style="font-size:24px; font-weight:800; color:#EF4444; font-family:var(--font-mono); margin:6px 0;" id="clientStatExposure">R$ --</div>
+                                <span style="font-size:12px; color:var(--text-muted);">Risco residual estimado (FAIR/NIST)</span>
+                            </div>
+                            <div class="pulse-card">
+                                <span style="font-size:11px; color:var(--text-dim); text-transform:uppercase; font-weight:700;">Média de Postura Global</span>
+                                <div style="font-size:26px; font-weight:800; color:var(--cyan-neon); font-family:var(--font-mono); margin:6px 0;" id="clientStatAvgScore">--/100</div>
+                                <span style="font-size:12px; color:var(--text-muted);">Scorecard ponderado de clientes</span>
+                            </div>
+                        </div>
+
+                        <!-- 3. FILTRO E BUSCA DE EMPRESAS -->
+                        <div class="pulse-card" style="margin-bottom:20px; padding:16px;">
+                            <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:16px;">
+                                <div>
+                                    <label style="display:block; font-size:11px; font-weight:700; color:var(--text-dim); text-transform:uppercase; margin-bottom:6px;">Buscar Organização</label>
+                                    <input type="text" id="clientSearchInput" class="form-input" placeholder="Buscar por Razão Social, CNPJ ou CISO..." oninput="NeuroClients.filter();">
+                                </div>
+                                <div>
+                                    <label style="display:block; font-size:11px; font-weight:700; color:var(--text-dim); text-transform:uppercase; margin-bottom:6px;">Segmento de Mercado</label>
+                                    <select id="clientIndustryFilter" class="form-select" onchange="NeuroClients.filter();">
+                                        <option value="ALL">Todos os Segmentos</option>
+                                        <option value="FINTECH">Fintech / Banking</option>
+                                        <option value="HEALTHCARE">Saúde / Healthcare</option>
+                                        <option value="E_COMMERCE">E-Commerce & Varejo</option>
+                                        <option value="LOGISTICS">Logística & Frotas</option>
+                                        <option value="GOV">Governo & Setor Público</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label style="display:block; font-size:11px; font-weight:700; color:var(--text-dim); text-transform:uppercase; margin-bottom:6px;">SLA Contratual</label>
+                                    <select id="clientSlaFilter" class="form-select" onchange="NeuroClients.filter();">
+                                        <option value="ALL">Todos os SLAs</option>
+                                        <option value="ENTERPRISE_24_7">24/7 Enterprise Elite</option>
+                                        <option value="BUSINESS_CRITICAL">Business Critical</option>
+                                        <option value="STANDARD">Standard ASPM</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4. TABELA DE ORGANIZAÇÕES COM BOTÃO ÚNICO 360° -->
+                        <div class="pulse-card" style="padding:0; overflow:hidden; margin-bottom:24px;">
+                            <div style="padding:16px 20px; border-bottom:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center;">
+                                <span style="font-size:13px; font-weight:700; color:#fff;">Portfólio de Empresas Conectadas // Modelo Quantitativo FAIR / NIST SP 800-30</span>
+                                <span style="font-size:11px; color:var(--matrix-green); font-family:var(--font-mono);">SYNC EM TEMPO REAL ●</span>
+                            </div>
+                            <div style="overflow-x:auto;">
+                                <table style="width:100%; border-collapse:collapse; text-align:left; font-size:13px;">
+                                    <thead>
+                                        <tr style="border-bottom:1px solid var(--border-subtle); background:rgba(255,255,255,0.02); font-size:11px; color:var(--text-dim); text-transform:uppercase;">
+                                            <th style="padding:12px;">Organização / Setor</th>
+                                            <th style="padding:12px;">CISO / Contato</th>
+                                            <th style="padding:12px;">Realidade Estrutural</th>
+                                            <th style="padding:12px;">Risco em Aberto</th>
+                                            <th style="padding:12px;">Prejuízo Evitado</th>
+                                            <th style="padding:12px; text-align:center;">Score</th>
+                                            <th style="padding:12px; text-align:right;">Ações de Gestão</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="clientsTableBody">
+                                        <tr><td colspan="7" style="text-align:center; padding:30px; color:var(--text-muted);">Carregando empresas...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- 5. DIRETÓRIO DE USUÁRIOS & CISOS AUTORIZADOS -->
+                        <div id="clientUsersSection" class="pulse-card" style="padding:20px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border-subtle); padding-bottom:10px;">
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <span style="font-size:16px;">👥</span>
+                                    <span style="font-size:14px; font-weight:700; color:#fff;">Diretório de CISOs, Líderes de Segurança & Usuários Autorizados</span>
+                                </div>
+                                <span style="font-size:11px; color:var(--cyan-neon); font-family:var(--font-mono);">CONTROLE DE ACESSO RBAC</span>
+                            </div>
+                            <div id="clientUsersList" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:14px;">
+                                <!-- Preenchido dinamicamente pelo JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- =======================================================
+                         SUB-VIEW B: COCKPIT 360° DEDICADO DO CLIENTE SELECIONADO
+                         ======================================================= -->
+                    <div id="clientCockpitSection" style="display:none; animation:fadeIn 0.3s ease;">
+                        <!-- Top Nav Bar do Cliente -->
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px; padding-bottom:16px; border-bottom:1px solid var(--border-subtle);">
+                            <button class="btn-secondary-dark" onclick="NeuroClients.closeClientCockpit();" style="display:flex; align-items:center; gap:8px;">
+                                <span>←</span>
+                                <span>Voltar ao Portfólio de Empresas</span>
                             </button>
-                            <button class="btn-primary-matrix" onclick="NeuroClients.toggleCreateForm();">
-                                <span id="btnToggleCreateText">+ Cadastrar Nova Empresa</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- 1. CARD EMBUTIDO: CADASTRO / EDIÇÃO DE EMPRESA (TELA PRÓPRIA) -->
-                    <div id="clientInlineCreateCard" class="pulse-card" style="display:none; margin-bottom:24px; padding:24px; border:1px solid rgba(0,255,65,0.4); background:rgba(7,14,26,0.95); animation:fadeIn 0.3s ease;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; border-bottom:1px solid var(--border-subtle); padding-bottom:12px;">
-                            <div style="display:flex; align-items:center; gap:8px;">
-                                <div class="cobra-badge" data-cobra-shield="20"></div>
-                                <h3 style="font-size:16px; font-weight:800; color:#fff;" id="clientFormTitle">Cadastrar Nova Organização Parceira</h3>
-                            </div>
-                            <button class="btn-secondary-dark" style="padding:4px 10px; font-size:12px;" onclick="NeuroClients.toggleCreateForm(false);">✕ Fechar Formulário</button>
-                        </div>
-
-                        <input type="hidden" id="clientFormId" value="">
-                        
-                        <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:14px; margin-bottom:14px;">
-                            <div>
-                                <label style="display:block; font-size:11px; font-weight:700; color:var(--matrix-green); text-transform:uppercase; margin-bottom:4px;">Razão Social / Nome da Empresa *</label>
-                                <input type="text" id="clientFormName" class="form-input" placeholder="Ex: FinTech Prime Global S.A." required>
-                            </div>
-                            <div>
-                                <label style="display:block; font-size:11px; font-weight:700; color:#cbd5e1; text-transform:uppercase; margin-bottom:4px;">CNPJ (Opcional)</label>
-                                <input type="text" id="clientFormCnpj" class="form-input" placeholder="00.000.000/0001-00">
-                            </div>
-                            <div>
-                                <label style="display:block; font-size:11px; font-weight:700; color:#cbd5e1; text-transform:uppercase; margin-bottom:4px;">Segmento / Setor</label>
-                                <select id="clientFormIndustry" class="form-select">
-                                    <option value="FINTECH">Fintech / Banking</option>
-                                    <option value="HEALTHCARE">Saúde / Healthcare</option>
-                                    <option value="E_COMMERCE">E-Commerce & Varejo</option>
-                                    <option value="LOGISTICS">Logística & Frotas</option>
-                                    <option value="GOV">Governo & Setor Público</option>
-                                </select>
+                            <div style="display:flex; gap:10px; align-items:center;">
+                                <button class="btn-secondary-dark" onclick="NeuroClients.exportCurrentClientReport();" title="Exportar Relatório Técnico e Executivo em PDF">
+                                    <span>📥 Baixar Relatório PDF</span>
+                                </button>
+                                <button class="btn-primary-matrix" id="btnCockpitTriggerScan" onclick="NeuroClients.triggerCockpitScan();" title="Disparar Varredura Autônoma nos Ativos deste Cliente">
+                                    <span>⚡ Disparar Varredura Completa</span>
+                                </button>
                             </div>
                         </div>
 
-                        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap:14px; margin-bottom:14px;">
-                            <div>
-                                <label style="display:block; font-size:11px; font-weight:700; color:#cbd5e1; text-transform:uppercase; margin-bottom:4px;">CISO / Responsável *</label>
-                                <input type="text" id="clientFormContactName" class="form-input" placeholder="Nome do CISO" required>
-                            </div>
-                            <div>
-                                <label style="display:block; font-size:11px; font-weight:700; color:#cbd5e1; text-transform:uppercase; margin-bottom:4px;">E-mail do Responsável *</label>
-                                <input type="email" id="clientFormContactEmail" class="form-input" placeholder="ciso@empresa.com.br" required>
-                            </div>
-                            <div>
-                                <label style="display:block; font-size:11px; font-weight:700; color:#cbd5e1; text-transform:uppercase; margin-bottom:4px;">Telefone / Plantão</label>
-                                <input type="text" id="clientFormContactPhone" class="form-input" placeholder="+55 (11) 90000-0000">
-                            </div>
-                            <div>
-                                <label style="display:block; font-size:11px; font-weight:700; color:#cbd5e1; text-transform:uppercase; margin-bottom:4px;">SLA Contratual</label>
-                                <select id="clientFormSla" class="form-select">
-                                    <option value="ENTERPRISE_24_7">24/7 Enterprise Elite</option>
-                                    <option value="BUSINESS_CRITICAL">Business Critical</option>
-                                    <option value="STANDARD">Standard ASPM</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:14px; margin-bottom:14px; background:rgba(255,255,255,0.02); padding:14px; border-radius:8px; border:1px solid var(--border-subtle);">
-                            <div>
-                                <label style="display:block; font-size:11px; font-weight:700; color:var(--cyan-neon); margin-bottom:4px;">Faturamento Anual (R$)</label>
-                                <input type="number" id="clientFormRevenue" class="form-input" placeholder="50000000" value="50000000">
-                            </div>
-                            <div>
-                                <label style="display:block; font-size:11px; font-weight:700; color:var(--cyan-neon); margin-bottom:4px;">Registros Sensíveis LGPD</label>
-                                <input type="number" id="clientFormRecords" class="form-input" placeholder="100000" value="100000">
-                            </div>
-                            <div>
-                                <label style="display:block; font-size:11px; font-weight:700; color:var(--cyan-neon); margin-bottom:4px;">Custo Downtime (R$/hora)</label>
-                                <input type="number" id="clientFormDowntime" class="form-input" placeholder="25000" value="25000">
+                        <!-- Perfil Corporativo & Contatos CISO Banner -->
+                        <div class="pulse-card" style="margin-bottom:24px; padding:22px; background:rgba(7,14,26,0.95); border:1px solid rgba(0,240,255,0.3);">
+                            <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px;">
+                                <div style="display:flex; align-items:center; gap:14px;">
+                                    <div class="cobra-badge" data-cobra-shield="24" style="width:48px; height:48px;"></div>
+                                    <div>
+                                        <div style="font-size:11px; font-weight:700; color:var(--matrix-green); text-transform:uppercase; letter-spacing:1px;">// COCKPIT EXECUTIVO 360° // MULTI-TENANT</div>
+                                        <h1 style="font-size:24px; font-weight:900; color:#fff; margin-top:2px;" id="cockpitClientName">Carregando Empresa...</h1>
+                                        <div style="font-size:12px; color:var(--text-muted); font-family:var(--font-mono); margin-top:4px;">
+                                            CNPJ: <span id="cockpitClientCnpj" style="color:#cbd5e1;">--</span> | 
+                                            Setor: <span id="cockpitClientIndustry" style="color:var(--cyan-neon); font-weight:700;">--</span> | 
+                                            SLA: <span id="cockpitClientSla" style="color:#FDE047; font-weight:700;">--</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border-subtle); padding:12px 18px; border-radius:8px; display:flex; gap:16px;">
+                                    <div>
+                                        <span style="font-size:10px; color:var(--text-dim); text-transform:uppercase; font-weight:700; display:block;">CISO Responsável</span>
+                                        <strong style="font-size:13px; color:#fff;" id="cockpitContactName">--</strong>
+                                    </div>
+                                    <div>
+                                        <span style="font-size:10px; color:var(--text-dim); text-transform:uppercase; font-weight:700; display:block;">E-mail do CISO</span>
+                                        <strong style="font-size:13px; color:var(--cyan-neon); font-family:var(--font-mono);" id="cockpitContactEmail">--</strong>
+                                    </div>
+                                    <div>
+                                        <span style="font-size:10px; color:var(--text-dim); text-transform:uppercase; font-weight:700; display:block;">Telefone de Plantão</span>
+                                        <strong style="font-size:13px; color:#cbd5e1; font-family:var(--font-mono);" id="cockpitContactPhone">--</strong>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div style="margin-bottom:16px;">
-                            <label style="display:block; font-size:11px; font-weight:700; color:#cbd5e1; text-transform:uppercase; margin-bottom:4px;">Observações de Compliance & Escopo</label>
-                            <textarea id="clientFormNotes" class="form-textarea" rows="2" placeholder="Informações de conformidade, exigências BACEN/LGPD ou repositórios críticos..."></textarea>
-                        </div>
-
-                        <div style="display:flex; justify-content:flex-end; gap:10px;">
-                            <button class="btn-secondary-dark" onclick="NeuroClients.toggleCreateForm(false);">Cancelar</button>
-                            <button class="btn-primary-matrix" onclick="NeuroClients.saveClient();">✓ Salvar Organização</button>
-                        </div>
-                    </div>
-
-                    <!-- 2. CARD EMBUTIDO: DOSSIÊ DE IMPACTO FINANCEIRO (FAIR / NIST / LGPD) -->
-                    <div id="clientInlineFinancialCard" class="pulse-card" style="display:none; margin-bottom:24px; padding:24px; border:1px solid rgba(0,240,255,0.4); background:rgba(7,14,26,0.95); animation:fadeIn 0.3s ease;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid var(--border-subtle); padding-bottom:12px;">
-                            <div>
-                                <span class="section-tag">// MODELO DE RISCO QUANTITATIVO FAIR & NIST 800-30</span>
-                                <h3 style="font-size:18px; font-weight:800; color:#fff;" id="clientFinancialViewTitle">Análise Financeira Contextualizada</h3>
+                        <!-- Grid de Scorecard & Gráficos Neon do Cliente (Estilo Security Scorecard) -->
+                        <div style="display:grid; grid-template-columns: 320px 1fr; gap:24px; margin-bottom:24px;">
+                            <!-- Gauge Score do Cliente -->
+                            <div class="pulse-card" style="text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:28px 20px;">
+                                <span class="section-tag">// SCORECARD DA ORGANIZAÇÃO</span>
+                                <div class="gauge-container" style="margin:16px 0;">
+                                    <div class="gauge-circle" style="position:relative; width:170px; height:170px; border-radius:50%; background:radial-gradient(circle, rgba(0,255,65,0.08), #030712); border:2px solid var(--border-subtle); display:flex; align-items:center; justify-content:center;">
+                                        <div style="text-align:center;">
+                                            <span id="cockpitScoreDisplay" style="color:var(--matrix-green); font-size:46px; font-weight:900; font-family:var(--font-mono); line-height:1;">--</span>
+                                            <div id="cockpitGradeDisplay" style="font-size:12px; font-weight:700; color:#fff; text-transform:uppercase; margin-top:4px;">Calculando...</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span id="cockpitPostureStatus" style="font-weight:600; color:#cbd5e1; font-size:13px;">Postura Analisada em Tempo Real</span>
                             </div>
-                            <button class="btn-secondary-dark" style="padding:4px 10px; font-size:12px;" onclick="NeuroClients.closeFinancialView();">✕ Fechar Análise</button>
-                        </div>
-                        <div id="clientFinancialViewBody">
-                            <div style="text-align:center; padding:30px; color:var(--matrix-green); font-family:var(--font-mono);">Calculando decomposição financeira...</div>
-                        </div>
-                    </div>
 
-                    <!-- 3. CARD EMBUTIDO: ATIVOS & DETALHES DA EMPRESA -->
-                    <div id="clientInlineDetailsCard" class="pulse-card" style="display:none; margin-bottom:24px; padding:24px; border:1px solid rgba(99,102,241,0.4); background:rgba(7,14,26,0.95); animation:fadeIn 0.3s ease;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid var(--border-subtle); padding-bottom:12px;">
-                            <div>
-                                <span class="section-tag">// AMBIENTE DE ENGENHARIA & INVENTÁRIO DO CLIENTE</span>
-                                <h3 style="font-size:18px; font-weight:800; color:#fff;" id="clientDetailsViewTitle">Ativos Monitorados & Ameaças</h3>
-                            </div>
-                            <button class="btn-secondary-dark" style="padding:4px 10px; font-size:12px;" onclick="NeuroClients.closeDetailsView();">✕ Fechar Detalhes</button>
-                        </div>
-                        <div id="clientDetailsViewBody">
-                            <div style="text-align:center; padding:30px; color:var(--matrix-green); font-family:var(--font-mono);">Carregando ativos do cliente...</div>
-                        </div>
-                    </div>
-
-                    <!-- 4. SUMMARY KPIS FINANCEIROS -->
-                    <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; margin-bottom:24px;">
-                        <div class="pulse-card">
-                            <span style="font-size:11px; color:var(--text-dim); text-transform:uppercase; font-weight:700;">Empresas Monitoradas</span>
-                            <div style="font-size:26px; font-weight:800; color:#fff; font-family:var(--font-mono); margin:6px 0;" id="clientStatTotal">--</div>
-                            <span style="font-size:12px; color:var(--text-muted);">Organizações ativas na esteira</span>
-                        </div>
-                        <div class="pulse-card">
-                            <span style="font-size:11px; color:var(--text-dim); text-transform:uppercase; font-weight:700;">Prejuízo Evitado Acumulado</span>
-                            <div style="font-size:24px; font-weight:800; color:var(--matrix-green); font-family:var(--font-mono); margin:6px 0;" id="clientStatLossAvoided">R$ --</div>
-                            <span style="font-size:12px; color:var(--text-muted);">Economia total por remediações</span>
-                        </div>
-                        <div class="pulse-card">
-                            <span style="font-size:11px; color:var(--text-dim); text-transform:uppercase; font-weight:700;">Exposição Financeira em Aberto</span>
-                            <div style="font-size:24px; font-weight:800; color:#EF4444; font-family:var(--font-mono); margin:6px 0;" id="clientStatExposure">R$ --</div>
-                            <span style="font-size:12px; color:var(--text-muted);">Risco residual estimado (FAIR/NIST)</span>
-                        </div>
-                        <div class="pulse-card">
-                            <span style="font-size:11px; color:var(--text-dim); text-transform:uppercase; font-weight:700;">Média de Postura Global</span>
-                            <div style="font-size:26px; font-weight:800; color:var(--cyan-neon); font-family:var(--font-mono); margin:6px 0;" id="clientStatAvgScore">--/100</div>
-                            <span style="font-size:12px; color:var(--text-muted);">Scorecard ponderado de clientes</span>
-                        </div>
-                    </div>
-
-                    <!-- 5. FILTRO E BUSCA DE EMPRESAS -->
-                    <div class="pulse-card" style="margin-bottom:20px; padding:16px;">
-                        <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:16px;">
-                            <div>
-                                <label style="display:block; font-size:11px; font-weight:700; color:var(--text-dim); text-transform:uppercase; margin-bottom:6px;">Buscar Organização</label>
-                                <input type="text" id="clientSearchInput" class="form-input" placeholder="Buscar por Razão Social, CNPJ ou CISO..." oninput="NeuroClients.filter();">
-                            </div>
-                            <div>
-                                <label style="display:block; font-size:11px; font-weight:700; color:var(--text-dim); text-transform:uppercase; margin-bottom:6px;">Segmento de Mercado</label>
-                                <select id="clientIndustryFilter" class="form-select" onchange="NeuroClients.filter();">
-                                    <option value="ALL">Todos os Segmentos</option>
-                                    <option value="FINTECH">Fintech / Banking</option>
-                                    <option value="HEALTHCARE">Saúde / Healthcare</option>
-                                    <option value="E_COMMERCE">E-Commerce & Varejo</option>
-                                    <option value="LOGISTICS">Logística & Frotas</option>
-                                    <option value="GOV">Governo & Setor Público</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label style="display:block; font-size:11px; font-weight:700; color:var(--text-dim); text-transform:uppercase; margin-bottom:6px;">SLA Contratual</label>
-                                <select id="clientSlaFilter" class="form-select" onchange="NeuroClients.filter();">
-                                    <option value="ALL">Todos os SLAs</option>
-                                    <option value="ENTERPRISE_24_7">24/7 Enterprise Elite</option>
-                                    <option value="BUSINESS_CRITICAL">Business Critical</option>
-                                    <option value="STANDARD">Standard ASPM</option>
-                                </select>
+                            <!-- 4 Big KPI Cards de Postura & Finanças -->
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+                                <div class="pulse-card" style="border-left:4px solid var(--matrix-green);">
+                                    <span style="font-size:11px; font-weight:700; color:var(--matrix-green); text-transform:uppercase;">Prejuízo Financeiro Evitado (ROI)</span>
+                                    <div style="font-size:24px; font-weight:900; color:var(--matrix-green); font-family:var(--font-mono); margin:6px 0;" id="cockpitLossAvoided">R$ --</div>
+                                    <span style="font-size:12px; color:var(--text-muted);"><span id="cockpitRemediatedCount">0</span> vulnerabilidades blindadas</span>
+                                </div>
+                                <div class="pulse-card" style="border-left:4px solid #EF4444;">
+                                    <span style="font-size:11px; font-weight:700; color:#EF4444; text-transform:uppercase;">Exposição Financeira em Aberto</span>
+                                    <div style="font-size:24px; font-weight:900; color:#EF4444; font-family:var(--font-mono); margin:6px 0;" id="cockpitExposure">R$ --</div>
+                                    <span style="font-size:12px; color:var(--text-muted);"><span id="cockpitOpenVulnsCount">0</span> falhas ativas no ambiente</span>
+                                </div>
+                                <div class="pulse-card" style="border-left:4px solid var(--cyan-neon);">
+                                    <span style="font-size:11px; font-weight:700; color:var(--cyan-neon); text-transform:uppercase;">Ativos Monitorados</span>
+                                    <div style="font-size:24px; font-weight:900; color:#fff; font-family:var(--font-mono); margin:6px 0;" id="cockpitAssetsCount">--</div>
+                                    <span style="font-size:12px; color:var(--text-muted);">Repositórios, URLs, Cloud & Deps</span>
+                                </div>
+                                <div class="pulse-card" style="border-left:4px solid #FDE047;">
+                                    <span style="font-size:11px; font-weight:700; color:#FDE047; text-transform:uppercase;">Faturamento Estrutural</span>
+                                    <div style="font-size:24px; font-weight:900; color:#FDE047; font-family:var(--font-mono); margin:6px 0;" id="cockpitAnnualRevenue">R$ --</div>
+                                    <span style="font-size:12px; color:var(--text-muted);"><span id="cockpitSensitiveRecords">--</span> titulares sensíveis LGPD</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- 6. TABELA DE ORGANIZAÇÕES -->
-                    <div class="pulse-card" style="padding:0; overflow:hidden; margin-bottom:24px;">
-                        <div style="padding:16px 20px; border-bottom:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-size:13px; font-weight:700; color:#fff;">Portfólio de Empresas Conectadas // Modelo Quantitativo FAIR / NIST SP 800-30</span>
-                            <span style="font-size:11px; color:var(--matrix-green); font-family:var(--font-mono);">SYNC EM TEMPO REAL ●</span>
-                        </div>
-                        <div style="overflow-x:auto;">
-                            <table style="width:100%; border-collapse:collapse; text-align:left; font-size:13px;">
-                                <thead>
-                                    <tr style="border-bottom:1px solid var(--border-subtle); background:rgba(255,255,255,0.02); font-size:11px; color:var(--text-dim); text-transform:uppercase;">
-                                        <th style="padding:12px;">Organização / Setor</th>
-                                        <th style="padding:12px;">CISO / Contato</th>
-                                        <th style="padding:12px;">Realidade Estrutural</th>
-                                        <th style="padding:12px;">Risco em Aberto</th>
-                                        <th style="padding:12px;">Prejuízo Evitado</th>
-                                        <th style="padding:12px; text-align:center;">Score</th>
-                                        <th style="padding:12px; text-align:right;">Ações de Gestão</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="clientsTableBody">
-                                    <tr><td colspan="7" style="text-align:center; padding:30px; color:var(--text-muted);">Carregando empresas...</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- 7. DIRETÓRIO DE USUÁRIOS & CISOS AUTORIZADOS -->
-                    <div id="clientUsersSection" class="pulse-card" style="padding:20px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border-subtle); padding-bottom:10px;">
-                            <div style="display:flex; align-items:center; gap:8px;">
-                                <span style="font-size:16px;">👥</span>
-                                <span style="font-size:14px; font-weight:700; color:#fff;">Diretório de CISOs, Líderes de Segurança & Usuários Autorizados</span>
+                        <!-- Decomposição Financeira FAIR / NIST SP 800-30 / LGPD -->
+                        <div class="pulse-card" style="margin-bottom:24px; padding:22px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border-subtle); padding-bottom:10px;">
+                                <div>
+                                    <span class="section-tag">// MODELO DE RISCO QUANTITATIVO FAIR & NIST 800-30</span>
+                                    <h3 style="font-size:16px; font-weight:800; color:#fff;">Decomposição das Perdas Financeiras Estimadas por Vetor</h3>
+                                </div>
+                                <span style="font-size:11px; color:var(--matrix-green); font-family:var(--font-mono);">CALCULADO VIA ENGENHARIA MATEMÁTICA</span>
                             </div>
-                            <span style="font-size:11px; color:var(--cyan-neon); font-family:var(--font-mono);">CONTROLE DE ACESSO RBAC</span>
+                            <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:14px;" id="cockpitFinancialVectors">
+                                <!-- Preenchido dinamicamente pelo JS -->
+                            </div>
                         </div>
-                        <div id="clientUsersList" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:14px;">
-                            <!-- Preenchido dinamicamente pelo JS -->
+
+                        <!-- Inventário de Ativos & Vulnerabilidades da Empresa -->
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom:24px;">
+                            <!-- Ativos do Cliente -->
+                            <div class="pulse-card" style="padding:0; overflow:hidden;">
+                                <div style="padding:14px 18px; border-bottom:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center;">
+                                    <span style="font-size:13px; font-weight:700; color:#fff;">📦 Ativos Vinculados em Monitoramento</span>
+                                    <span style="font-size:11px; color:var(--cyan-neon); font-family:var(--font-mono);" id="cockpitAssetsHeaderCount">-- ativos</span>
+                                </div>
+                                <div id="cockpitAssetsList" style="padding:12px; display:flex; flex-direction:column; gap:8px; max-height:300px; overflow-y:auto;">
+                                    <!-- Renderizado pelo JS -->
+                                </div>
+                            </div>
+
+                            <!-- Vulnerabilidades Ativas do Cliente -->
+                            <div class="pulse-card" style="padding:0; overflow:hidden;">
+                                <div style="padding:14px 18px; border-bottom:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center;">
+                                    <span style="font-size:13px; font-weight:700; color:#fff;">🛡️ Ameaças & Vulnerabilidades Detectadas</span>
+                                    <span style="font-size:11px; color:#EF4444; font-family:var(--font-mono);" id="cockpitVulnsHeaderCount">-- falhas</span>
+                                </div>
+                                <div id="cockpitVulnsList" style="padding:12px; display:flex; flex-direction:column; gap:8px; max-height:300px; overflow-y:auto;">
+                                    <!-- Renderizado pelo JS -->
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
