@@ -1,4 +1,4 @@
-// NeuroSec ASPM 4.0 — Dashboard SPA Orchestrator & Sidebar Controller
+// NeuroSec ASPM 4.5 — Dashboard SPA Orchestrator & Sidebar Controller
 const NeuroDashboard = {
     currentTab: "tab-scorecard",
 

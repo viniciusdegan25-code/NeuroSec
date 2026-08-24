@@ -1,4 +1,4 @@
-// NeuroSec ASPM 4.0 — Gestão de Clientes & Ambientes Corporativos (Multi-Tenant Hub)
+// NeuroSec ASPM 4.5 — Gestão de Clientes & Ambientes Corporativos (Multi-Tenant Hub)
 const NeuroClients = {
     allClients: [],
     currentClientId: null,
@@ -32,6 +32,9 @@ const NeuroClients = {
 
             // 2. Renderiza Tabela Dinâmica
             this.filterAndRenderTable();
+
+            // 3. Renderiza Diretório de Usuários / CISOs
+            this.renderUsersList();
         } catch (err) {
             console.error("Erro ao carregar clientes:", err);
         }
@@ -107,10 +110,10 @@ const NeuroClients = {
                             <button class="btn-primary-matrix" style="padding:5px 9px; font-size:11px;" onclick="NeuroClients.triggerScan(${c.id}, '${c.name}')" title="Disparar Varredura Autônoma para o Cliente">
                                 ⚡ Scan
                             </button>
-                            <button class="btn-ai-indigo" style="padding:5px 9px; font-size:11px;" onclick="NeuroClients.openFinancialModal(${c.id})" title="Ver Dossiê e Breakdown de Risco Financeiro">
+                            <button class="btn-ai-indigo" style="padding:5px 9px; font-size:11px;" onclick="NeuroClients.openFinancialView(${c.id})" title="Ver Dossiê e Breakdown de Risco Financeiro">
                                 💰 Análise Financeira
                             </button>
-                            <button class="btn-secondary-dark" style="padding:5px 9px; font-size:11px; border-color:rgba(0,240,255,0.3); color:var(--cyan-neon);" onclick="NeuroClients.openDetailsModal(${c.id})" title="Ver Ativos e Postura do Cliente">
+                            <button class="btn-secondary-dark" style="padding:5px 9px; font-size:11px; border-color:rgba(0,240,255,0.3); color:var(--cyan-neon);" onclick="NeuroClients.openDetailsView(${c.id})" title="Ver Ativos e Postura do Cliente">
                                 🔍 Ativos
                             </button>
                             <button class="btn-secondary-dark" style="padding:5px 9px; font-size:11px; color:#EF4444; border-color:rgba(239,68,68,0.3);" onclick="NeuroClients.deleteClient(${c.id}, '${c.name}')" title="Excluir Cliente">
@@ -123,26 +126,59 @@ const NeuroClients = {
         }).join("");
     },
 
+    renderUsersList() {
+        const container = document.getElementById("clientUsersList");
+        if (!container) return;
+
+        if (!this.allClients || this.allClients.length === 0) {
+            container.innerHTML = `<div style="color:var(--text-muted); font-size:12px;">Nenhum usuário CISO registrado.</div>`;
+            return;
+        }
+
+        container.innerHTML = this.allClients.map(c => `
+            <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-subtle); border-radius:8px; padding:14px; display:flex; flex-direction:column; gap:6px;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                    <div style="font-weight:700; color:#fff; font-size:13px;">${c.contact_name}</div>
+                    <span style="font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px; background:rgba(0,255,65,0.1); color:var(--matrix-green); border:1px solid rgba(0,255,65,0.25);">CISO LEAD</span>
+                </div>
+                <div style="font-size:11px; color:var(--cyan-neon); font-family:var(--font-mono);">${c.contact_email}</div>
+                <div style="font-size:11px; color:var(--text-muted);">🏢 ${c.name}</div>
+                <div style="font-size:10px; color:var(--text-dim); margin-top:4px;">SLA: ${c.sla_tier} | Telefone: ${c.contact_phone || '+55 (11) 90000-0000'}</div>
+            </div>
+        `).join("");
+    },
+
+    toggleCreateForm(forceState) {
+        const card = document.getElementById("clientInlineCreateCard");
+        const btnText = document.getElementById("btnToggleCreateText");
+        if (!card) return;
+
+        const isVisible = card.style.display !== "none";
+        const newState = forceState !== undefined ? forceState : !isVisible;
+
+        card.style.display = newState ? "block" : "none";
+        if (btnText) {
+            btnText.innerText = newState ? "✕ Fechar Formulário" : "+ Cadastrar Nova Empresa";
+        }
+
+        if (newState) {
+            card.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+    },
+
+    toggleUsersSection() {
+        const sec = document.getElementById("clientUsersSection");
+        if (sec) {
+            sec.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+    },
+
     openCreateModal() {
-        const modal = document.getElementById("clientModal");
-        if (!modal) return;
-        document.getElementById("clientModalTitle").innerText = "Cadastrar Novo Cliente Corporativo";
-        document.getElementById("clientFormId").value = "";
-        document.getElementById("clientFormName").value = "";
-        document.getElementById("clientFormCnpj").value = "";
-        document.getElementById("clientFormContactName").value = "";
-        document.getElementById("clientFormContactEmail").value = "";
-        document.getElementById("clientFormContactPhone").value = "";
-        document.getElementById("clientFormRevenue").value = "50000000";
-        document.getElementById("clientFormRecords").value = "100000";
-        document.getElementById("clientFormDowntime").value = "25000";
-        document.getElementById("clientFormNotes").value = "";
-        modal.classList.add("open");
+        this.toggleCreateForm(true);
     },
 
     closeModal() {
-        const modal = document.getElementById("clientModal");
-        if (modal) modal.classList.remove("open");
+        this.toggleCreateForm(false);
     },
 
     async saveClient() {
@@ -168,7 +204,7 @@ const NeuroClients = {
                 name, cnpj, contact_name, contact_email, contact_phone, sla_tier, industry,
                 annual_revenue_brl, sensitive_records_count, downtime_cost_per_hour, notes
             });
-            this.closeModal();
+            this.toggleCreateForm(false);
             NeuroUI.toast(`Cliente corporativo '${name}' cadastrado com sucesso!`, "success");
             await this.render();
         } catch (err) {
@@ -199,17 +235,16 @@ const NeuroClients = {
         }
     },
 
-    async openFinancialModal(clientId) {
-        const modal = document.getElementById("clientFinancialModal");
-        if (!modal) return;
-        modal.classList.add("open");
+    async openFinancialView(clientId) {
+        const card = document.getElementById("clientInlineFinancialCard");
+        const body = document.getElementById("clientFinancialViewBody");
+        const title = document.getElementById("clientFinancialViewTitle");
 
-        const body = document.getElementById("clientFinancialBody");
-        const title = document.getElementById("clientFinancialTitle");
+        if (!card || !body) return;
 
-        if (body) {
-            body.innerHTML = `<div style="text-align:center; padding:30px; color:var(--matrix-green); font-family:var(--font-mono);">Calculando modelo financeiro FAIR / NIST SP 800-30 para a empresa...</div>`;
-        }
+        card.style.display = "block";
+        card.scrollIntoView({ behavior: "smooth", block: "start" });
+        body.innerHTML = `<div style="text-align:center; padding:30px; color:var(--matrix-green); font-family:var(--font-mono);">Calculando modelo quantitativo FAIR & NIST SP 800-30 para a empresa...</div>`;
 
         try {
             const data = await NeuroAPI.get(`/clients/${clientId}/financial-analysis`);
@@ -298,20 +333,21 @@ const NeuroClients = {
         }
     },
 
-    closeFinancialModal() {
-        const modal = document.getElementById("clientFinancialModal");
-        if (modal) modal.classList.remove("open");
+    closeFinancialView() {
+        const card = document.getElementById("clientInlineFinancialCard");
+        if (card) card.style.display = "none";
     },
 
-    async openDetailsModal(clientId) {
-        const modal = document.getElementById("clientDetailsModal");
-        if (!modal) return;
-        modal.classList.add("open");
+    async openDetailsView(clientId) {
+        const card = document.getElementById("clientInlineDetailsCard");
+        const body = document.getElementById("clientDetailsViewBody");
+        const title = document.getElementById("clientDetailsViewTitle");
 
-        const body = document.getElementById("clientDetailsBody");
-        if (body) {
-            body.innerHTML = `<div style="text-align:center; padding:30px; color:var(--matrix-green); font-family:var(--font-mono);">Carregando inventário de ativos e vulnerabilidades do cliente...</div>`;
-        }
+        if (!card || !body) return;
+
+        card.style.display = "block";
+        card.scrollIntoView({ behavior: "smooth", block: "start" });
+        body.innerHTML = `<div style="text-align:center; padding:30px; color:var(--matrix-green); font-family:var(--font-mono);">Carregando inventário de ativos e vulnerabilidades do cliente...</div>`;
 
         try {
             const data = await NeuroAPI.get(`/clients/${clientId}`);
@@ -319,41 +355,43 @@ const NeuroClients = {
             const assets = data.assets || [];
             const vulns = data.vulnerabilities || [];
 
+            if (title) title.innerText = `Ambiente & Ativos // ${c.name}`;
+
             body.innerHTML = `
                 <div style="margin-bottom:20px; border-bottom:1px solid var(--border-subtle); padding-bottom:14px;">
-                    <div style="font-size:11px; font-weight:700; color:var(--matrix-green); text-transform:uppercase;">// AMBIENTE DEDICADO DO CLIENTE</div>
-                    <h2 style="font-size:20px; font-weight:800; color:#fff;">${c.name}</h2>
                     <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">
                         CNPJ: <span style="color:#cbd5e1;">${c.cnpj || 'N/A'}</span> | 
-                        CISO Responsável: <span style="color:var(--cyan-neon);">${c.contact_name}</span> (${c.contact_email}) | 
-                        Score Atual: <strong style="color:var(--matrix-green);">${c.security_score}/100</strong>
+                        CISO Responsável: <span style="color:var(--cyan-neon); font-weight:700;">${c.contact_name}</span> (${c.contact_email}) | 
+                        Score Atual: <strong style="color:var(--matrix-green); font-family:var(--font-mono);">${c.security_score}/100</strong>
                     </div>
                 </div>
 
-                <div style="margin-bottom:16px;">
-                    <h3 style="font-size:14px; font-weight:700; color:#fff; margin-bottom:8px;">📦 Ativos Vinculados em Monitoramento (${assets.length})</h3>
-                    <div style="display:flex; flex-direction:column; gap:6px;">
-                        ${assets.length > 0 ? assets.map(a => `
-                            <div style="display:flex; justify-content:space-between; align-items:center; background:#07090E; border:1px solid var(--border-subtle); padding:8px 12px; border-radius:6px; font-family:var(--font-mono); font-size:12px;">
-                                <span style="color:#00F0FF;">${a.name}</span>
-                                <span style="color:var(--text-muted); font-size:11px;">[${a.asset_type}] ${a.criticality}</span>
-                            </div>
-                        `).join("") : '<div style="color:var(--text-muted); font-size:12px;">Nenhum ativo associado diretamente ainda.</div>'}
-                    </div>
-                </div>
-
-                <div>
-                    <h3 style="font-size:14px; font-weight:700; color:#fff; margin-bottom:8px;">🛡️ Ameaças & Vulnerabilidades do Cliente (${vulns.length})</h3>
-                    <div style="display:flex; flex-direction:column; gap:6px;">
-                        ${vulns.length > 0 ? vulns.map(v => `
-                            <div style="display:flex; justify-content:space-between; align-items:center; background:#07090E; border:1px solid var(--border-subtle); padding:8px 12px; border-radius:6px; font-size:12px;">
-                                <div>
-                                    <span style="color:#fff; font-weight:600;">${v.vuln_type}</span>
-                                    <span style="display:block; font-size:11px; color:var(--text-muted); font-family:var(--font-mono);">${v.asset_name}</span>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                    <div>
+                        <h3 style="font-size:13px; font-weight:700; color:var(--cyan-neon); margin-bottom:8px; text-transform:uppercase;">📦 Ativos Vinculados em Monitoramento (${assets.length})</h3>
+                        <div style="display:flex; flex-direction:column; gap:6px; max-height:260px; overflow-y:auto;">
+                            ${assets.length > 0 ? assets.map(a => `
+                                <div style="display:flex; justify-content:space-between; align-items:center; background:#030712; border:1px solid var(--border-subtle); padding:8px 12px; border-radius:6px; font-family:var(--font-mono); font-size:12px;">
+                                    <span style="color:#00F0FF;">${a.name}</span>
+                                    <span style="color:var(--text-muted); font-size:11px;">[${a.asset_type}] ${a.criticality}</span>
                                 </div>
-                                <span style="font-size:11px; font-weight:700; color:${v.severity === 'CRITICAL' ? '#EF4444' : '#F97316'};">${v.severity} (${v.status})</span>
-                            </div>
-                        `).join("") : '<div style="color:var(--matrix-green); font-size:12px;">✓ Nenhuma vulnerabilidade crítica pendente para este cliente.</div>'}
+                            `).join("") : '<div style="color:var(--text-muted); font-size:12px;">Nenhum ativo associado diretamente ainda.</div>'}
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 style="font-size:13px; font-weight:700; color:#EF4444; margin-bottom:8px; text-transform:uppercase;">🛡️ Ameaças & Vulnerabilidades do Cliente (${vulns.length})</h3>
+                        <div style="display:flex; flex-direction:column; gap:6px; max-height:260px; overflow-y:auto;">
+                            ${vulns.length > 0 ? vulns.map(v => `
+                                <div style="display:flex; justify-content:space-between; align-items:center; background:#030712; border:1px solid var(--border-subtle); padding:8px 12px; border-radius:6px; font-size:12px;">
+                                    <div>
+                                        <span style="color:#fff; font-weight:600;">${v.vuln_type}</span>
+                                        <span style="display:block; font-size:11px; color:var(--text-muted); font-family:var(--font-mono);">${v.asset_name}</span>
+                                    </div>
+                                    <span style="font-size:11px; font-weight:700; color:${v.severity === 'CRITICAL' ? '#EF4444' : '#F97316'};">${v.severity}</span>
+                                </div>
+                            `).join("") : '<div style="color:var(--matrix-green); font-size:12px;">✓ Nenhuma vulnerabilidade crítica pendente para este cliente.</div>'}
+                        </div>
                     </div>
                 </div>
             `;
@@ -362,14 +400,19 @@ const NeuroClients = {
         }
     },
 
-    closeDetailsModal() {
-        const modal = document.getElementById("clientDetailsModal");
-        if (modal) modal.classList.remove("open");
-    }
+    closeDetailsView() {
+        const card = document.getElementById("clientInlineDetailsCard");
+        if (card) card.style.display = "none";
+    },
+
+    // Aliases para compatibilidade
+    openFinancialModal(id) { this.openFinancialView(id); },
+    closeFinancialModal() { this.closeFinancialView(); },
+    openDetailsModal(id) { this.openDetailsView(id); },
+    closeDetailsModal() { this.closeDetailsView(); }
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Carrega clientes se estiver na página dashboard
     if (document.getElementById("tab-clients")) {
         NeuroClients.render();
     }

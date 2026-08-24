@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuroSec ASPM 4.0 — Cockpit Modular & AI Defense Center</title>
-    <meta name="description" content="Painel executivo modular de gerenciamento de postura de segurança em aplicações (ASPM 4.0) com inteligência autônoma da NeuroSec IA.">
+    <title>NeuroSec ASPM 4.5 — Cockpit Modular & AI Defense Center</title>
+    <meta name="description" content="Painel executivo modular de gerenciamento de postura de segurança em aplicações (ASPM 4.5) com inteligência autônoma da NeuroSec IA.">
     <link rel="stylesheet" href="/css/matrix.css">
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 8 C35 8 18 20 15 45 C12 65 25 85 50 95 C75 85 88 65 85 45 C82 20 65 8 50 8 Z' fill='%2300FF88'/></svg>">
@@ -27,7 +27,7 @@
                         <div class="cobra-badge" data-cobra-shield="22"></div>
                         <div class="brand-text-wrapper sub-tab-text">
                             <span class="brand-title" style="font-size: 16px;">NeuroSec <span class="highlight">ASPM</span></span>
-                            <span class="brand-version" style="font-size: 9px; color:var(--matrix-green); font-weight:700;">AUTONOMOUS 4.0</span>
+                            <span class="brand-version" style="font-size: 9px; color:var(--matrix-green); font-weight:700;">AUTONOMOUS v4.5</span>
                         </div>
                     </a>
                     <button class="sidebar-collapse-btn" id="sidebarToggleBtn" title="Recolher/Expandir Menu">
@@ -633,19 +633,137 @@ jobs:
                 <!-- =======================================================
                      VIEW 14: GESTÃO DE CLIENTES & MULTI-TENANT HUB
                      ======================================================= -->
+                <!-- =======================================================
+                     VIEW 14: GESTÃO DE CLIENTES & MULTI-TENANT HUB (TELA PRÓPRIA INTEGRADA)
+                     ======================================================= -->
                 <section class="subtab-view" id="tab-clients">
-                    <div class="view-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <div class="view-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
                         <div>
-                            <span class="section-tag">// ECOSSISTEMA CORPORATIVO MULTI-TENANT</span>
+                            <span class="section-tag">// GESTÃO CORPORATIVA // NEUROSEC ASPM 4.5</span>
                             <h2 style="font-size:22px; font-weight:800; color:#fff; margin-top:4px;">Gestão de Clientes & Ambientes Monitorados</h2>
-                            <p style="font-size:13px; color:var(--text-muted); margin-top:2px;">Painel de controle unificado para administração de postura de segurança por organização parceira.</p>
+                            <p style="font-size:13px; color:var(--text-muted); margin-top:2px;">Painel de controle unificado para administração de postura de segurança, usuários e risco financeiro por organização parceira.</p>
                         </div>
-                        <button class="btn-primary-matrix" onclick="NeuroClients.openCreateModal();">
-                            <span>+ Cadastrar Novo Cliente</span>
-                        </button>
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <button class="btn-secondary-dark" onclick="NeuroClients.toggleUsersSection();">
+                                <span>👥 Usuários & CISOs</span>
+                            </button>
+                            <button class="btn-primary-matrix" onclick="NeuroClients.toggleCreateForm();">
+                                <span id="btnToggleCreateText">+ Cadastrar Nova Empresa</span>
+                            </button>
+                        </div>
                     </div>
 
-                    <!-- Client Summary Cards -->
+                    <!-- 1. CARD EMBUTIDO: CADASTRO / EDIÇÃO DE EMPRESA (TELA PRÓPRIA) -->
+                    <div id="clientInlineCreateCard" class="pulse-card" style="display:none; margin-bottom:24px; padding:24px; border:1px solid rgba(0,255,65,0.4); background:rgba(7,14,26,0.95); animation:fadeIn 0.3s ease;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; border-bottom:1px solid var(--border-subtle); padding-bottom:12px;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <div class="cobra-badge" data-cobra-shield="20"></div>
+                                <h3 style="font-size:16px; font-weight:800; color:#fff;" id="clientFormTitle">Cadastrar Nova Organização Parceira</h3>
+                            </div>
+                            <button class="btn-secondary-dark" style="padding:4px 10px; font-size:12px;" onclick="NeuroClients.toggleCreateForm(false);">✕ Fechar Formulário</button>
+                        </div>
+
+                        <input type="hidden" id="clientFormId" value="">
+                        
+                        <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:14px; margin-bottom:14px;">
+                            <div>
+                                <label style="display:block; font-size:11px; font-weight:700; color:var(--matrix-green); text-transform:uppercase; margin-bottom:4px;">Razão Social / Nome da Empresa *</label>
+                                <input type="text" id="clientFormName" class="form-input" placeholder="Ex: FinTech Prime Global S.A." required>
+                            </div>
+                            <div>
+                                <label style="display:block; font-size:11px; font-weight:700; color:#cbd5e1; text-transform:uppercase; margin-bottom:4px;">CNPJ (Opcional)</label>
+                                <input type="text" id="clientFormCnpj" class="form-input" placeholder="00.000.000/0001-00">
+                            </div>
+                            <div>
+                                <label style="display:block; font-size:11px; font-weight:700; color:#cbd5e1; text-transform:uppercase; margin-bottom:4px;">Segmento / Setor</label>
+                                <select id="clientFormIndustry" class="form-select">
+                                    <option value="FINTECH">Fintech / Banking</option>
+                                    <option value="HEALTHCARE">Saúde / Healthcare</option>
+                                    <option value="E_COMMERCE">E-Commerce & Varejo</option>
+                                    <option value="LOGISTICS">Logística & Frotas</option>
+                                    <option value="GOV">Governo & Setor Público</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap:14px; margin-bottom:14px;">
+                            <div>
+                                <label style="display:block; font-size:11px; font-weight:700; color:#cbd5e1; text-transform:uppercase; margin-bottom:4px;">CISO / Responsável *</label>
+                                <input type="text" id="clientFormContactName" class="form-input" placeholder="Nome do CISO" required>
+                            </div>
+                            <div>
+                                <label style="display:block; font-size:11px; font-weight:700; color:#cbd5e1; text-transform:uppercase; margin-bottom:4px;">E-mail do Responsável *</label>
+                                <input type="email" id="clientFormContactEmail" class="form-input" placeholder="ciso@empresa.com.br" required>
+                            </div>
+                            <div>
+                                <label style="display:block; font-size:11px; font-weight:700; color:#cbd5e1; text-transform:uppercase; margin-bottom:4px;">Telefone / Plantão</label>
+                                <input type="text" id="clientFormContactPhone" class="form-input" placeholder="+55 (11) 90000-0000">
+                            </div>
+                            <div>
+                                <label style="display:block; font-size:11px; font-weight:700; color:#cbd5e1; text-transform:uppercase; margin-bottom:4px;">SLA Contratual</label>
+                                <select id="clientFormSla" class="form-select">
+                                    <option value="ENTERPRISE_24_7">24/7 Enterprise Elite</option>
+                                    <option value="BUSINESS_CRITICAL">Business Critical</option>
+                                    <option value="STANDARD">Standard ASPM</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:14px; margin-bottom:14px; background:rgba(255,255,255,0.02); padding:14px; border-radius:8px; border:1px solid var(--border-subtle);">
+                            <div>
+                                <label style="display:block; font-size:11px; font-weight:700; color:var(--cyan-neon); margin-bottom:4px;">Faturamento Anual (R$)</label>
+                                <input type="number" id="clientFormRevenue" class="form-input" placeholder="50000000" value="50000000">
+                            </div>
+                            <div>
+                                <label style="display:block; font-size:11px; font-weight:700; color:var(--cyan-neon); margin-bottom:4px;">Registros Sensíveis LGPD</label>
+                                <input type="number" id="clientFormRecords" class="form-input" placeholder="100000" value="100000">
+                            </div>
+                            <div>
+                                <label style="display:block; font-size:11px; font-weight:700; color:var(--cyan-neon); margin-bottom:4px;">Custo Downtime (R$/hora)</label>
+                                <input type="number" id="clientFormDowntime" class="form-input" placeholder="25000" value="25000">
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom:16px;">
+                            <label style="display:block; font-size:11px; font-weight:700; color:#cbd5e1; text-transform:uppercase; margin-bottom:4px;">Observações de Compliance & Escopo</label>
+                            <textarea id="clientFormNotes" class="form-textarea" rows="2" placeholder="Informações de conformidade, exigências BACEN/LGPD ou repositórios críticos..."></textarea>
+                        </div>
+
+                        <div style="display:flex; justify-content:flex-end; gap:10px;">
+                            <button class="btn-secondary-dark" onclick="NeuroClients.toggleCreateForm(false);">Cancelar</button>
+                            <button class="btn-primary-matrix" onclick="NeuroClients.saveClient();">✓ Salvar Organização</button>
+                        </div>
+                    </div>
+
+                    <!-- 2. CARD EMBUTIDO: DOSSIÊ DE IMPACTO FINANCEIRO (FAIR / NIST / LGPD) -->
+                    <div id="clientInlineFinancialCard" class="pulse-card" style="display:none; margin-bottom:24px; padding:24px; border:1px solid rgba(0,240,255,0.4); background:rgba(7,14,26,0.95); animation:fadeIn 0.3s ease;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid var(--border-subtle); padding-bottom:12px;">
+                            <div>
+                                <span class="section-tag">// MODELO DE RISCO QUANTITATIVO FAIR & NIST 800-30</span>
+                                <h3 style="font-size:18px; font-weight:800; color:#fff;" id="clientFinancialViewTitle">Análise Financeira Contextualizada</h3>
+                            </div>
+                            <button class="btn-secondary-dark" style="padding:4px 10px; font-size:12px;" onclick="NeuroClients.closeFinancialView();">✕ Fechar Análise</button>
+                        </div>
+                        <div id="clientFinancialViewBody">
+                            <div style="text-align:center; padding:30px; color:var(--matrix-green); font-family:var(--font-mono);">Calculando decomposição financeira...</div>
+                        </div>
+                    </div>
+
+                    <!-- 3. CARD EMBUTIDO: ATIVOS & DETALHES DA EMPRESA -->
+                    <div id="clientInlineDetailsCard" class="pulse-card" style="display:none; margin-bottom:24px; padding:24px; border:1px solid rgba(99,102,241,0.4); background:rgba(7,14,26,0.95); animation:fadeIn 0.3s ease;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid var(--border-subtle); padding-bottom:12px;">
+                            <div>
+                                <span class="section-tag">// AMBIENTE DE ENGENHARIA & INVENTÁRIO DO CLIENTE</span>
+                                <h3 style="font-size:18px; font-weight:800; color:#fff;" id="clientDetailsViewTitle">Ativos Monitorados & Ameaças</h3>
+                            </div>
+                            <button class="btn-secondary-dark" style="padding:4px 10px; font-size:12px;" onclick="NeuroClients.closeDetailsView();">✕ Fechar Detalhes</button>
+                        </div>
+                        <div id="clientDetailsViewBody">
+                            <div style="text-align:center; padding:30px; color:var(--matrix-green); font-family:var(--font-mono);">Carregando ativos do cliente...</div>
+                        </div>
+                    </div>
+
+                    <!-- 4. SUMMARY KPIS FINANCEIROS -->
                     <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; margin-bottom:24px;">
                         <div class="pulse-card">
                             <span style="font-size:11px; color:var(--text-dim); text-transform:uppercase; font-weight:700;">Empresas Monitoradas</span>
@@ -655,7 +773,7 @@ jobs:
                         <div class="pulse-card">
                             <span style="font-size:11px; color:var(--text-dim); text-transform:uppercase; font-weight:700;">Prejuízo Evitado Acumulado</span>
                             <div style="font-size:24px; font-weight:800; color:var(--matrix-green); font-family:var(--font-mono); margin:6px 0;" id="clientStatLossAvoided">R$ --</div>
-                            <span style="font-size:12px; color:var(--text-muted);">Retorno financeiro por remediação</span>
+                            <span style="font-size:12px; color:var(--text-muted);">Economia total por remediações</span>
                         </div>
                         <div class="pulse-card">
                             <span style="font-size:11px; color:var(--text-dim); text-transform:uppercase; font-weight:700;">Exposição Financeira em Aberto</span>
@@ -665,11 +783,11 @@ jobs:
                         <div class="pulse-card">
                             <span style="font-size:11px; color:var(--text-dim); text-transform:uppercase; font-weight:700;">Média de Postura Global</span>
                             <div style="font-size:26px; font-weight:800; color:var(--cyan-neon); font-family:var(--font-mono); margin:6px 0;" id="clientStatAvgScore">--/100</div>
-                            <span style="font-size:12px; color:var(--text-muted);">Scorecard médio de clientes</span>
+                            <span style="font-size:12px; color:var(--text-muted);">Scorecard ponderado de clientes</span>
                         </div>
                     </div>
 
-                    <!-- Client Filter & Search Bar -->
+                    <!-- 5. FILTRO E BUSCA DE EMPRESAS -->
                     <div class="pulse-card" style="margin-bottom:20px; padding:16px;">
                         <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:16px;">
                             <div>
@@ -699,10 +817,10 @@ jobs:
                         </div>
                     </div>
 
-                    <!-- Client Inventory Table -->
-                    <div class="pulse-card" style="padding:0; overflow:hidden;">
+                    <!-- 6. TABELA DE ORGANIZAÇÕES -->
+                    <div class="pulse-card" style="padding:0; overflow:hidden; margin-bottom:24px;">
                         <div style="padding:16px 20px; border-bottom:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-size:13px; font-weight:700; color:#fff;">Portfólio de Empresas Conectadas // Modelo de Risco Financeiro Contextualizado</span>
+                            <span style="font-size:13px; font-weight:700; color:#fff;">Portfólio de Empresas Conectadas // Modelo Quantitativo FAIR / NIST SP 800-30</span>
                             <span style="font-size:11px; color:var(--matrix-green); font-family:var(--font-mono);">SYNC EM TEMPO REAL ●</span>
                         </div>
                         <div style="overflow-x:auto;">
@@ -724,70 +842,23 @@ jobs:
                             </table>
                         </div>
                     </div>
+
+                    <!-- 7. DIRETÓRIO DE USUÁRIOS & CISOS AUTORIZADOS -->
+                    <div id="clientUsersSection" class="pulse-card" style="padding:20px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border-subtle); padding-bottom:10px;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="font-size:16px;">👥</span>
+                                <span style="font-size:14px; font-weight:700; color:#fff;">Diretório de CISOs, Líderes de Segurança & Usuários Autorizados</span>
+                            </div>
+                            <span style="font-size:11px; color:var(--cyan-neon); font-family:var(--font-mono);">CONTROLE DE ACESSO RBAC</span>
+                        </div>
+                        <div id="clientUsersList" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:14px;">
+                            <!-- Preenchido dinamicamente pelo JS -->
+                        </div>
+                    </div>
                 </section>
             </div>
         </main>
-    </div>
-
-    <!-- ===================================================================
-         MODAL 1: STUDIO DE REMEDIAÇÃO COM IA & DIFF VIEWER
-         =================================================================== -->
-    <div class="modal-backdrop" id="remediationModal">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h3 id="modalVulnTitle" style="font-size: 16px; font-weight: 700; color: #fff;">Remediação Inteligente com IA</h3>
-                <button class="modal-close-btn" onclick="NeuroRemediation.closeModal();">✕</button>
-            </div>
-            
-            <div class="modal-body">
-                <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; margin-bottom: 6px;">Diagnóstico Técnico da NeuroSec IA:</div>
-                <div class="diagnosis-box" id="modalDiagnosisBox">
-                    <div style="color:var(--matrix-green);">Conectando ao motor cognitivo...</div>
-                </div>
-
-                <div style="font-size: 11px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; margin: 16px 0 6px 0;">Visualização do Patch de Código (Unified Diff):</div>
-                <div id="modalDiffContainer">
-                    <div style="color:var(--text-muted);">Aguardando geração do patch...</div>
-                </div>
-
-                <div style="margin-top: 18px;">
-                    <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Operador Responsável pela Aprovação</label>
-                    <input type="text" id="remediationOperatorInput" value="SecOps Lead / CISO" style="width: 100%; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 10px 14px; color: #fff; font-size: 13px; outline: none;">
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <button class="btn-secondary-dark" onclick="NeuroRemediation.closeModal();">Fechar</button>
-                <button class="btn-primary-matrix" onclick="NeuroRemediation.approveCurrent();">✓ Aprovar Patch & Registrar em Auditoria</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===================================================================
-         MODAL 2: DOSSIÊ TÉCNICO COMPLETO DA NEUROSEC IA
-         =================================================================== -->
-    <div class="modal-backdrop" id="dossierModal">
-        <div class="modal-card" style="max-width: 860px; max-height: 90vh;">
-            <div class="modal-header">
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <div class="cobra-badge" data-cobra-shield="18"></div>
-                    <h3 style="font-size: 16px; font-weight: 700; color: #fff;">Dossiê Técnico Autônomo // NeuroSec IA</h3>
-                </div>
-                <button class="modal-close-btn" onclick="NeuroRemediation.closeDossierModal();">✕</button>
-            </div>
-            
-            <div class="modal-body" id="dossierModalBody" style="max-height: calc(90vh - 140px); overflow-y:auto; padding:24px;">
-                <div style="text-align:center; padding:40px; color:var(--matrix-green); font-family:var(--font-mono);">
-                    Carregando Dossiê Técnico com a NeuroSec IA...
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <button class="btn-secondary-dark" onclick="NeuroRemediation.downloadDossierMarkdown();">📥 Baixar Dossiê (.MD)</button>
-                <button class="btn-secondary-dark" onclick="NeuroRemediation.closeDossierModal();">Fechar</button>
-                <button class="btn-primary-matrix" onclick="NeuroRemediation.approveCurrent();">✓ Aprovar e Remediar Agora</button>
-            </div>
-        </div>
     </div>
 
     <!-- Floating Quick AI Agent -->
@@ -808,141 +879,6 @@ jobs:
         <div style="padding: 10px 14px; border-top: 1px solid var(--border-subtle); display: flex; gap: 8px; background: var(--bg-surface);">
             <input type="text" id="floatingAiInput" placeholder="Pergunte algo ou tire dúvidas..." style="flex: 1; background: transparent; border: 1px solid var(--border-subtle); border-radius: 6px; padding: 8px 12px; color: #fff; font-size: 13px; outline: none;">
             <button id="floatingAiSendBtn" style="background: var(--indigo-ai); border: none; border-radius: 6px; color: #fff; padding: 0 14px; cursor: pointer; font-weight: 600;">→</button>
-        </div>
-    </div>
-
-    <!-- ===================================================================
-         MODAL 3: CADASTRO / EDIÇÃO DE CLIENTE CORPORATIVO
-         =================================================================== -->
-    <div class="modal-backdrop" id="clientModal">
-        <div class="modal-card" style="max-width: 540px;">
-            <div class="modal-header">
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <div class="cobra-badge" data-cobra-shield="18"></div>
-                    <h3 style="font-size: 16px; font-weight: 700; color: #fff;" id="clientModalTitle">Cadastrar Novo Cliente Corporativo</h3>
-                </div>
-                <button class="modal-close-btn" onclick="NeuroClients.closeModal();">✕</button>
-            </div>
-            <div class="modal-body" style="padding:20px;">
-                <input type="hidden" id="clientFormId" value="">
-                
-                <div style="margin-bottom:14px;">
-                    <label style="display:block; font-size:12px; font-weight:600; color:#cbd5e1; margin-bottom:4px;">Razão Social / Nome da Empresa *</label>
-                    <input type="text" id="clientFormName" class="form-input" placeholder="Ex: FinTech Prime Global S.A." required>
-                </div>
-
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
-                    <div>
-                        <label style="display:block; font-size:12px; font-weight:600; color:#cbd5e1; margin-bottom:4px;">CNPJ (Opcional)</label>
-                        <input type="text" id="clientFormCnpj" class="form-input" placeholder="00.000.000/0001-00">
-                    </div>
-                    <div>
-                        <label style="display:block; font-size:12px; font-weight:600; color:#cbd5e1; margin-bottom:4px;">Segmento / Setor</label>
-                        <select id="clientFormIndustry" class="form-select">
-                            <option value="FINTECH">Fintech / Banking</option>
-                            <option value="HEALTHCARE">Saúde / Healthcare</option>
-                            <option value="E_COMMERCE">E-Commerce</option>
-                            <option value="LOGISTICS">Logística</option>
-                            <option value="GOV">Governo</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
-                    <div>
-                        <label style="display:block; font-size:12px; font-weight:600; color:#cbd5e1; margin-bottom:4px;">CISO / Responsável Técnico *</label>
-                        <input type="text" id="clientFormContactName" class="form-input" placeholder="Nome do CISO" required>
-                    </div>
-                    <div>
-                        <label style="display:block; font-size:12px; font-weight:600; color:#cbd5e1; margin-bottom:4px;">E-mail do Responsável *</label>
-                        <input type="email" id="clientFormContactEmail" class="form-input" placeholder="ciso@empresa.com.br" required>
-                    </div>
-                </div>
-
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
-                    <div>
-                        <label style="display:block; font-size:12px; font-weight:600; color:#cbd5e1; margin-bottom:4px;">Telefone / Plantão</label>
-                        <input type="text" id="clientFormContactPhone" class="form-input" placeholder="+55 (11) 90000-0000">
-                    </div>
-                    <div>
-                        <label style="display:block; font-size:12px; font-weight:600; color:#cbd5e1; margin-bottom:4px;">SLA Contratual</label>
-                        <select id="clientFormSla" class="form-select">
-                            <option value="ENTERPRISE_24_7">24/7 Enterprise Elite</option>
-                            <option value="BUSINESS_CRITICAL">Business Critical</option>
-                            <option value="STANDARD">Standard ASPM</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:14px; background:rgba(255,255,255,0.02); padding:12px; border-radius:6px; border:1px solid var(--border-subtle);">
-                    <div>
-                        <label style="display:block; font-size:11px; font-weight:700; color:var(--matrix-green); margin-bottom:4px;">Faturamento Anual (R$)</label>
-                        <input type="number" id="clientFormRevenue" class="form-input" placeholder="50000000" value="50000000">
-                    </div>
-                    <div>
-                        <label style="display:block; font-size:11px; font-weight:700; color:var(--matrix-green); margin-bottom:4px;">Registros Sensíveis LGPD</label>
-                        <input type="number" id="clientFormRecords" class="form-input" placeholder="100000" value="100000">
-                    </div>
-                    <div>
-                        <label style="display:block; font-size:11px; font-weight:700; color:var(--matrix-green); margin-bottom:4px;">Custo Downtime (R$/hora)</label>
-                        <input type="number" id="clientFormDowntime" class="form-input" placeholder="25000" value="25000">
-                    </div>
-                </div>
-
-                <div>
-                    <label style="display:block; font-size:12px; font-weight:600; color:#cbd5e1; margin-bottom:4px;">Observações de Compliance / Escopo</label>
-                    <textarea id="clientFormNotes" class="form-textarea" rows="2" placeholder="Informações de conformidade, exigências LGPD ou repositórios críticos..."></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary-dark" onclick="NeuroClients.closeModal();">Cancelar</button>
-                <button class="btn-primary-matrix" onclick="NeuroClients.saveClient();">✓ Salvar Empresa</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===================================================================
-         MODAL 4: DETALHES & ATIVOS DO CLIENTE
-         =================================================================== -->
-    <div class="modal-backdrop" id="clientDetailsModal">
-        <div class="modal-card" style="max-width: 680px;">
-            <div class="modal-header">
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <div class="cobra-badge" data-cobra-shield="18"></div>
-                    <h3 style="font-size: 16px; font-weight: 700; color: #fff;">Ambiente & Ativos do Cliente</h3>
-                </div>
-                <button class="modal-close-btn" onclick="NeuroClients.closeDetailsModal();">✕</button>
-            </div>
-            <div class="modal-body" id="clientDetailsBody" style="padding:20px; max-height:calc(85vh - 120px); overflow-y:auto;">
-                <div style="color:var(--matrix-green); text-align:center; padding:20px;">Carregando...</div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary-dark" onclick="NeuroClients.closeDetailsModal();">Fechar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===================================================================
-         MODAL 5: ANÁLISE DE IMPACTO FINANCEIRO CONTEXTUALIZADO (FAIR / NIST / LGPD)
-         =================================================================== -->
-    <div class="modal-backdrop" id="clientFinancialModal">
-        <div class="modal-card" style="max-width: 760px;">
-            <div class="modal-header">
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <div class="cobra-badge" data-cobra-shield="20"></div>
-                    <div>
-                        <div style="font-size:11px; font-weight:700; color:var(--matrix-green); text-transform:uppercase;">// MODELO DE RISCO FINANCEIRO QUANTITATIVO (FAIR & NIST 800-30)</div>
-                        <h3 style="font-size: 16px; font-weight: 800; color: #fff;" id="clientFinancialTitle">Dossiê de Impacto Financeiro</h3>
-                    </div>
-                </div>
-                <button class="modal-close-btn" onclick="NeuroClients.closeFinancialModal();">✕</button>
-            </div>
-            <div class="modal-body" id="clientFinancialBody" style="padding:22px; max-height:calc(85vh - 120px); overflow-y:auto;">
-                <div style="color:var(--matrix-green); text-align:center; padding:30px;">Calculando risco financeiro e prejuízo evitado...</div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary-dark" onclick="NeuroClients.closeFinancialModal();">Fechar</button>
-            </div>
         </div>
     </div>
 

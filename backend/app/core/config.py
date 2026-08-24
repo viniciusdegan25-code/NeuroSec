@@ -18,8 +18,8 @@ except ImportError:
         pass
 
 class Settings(SettingsBase):
-    PROJECT_NAME: str = "NeuroSec ASPM 4.0"
-    VERSION: str = "4.0.0"
+    PROJECT_NAME: str = "NeuroSec ASPM 4.5"
+    VERSION: str = "4.5.0"
     API_V1_STR: str = "/api/v1"
     
     # JWT & Authentication Security
