@@ -767,6 +767,16 @@ body {
   padding: 16px 10px;
   overflow-y: auto;
   flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: var(--matrix-green) rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-nav::-webkit-scrollbar {
+  width: 5px;
+}
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: var(--matrix-green);
+  border-radius: 4px;
 }
 
 .nav-module-group {

@@ -19,108 +19,101 @@
         <!-- ===================================================================
              EXPANDABLE SIDEBAR
              =================================================================== -->
-        <aside class="dash-sidebar" id="dashSidebar">
-            <div>
-                <!-- Sidebar Header -->
-                <div class="sidebar-header">
-                    <a href="/" class="sidebar-logo">
-                        <div class="cobra-badge" data-cobra-shield="22"></div>
-                        <div class="brand-text-wrapper sub-tab-text">
-                            <span class="brand-title" style="font-size: 16px;">NeuroSec <span class="highlight">ASPM</span></span>
-                            <span class="brand-version" style="font-size: 9px; color:var(--matrix-green); font-weight:700;">AUTONOMOUS v4.5</span>
-                        </div>
-                    </a>
-                    <button class="sidebar-collapse-btn" id="sidebarToggleBtn" title="Recolher/Expandir Menu">
-                        <span id="collapseIcon">◀</span>
+        <aside class="dash-sidebar" id="dashSidebar" style="display:flex; flex-direction:column; height:100vh; overflow:hidden;">
+            <!-- Sidebar Header -->
+            <div class="sidebar-header">
+                <a href="/" class="sidebar-logo">
+                    <div class="cobra-badge" data-cobra-shield="22"></div>
+                    <div class="brand-text-wrapper sub-tab-text">
+                        <span class="brand-title" style="font-size: 16px;">NeuroSec <span class="highlight">ASPM</span></span>
+                        <span class="brand-version" style="font-size: 9px; color:var(--matrix-green); font-weight:700;">AUTONOMOUS v4.5</span>
+                    </div>
+                </a>
+                <button class="sidebar-collapse-btn" id="sidebarToggleBtn" title="Recolher/Expandir Menu">
+                    <span id="collapseIcon">◀</span>
+                </button>
+            </div>
+
+            <!-- Navigation Modules -->
+            <div class="sidebar-nav" style="flex:1; overflow-y:auto; padding:16px 10px;">
+                <!-- Module 1: Postura, Scorecard & Clientes (DESTAQUE NO TOPO) -->
+                <div class="nav-module-group">
+                    <div class="nav-module-title">1. Postura & Clientes</div>
+                    <button class="sub-tab-btn active" data-tab="tab-scorecard">
+                        <span class="sub-tab-icon">📊</span>
+                        <span class="sub-tab-text">Security Scorecard (0-100)</span>
+                    </button>
+                    <button class="sub-tab-btn" data-tab="tab-clients" style="color:var(--matrix-green); font-weight:700; background:rgba(0,255,65,0.06); border:1px solid rgba(0,255,65,0.25);">
+                        <span class="sub-tab-icon">🏢</span>
+                        <span class="sub-tab-text">Clientes & Multi-Tenant</span>
+                    </button>
+                    <button class="sub-tab-btn" data-tab="tab-inventory">
+                        <span class="sub-tab-icon">🛡️</span>
+                        <span class="sub-tab-text">Inventário de Ameaças</span>
                     </button>
                 </div>
 
-                <!-- Navigation Modules -->
-                <div class="sidebar-nav">
-                    <!-- Module 1: Postura & Scorecard -->
-                    <div class="nav-module-group">
-                        <div class="nav-module-title">1. Postura & Scorecard</div>
-                        <button class="sub-tab-btn active" data-tab="tab-scorecard">
-                            <span class="sub-tab-icon">📊</span>
-                            <span class="sub-tab-text">Security Scorecard (0-100)</span>
-                        </button>
-                        <button class="sub-tab-btn" data-tab="tab-inventory">
-                            <span class="sub-tab-icon">🛡️</span>
-                            <span class="sub-tab-text">Inventário de Ameaças</span>
-                        </button>
-                    </div>
+                <!-- Module 2: Motores de Varredura -->
+                <div class="nav-module-group">
+                    <div class="nav-module-title">2. Motores de Varredura</div>
+                    <button class="sub-tab-btn" data-tab="tab-sast">
+                        <span class="sub-tab-icon">⚡</span>
+                        <span class="sub-tab-text">SAST (Código Estático)</span>
+                    </button>
+                    <button class="sub-tab-btn" data-tab="tab-dast">
+                        <span class="sub-tab-icon">🌐</span>
+                        <span class="sub-tab-text">DAST & Infra Web (URL)</span>
+                    </button>
+                    <button class="sub-tab-btn" data-tab="tab-sca">
+                        <span class="sub-tab-icon">📦</span>
+                        <span class="sub-tab-text">SCA & SBOM (Supply Chain)</span>
+                    </button>
+                    <button class="sub-tab-btn" data-tab="tab-cloud">
+                        <span class="sub-tab-icon">☁️</span>
+                        <span class="sub-tab-text">Cloud CSPM (IaC / Nuvem)</span>
+                    </button>
+                </div>
 
-                    <!-- Module 2: Motores de Varredura -->
-                    <div class="nav-module-group">
-                        <div class="nav-module-title">2. Motores de Varredura</div>
-                        <button class="sub-tab-btn" data-tab="tab-sast">
-                            <span class="sub-tab-icon">⚡</span>
-                            <span class="sub-tab-text">SAST (Código Estático)</span>
-                        </button>
-                        <button class="sub-tab-btn" data-tab="tab-dast">
-                            <span class="sub-tab-icon">🌐</span>
-                            <span class="sub-tab-text">DAST & Infra Web (URL)</span>
-                        </button>
-                        <button class="sub-tab-btn" data-tab="tab-sca">
-                            <span class="sub-tab-icon">📦</span>
-                            <span class="sub-tab-text">SCA & SBOM (Supply Chain)</span>
-                        </button>
-                        <button class="sub-tab-btn" data-tab="tab-cloud">
-                            <span class="sub-tab-icon">☁️</span>
-                            <span class="sub-tab-text">Cloud CSPM (IaC / Nuvem)</span>
-                        </button>
-                    </div>
+                <!-- Module 3: IA & Remediação -->
+                <div class="nav-module-group">
+                    <div class="nav-module-title">3. Inteligência Autônoma</div>
+                    <button class="sub-tab-btn" data-tab="tab-remediation">
+                        <span class="sub-tab-icon">🤖</span>
+                        <span class="sub-tab-text">Studio de Remediação (Diff)</span>
+                    </button>
+                    <button class="sub-tab-btn" data-tab="tab-dossier" id="btnTabDossier" style="color: #6ee7b7;">
+                        <span class="sub-tab-icon">📄</span>
+                        <span class="sub-tab-text">Dossiê IA & Análise Aprofundada</span>
+                    </button>
+                    <button class="sub-tab-btn" data-tab="tab-central-ai" style="color: #A5B4FC;">
+                        <span class="sub-tab-icon">🧠</span>
+                        <span class="sub-tab-text">Central de IA Dedicada</span>
+                    </button>
+                </div>
 
-                    <!-- Module 3: IA & Remediação -->
-                    <div class="nav-module-group">
-                        <div class="nav-module-title">3. Inteligência Autônoma</div>
-                        <button class="sub-tab-btn" data-tab="tab-remediation">
-                            <span class="sub-tab-icon">🤖</span>
-                            <span class="sub-tab-text">Studio de Remediação (Diff)</span>
-                        </button>
-                        <button class="sub-tab-btn" data-tab="tab-dossier" id="btnTabDossier" style="color: #6ee7b7;">
-                            <span class="sub-tab-icon">📄</span>
-                            <span class="sub-tab-text">Dossiê IA & Análise Aprofundada</span>
-                        </button>
-                        <button class="sub-tab-btn" data-tab="tab-central-ai" style="color: #A5B4FC;">
-                            <span class="sub-tab-icon">🧠</span>
-                            <span class="sub-tab-text">Central de IA Dedicada</span>
-                        </button>
-                    </div>
-
-                    <!-- Module 4: Governança & Operações -->
-                    <div class="nav-module-group">
-                        <div class="nav-module-title">4. Governança & Integrações</div>
-                        <button class="sub-tab-btn" data-tab="tab-cicd">
-                            <span class="sub-tab-icon">⚡</span>
-                            <span class="sub-tab-text">Automação CI/CD Pipeline</span>
-                        </button>
-                        <button class="sub-tab-btn" data-tab="tab-webhooks">
-                            <span class="sub-tab-icon">🔔</span>
-                            <span class="sub-tab-text">Webhooks & Alertas (Slack/Discord)</span>
-                        </button>
-                        <button class="sub-tab-btn" data-tab="tab-terminal">
-                            <span class="sub-tab-icon">💻</span>
-                            <span class="sub-tab-text">Cyber Terminal CLI</span>
-                        </button>
-                        <button class="sub-tab-btn" data-tab="tab-audit">
-                            <span class="sub-tab-icon">📜</span>
-                            <span class="sub-tab-text">Trilha de Auditoria</span>
-                        </button>
-                        <button class="sub-tab-btn" data-tab="tab-reports">
-                            <span class="sub-tab-icon">📄</span>
-                            <span class="sub-tab-text">Relatórios, CSV & SBOM</span>
-                        </button>
-                    </div>
-
-                    <!-- Module 5: Gestão de Clientes & Ambientes -->
-                    <div class="nav-module-group">
-                        <div class="nav-module-title">5. Clientes Corporativos</div>
-                        <button class="sub-tab-btn" data-tab="tab-clients">
-                            <span class="sub-tab-icon">🏢</span>
-                            <span class="sub-tab-text">Gestão de Clientes (Multi-Tenant)</span>
-                        </button>
-                    </div>
+                <!-- Module 4: Governança & Operações -->
+                <div class="nav-module-group">
+                    <div class="nav-module-title">4. Governança & Integrações</div>
+                    <button class="sub-tab-btn" data-tab="tab-cicd">
+                        <span class="sub-tab-icon">⚡</span>
+                        <span class="sub-tab-text">Automação CI/CD Pipeline</span>
+                    </button>
+                    <button class="sub-tab-btn" data-tab="tab-webhooks">
+                        <span class="sub-tab-icon">🔔</span>
+                        <span class="sub-tab-text">Webhooks & Alertas (Slack/Discord)</span>
+                    </button>
+                    <button class="sub-tab-btn" data-tab="tab-terminal">
+                        <span class="sub-tab-icon">💻</span>
+                        <span class="sub-tab-text">Cyber Terminal CLI</span>
+                    </button>
+                    <button class="sub-tab-btn" data-tab="tab-audit">
+                        <span class="sub-tab-icon">📜</span>
+                        <span class="sub-tab-text">Trilha de Auditoria</span>
+                    </button>
+                    <button class="sub-tab-btn" data-tab="tab-reports">
+                        <span class="sub-tab-icon">📄</span>
+                        <span class="sub-tab-text">Relatórios, CSV & SBOM</span>
+                    </button>
                 </div>
             </div>
 
@@ -141,11 +134,14 @@
             <!-- Topbar -->
             <header class="dash-topbar">
                 <div class="topbar-left">
-                    <span class="breadcrumb-module">NeuroSec ASPM 4.0 /</span>
+                    <span class="breadcrumb-module">NeuroSec ASPM 4.5 /</span>
                     <span class="breadcrumb-active" id="activeBreadcrumb">Security Scorecard (0-100)</span>
                 </div>
 
                 <div class="topbar-right" style="display:flex; align-items:center; gap:10px;">
+                    <button class="btn-primary-matrix" style="padding: 8px 14px; font-size: 12px; font-weight:700;" onclick="NeuroDashboard.switchTab('tab-clients');" title="Acessar Gestão de Clientes e Impacto Financeiro">
+                        <span>🏢 Clientes & Empresas</span>
+                    </button>
                     <button class="btn-ai-indigo" style="padding: 8px 14px; font-size: 12px;" onclick="NeuroDashboard.seedDemoScenario();" title="Popula um cenário bancário realista com 9 vulnerabilidades e métricas completas">
                         <span>🎬 Cenário Demo (1-Click)</span>
                     </button>
