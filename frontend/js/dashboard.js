@@ -10,12 +10,14 @@ const NeuroDashboard = {
         "tab-sca": "SCA & SBOM // Cadeia de Suprimentos",
         "tab-cloud": "Cloud CSPM // Auditoria de Nuvem e IaC",
         "tab-remediation": "Studio de Remediação & Diff Viewer",
+        "tab-dossier": "Dossiê Técnico Autônomo // NeuroSec IA",
         "tab-central-ai": "Central de IA Dedicada // Workspace AppSec",
         "tab-terminal": "Cyber Terminal CLI Interativo",
         "tab-audit": "Trilha de Auditoria & Governança (SOC 2)",
         "tab-reports": "Exportação de Relatórios & Conformidade",
         "tab-cicd": "Automação CI/CD // GitHub Actions & GitLab",
-        "tab-webhooks": "Webhooks & Alertas em Tempo Real (Slack/Discord)"
+        "tab-webhooks": "Webhooks & Alertas em Tempo Real (Slack/Discord)",
+        "tab-clients": "Gestão de Clientes & Ambientes Corporativos (Multi-Tenant)"
     },
 
     init() {
@@ -84,6 +86,8 @@ const NeuroDashboard = {
             NeuroInventory.render();
         } else if (tabId === "tab-audit" && typeof NeuroAudit !== "undefined") {
             NeuroAudit.render();
+        } else if (tabId === "tab-clients" && typeof NeuroClients !== "undefined") {
+            NeuroClients.render();
         }
     },
 
@@ -92,6 +96,7 @@ const NeuroDashboard = {
             if (typeof NeuroScorecard !== "undefined") await NeuroScorecard.render();
             if (typeof NeuroInventory !== "undefined") await NeuroInventory.render();
             if (typeof NeuroAudit !== "undefined") await NeuroAudit.render();
+            if (typeof NeuroClients !== "undefined") await NeuroClients.render();
         } catch (e) {
             console.error("Erro ao sincronizar dashboard:", e);
         }

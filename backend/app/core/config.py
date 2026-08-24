@@ -18,9 +18,15 @@ except ImportError:
         pass
 
 class Settings(SettingsBase):
-    PROJECT_NAME: str = "NeuroSec ASPM Enterprise"
-    VERSION: str = "3.5.0"
+    PROJECT_NAME: str = "NeuroSec ASPM 4.0"
+    VERSION: str = "4.0.0"
     API_V1_STR: str = "/api/v1"
+    
+    # JWT & Authentication Security
+    JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", "neurosec_super_secret_jwt_key_2026_enterprise_aspm_matrix")
+    JWT_ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "1440"))  # 24 hours
+    MFA_ISSUER_NAME: str = "NeuroSec ASPM 4.0"
     
     # AI & Groq Configuration (Lido via variável de ambiente de forma 100% segura)
     GROQ_API_KEY: str = os.getenv("GROQ_API_KEY", "")

@@ -1,6 +1,8 @@
 from fastapi import APIRouter
 
 from app.api.v1.endpoints import (
+    auth,
+    clients,
     vulnerabilities,
     sast,
     dast,
@@ -18,6 +20,8 @@ from app.api.v1.endpoints import (
 
 api_router = APIRouter()
 
+api_router.include_router(auth.router, prefix="/auth", tags=["Autenticação & MFA"])
+api_router.include_router(clients.router, prefix="/clients", tags=["Gestão de Clientes & Ambientes"])
 api_router.include_router(vulnerabilities.router, prefix="/vulnerabilities", tags=["Vulnerabilidades"])
 api_router.include_router(sast.router, prefix="/scan/sast", tags=["SAST Scan"])
 api_router.include_router(dast.router, prefix="/scan/dast", tags=["DAST Scan"])

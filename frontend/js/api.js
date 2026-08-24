@@ -9,9 +9,20 @@ const API_BASE = isRender
         : "https://neurosec-api.onrender.com/api/v1");
 
 const NeuroAPI = {
+    _getHeaders(extraHeaders = {}) {
+        const headers = { "Content-Type": "application/json", ...extraHeaders };
+        const token = localStorage.getItem("neurosec_jwt_token");
+        if (token) {
+            headers["Authorization"] = `Bearer ${token}`;
+        }
+        return headers;
+    },
+
     async get(endpoint) {
         try {
-            const res = await fetch(`${API_BASE}${endpoint}`);
+            const res = await fetch(`${API_BASE}${endpoint}`, {
+                headers: this._getHeaders()
+            });
             if (!res.ok) {
                 const errData = await res.json().catch(() => ({}));
                 const errMsg = this._formatErrorMessage(errData) || `HTTP ${res.status}: ${res.statusText}`;
@@ -29,7 +40,7 @@ const NeuroAPI = {
         try {
             const res = await fetch(`${API_BASE}${endpoint}`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: this._getHeaders(),
                 body: JSON.stringify(body)
             });
             if (!res.ok) {
@@ -49,7 +60,7 @@ const NeuroAPI = {
         try {
             const res = await fetch(`${API_BASE}${endpoint}`, {
                 method: "PATCH",
-                headers: { "Content-Type": "application/json" },
+                headers: this._getHeaders(),
                 body: JSON.stringify(body)
             });
             if (!res.ok) {
@@ -65,9 +76,32 @@ const NeuroAPI = {
         }
     },
 
+    async put(endpoint, body = {}) {
+        try {
+            const res = await fetch(`${API_BASE}${endpoint}`, {
+                method: "PUT",
+                headers: this._getHeaders(),
+                body: JSON.stringify(body)
+            });
+            if (!res.ok) {
+                const errData = await res.json().catch(() => ({}));
+                const errMsg = this._formatErrorMessage(errData) || `HTTP ${res.status}`;
+                throw new Error(errMsg);
+            }
+            return await res.json();
+        } catch (err) {
+            console.error(`Erro PUT ${endpoint}:`, err);
+            NeuroUI.toast(`Falha ao atualizar: ${err.message}`, "error");
+            throw err;
+        }
+    },
+
     async delete(endpoint) {
         try {
-            const res = await fetch(`${API_BASE}${endpoint}`, { method: "DELETE" });
+            const res = await fetch(`${API_BASE}${endpoint}`, {
+                method: "DELETE",
+                headers: this._getHeaders()
+            });
             if (!res.ok) {
                 const errData = await res.json().catch(() => ({}));
                 const errMsg = this._formatErrorMessage(errData) || `HTTP ${res.status}`;

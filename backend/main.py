@@ -196,6 +196,16 @@ if os.path.exists(frontend_path):
             return FileResponse(page)
         return FileResponse(os.path.join(frontend_path, "index.html"))
 
+    # 5. Rota de Autenticação Segura & MFA (Login Screen)
+    @app.get("/login")
+    @app.get("/entrar")
+    @app.get("/auth")
+    def serve_login_page():
+        page = os.path.join(frontend_path, "login.html")
+        if os.path.exists(page):
+            return FileResponse(page)
+        return FileResponse(os.path.join(frontend_path, "index.html"))
+
 @app.get("/health", summary="Healthcheck da API")
 def healthcheck():
     return {

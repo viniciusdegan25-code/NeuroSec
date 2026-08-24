@@ -28,7 +28,7 @@ def run_comprehensive_tests():
     print("      BATERIA DE TESTES DAS 11 FERRAMENTAS DA PLATAFORMA NEUROSEC      ")
     print("========================================================================")
     
-    init_db()
+    init_db(seed=True)
     client = TestClient(app)
     db = SessionLocal()
     

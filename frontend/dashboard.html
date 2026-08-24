@@ -78,6 +78,10 @@
                             <span class="sub-tab-icon">🤖</span>
                             <span class="sub-tab-text">Studio de Remediação (Diff)</span>
                         </button>
+                        <button class="sub-tab-btn" data-tab="tab-dossier" id="btnTabDossier" style="color: #6ee7b7;">
+                            <span class="sub-tab-icon">📄</span>
+                            <span class="sub-tab-text">Dossiê IA & Análise Aprofundada</span>
+                        </button>
                         <button class="sub-tab-btn" data-tab="tab-central-ai" style="color: #A5B4FC;">
                             <span class="sub-tab-icon">🧠</span>
                             <span class="sub-tab-text">Central de IA Dedicada</span>
@@ -108,6 +112,15 @@
                             <span class="sub-tab-text">Relatórios, CSV & SBOM</span>
                         </button>
                     </div>
+
+                    <!-- Module 5: Gestão de Clientes & Ambientes -->
+                    <div class="nav-module-group">
+                        <div class="nav-module-title">5. Clientes Corporativos</div>
+                        <button class="sub-tab-btn" data-tab="tab-clients">
+                            <span class="sub-tab-icon">🏢</span>
+                            <span class="sub-tab-text">Gestão de Clientes (Multi-Tenant)</span>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -132,7 +145,7 @@
                     <span class="breadcrumb-active" id="activeBreadcrumb">Security Scorecard (0-100)</span>
                 </div>
 
-                <div class="topbar-right">
+                <div class="topbar-right" style="display:flex; align-items:center; gap:10px;">
                     <button class="btn-ai-indigo" style="padding: 8px 14px; font-size: 12px;" onclick="NeuroDashboard.seedDemoScenario();" title="Popula um cenário bancário realista com 9 vulnerabilidades e métricas completas">
                         <span>🎬 Cenário Demo (1-Click)</span>
                     </button>
@@ -140,9 +153,16 @@
                         <span>Atualizar Postura</span>
                         <span>⟳</span>
                     </button>
-                    <a href="/avaliacao" class="btn-primary-matrix" style="padding: 8px 16px; font-size: 13px;">
-                        Avaliação Enterprise
-                    </a>
+                    
+                    <!-- Operator Profile Chip with MFA Status -->
+                    <div style="display:flex; align-items:center; gap:8px; background:rgba(0,255,65,0.06); border:1px solid rgba(0,255,65,0.25); padding:5px 12px; border-radius:20px;">
+                        <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--matrix-green); box-shadow:0 0 8px var(--matrix-green);"></span>
+                        <div style="text-align:left;">
+                            <span id="navUserName" style="font-size:12px; font-weight:700; color:#fff; display:block; line-height:1.1;">SecOps Lead & CISO</span>
+                            <span id="navUserRole" style="font-size:10px; color:var(--matrix-green); font-family:var(--font-mono); font-weight:700;">SECOPS_ADMIN // MFA ATIVO 🛡️</span>
+                        </div>
+                        <button onclick="NeuroAuth.logout()" title="Encerrar Sessão Segura" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:14px; margin-left:6px; padding:2px;" onmouseover="this.style.color='#EF4444'" onmouseout="this.style.color='var(--text-muted)'">🚪</button>
+                    </div>
                 </div>
             </header>
 
@@ -348,7 +368,40 @@
                         <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Diagnóstico de causa-raiz e geração autônoma de Unified Git Diff defensivo lado a lado.</p>
 
                         <div id="remediationListContainer">
-                            <p style="color: var(--text-muted); font-size: 14px;">Selecione qualquer vulnerabilidade do <a href="#" onclick="NeuroDashboard.switchTab('tab-inventory');" style="color:var(--matrix-green);">Inventário de Ameaças</a> e clique no botão <strong>"🤖 Patch"</strong> ou <strong>"📄 Dossiê IA"</strong> para abrir o studio.</p>
+                            <p style="color: var(--text-muted); font-size: 14px;">Selecione qualquer vulnerabilidade do <a href="#" onclick="NeuroDashboard.switchTab('tab-inventory');" style="color:var(--matrix-green);">Inventário de Ameaças</a> e clique no botão <strong>"🤖 Patch"</strong> ou <strong>"📄 Dossiê IA"</strong> para abrir a análise em tela cheia.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =======================================================
+                     VIEW 7.5: DOSSIÊ TÉCNICO & ANÁLISE APROFUNDADA EM ABA DEDICADA
+                     ======================================================= -->
+                <section class="subtab-view" id="tab-dossier">
+                    <div class="view-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:14px;">
+                        <div style="display:flex; align-items:center; gap:14px;">
+                            <button class="btn-secondary-dark" style="padding:8px 14px; font-size:12px;" onclick="NeuroDashboard.switchTab('tab-inventory');">
+                                <span>← Voltar ao Inventário</span>
+                            </button>
+                            <div>
+                                <span class="section-tag" id="dossierTagBadge">// DOSSIÊ TÉCNICO AUTÔNOMO // NEUROSEC IA</span>
+                                <h2 style="font-size:20px; font-weight:800; color:#fff; margin-top:2px;" id="dossierMainTitle">Análise Aprofundada da Vulnerabilidade</h2>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <button class="btn-secondary-dark" style="padding:8px 14px; font-size:12px;" onclick="NeuroRemediation.downloadDossierMarkdown();">
+                                <span>📥 Baixar Dossiê (.MD)</span>
+                            </button>
+                            <button class="btn-primary-matrix" style="padding:8px 16px; font-size:13px;" onclick="NeuroRemediation.approveCurrent();">
+                                <span>✓ Aprovar Patch & Remediar</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="pulse-card" style="padding:24px;" id="dossierFullContent">
+                        <div style="text-align:center; padding:60px 20px; color:var(--matrix-green); font-family:var(--font-mono);">
+                            <div class="cobra-badge" data-cobra-shield="32" style="margin:0 auto 16px auto;"></div>
+                            <div>Selecione uma vulnerabilidade no <a href="#" onclick="NeuroDashboard.switchTab('tab-inventory');" style="color:var(--matrix-green); text-decoration:underline;">Inventário de Ameaças</a> para visualizar o Dossiê Técnico Completo.</div>
                         </div>
                     </div>
                 </section>
@@ -576,6 +629,102 @@ jobs:
                         </div>
                     </div>
                 </section>
+
+                <!-- =======================================================
+                     VIEW 14: GESTÃO DE CLIENTES & MULTI-TENANT HUB
+                     ======================================================= -->
+                <section class="subtab-view" id="tab-clients">
+                    <div class="view-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                        <div>
+                            <span class="section-tag">// ECOSSISTEMA CORPORATIVO MULTI-TENANT</span>
+                            <h2 style="font-size:22px; font-weight:800; color:#fff; margin-top:4px;">Gestão de Clientes & Ambientes Monitorados</h2>
+                            <p style="font-size:13px; color:var(--text-muted); margin-top:2px;">Painel de controle unificado para administração de postura de segurança por organização parceira.</p>
+                        </div>
+                        <button class="btn-primary-matrix" onclick="NeuroClients.openCreateModal();">
+                            <span>+ Cadastrar Novo Cliente</span>
+                        </button>
+                    </div>
+
+                    <!-- Client Summary Cards -->
+                    <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; margin-bottom:24px;">
+                        <div class="pulse-card">
+                            <span style="font-size:11px; color:var(--text-dim); text-transform:uppercase; font-weight:700;">Empresas Monitoradas</span>
+                            <div style="font-size:26px; font-weight:800; color:#fff; font-family:var(--font-mono); margin:6px 0;" id="clientStatTotal">--</div>
+                            <span style="font-size:12px; color:var(--text-muted);">Organizações ativas na esteira</span>
+                        </div>
+                        <div class="pulse-card">
+                            <span style="font-size:11px; color:var(--text-dim); text-transform:uppercase; font-weight:700;">Prejuízo Evitado Acumulado</span>
+                            <div style="font-size:24px; font-weight:800; color:var(--matrix-green); font-family:var(--font-mono); margin:6px 0;" id="clientStatLossAvoided">R$ --</div>
+                            <span style="font-size:12px; color:var(--text-muted);">Retorno financeiro por remediação</span>
+                        </div>
+                        <div class="pulse-card">
+                            <span style="font-size:11px; color:var(--text-dim); text-transform:uppercase; font-weight:700;">Exposição Financeira em Aberto</span>
+                            <div style="font-size:24px; font-weight:800; color:#EF4444; font-family:var(--font-mono); margin:6px 0;" id="clientStatExposure">R$ --</div>
+                            <span style="font-size:12px; color:var(--text-muted);">Risco residual estimado (FAIR/NIST)</span>
+                        </div>
+                        <div class="pulse-card">
+                            <span style="font-size:11px; color:var(--text-dim); text-transform:uppercase; font-weight:700;">Média de Postura Global</span>
+                            <div style="font-size:26px; font-weight:800; color:var(--cyan-neon); font-family:var(--font-mono); margin:6px 0;" id="clientStatAvgScore">--/100</div>
+                            <span style="font-size:12px; color:var(--text-muted);">Scorecard médio de clientes</span>
+                        </div>
+                    </div>
+
+                    <!-- Client Filter & Search Bar -->
+                    <div class="pulse-card" style="margin-bottom:20px; padding:16px;">
+                        <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:16px;">
+                            <div>
+                                <label style="display:block; font-size:11px; font-weight:700; color:var(--text-dim); text-transform:uppercase; margin-bottom:6px;">Buscar Organização</label>
+                                <input type="text" id="clientSearchInput" class="form-input" placeholder="Buscar por Razão Social, CNPJ ou CISO..." oninput="NeuroClients.filter();">
+                            </div>
+                            <div>
+                                <label style="display:block; font-size:11px; font-weight:700; color:var(--text-dim); text-transform:uppercase; margin-bottom:6px;">Segmento de Mercado</label>
+                                <select id="clientIndustryFilter" class="form-select" onchange="NeuroClients.filter();">
+                                    <option value="ALL">Todos os Segmentos</option>
+                                    <option value="FINTECH">Fintech / Banking</option>
+                                    <option value="HEALTHCARE">Saúde / Healthcare</option>
+                                    <option value="E_COMMERCE">E-Commerce & Varejo</option>
+                                    <option value="LOGISTICS">Logística & Frotas</option>
+                                    <option value="GOV">Governo & Setor Público</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="display:block; font-size:11px; font-weight:700; color:var(--text-dim); text-transform:uppercase; margin-bottom:6px;">SLA Contratual</label>
+                                <select id="clientSlaFilter" class="form-select" onchange="NeuroClients.filter();">
+                                    <option value="ALL">Todos os SLAs</option>
+                                    <option value="ENTERPRISE_24_7">24/7 Enterprise Elite</option>
+                                    <option value="BUSINESS_CRITICAL">Business Critical</option>
+                                    <option value="STANDARD">Standard ASPM</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Client Inventory Table -->
+                    <div class="pulse-card" style="padding:0; overflow:hidden;">
+                        <div style="padding:16px 20px; border-bottom:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-size:13px; font-weight:700; color:#fff;">Portfólio de Empresas Conectadas // Modelo de Risco Financeiro Contextualizado</span>
+                            <span style="font-size:11px; color:var(--matrix-green); font-family:var(--font-mono);">SYNC EM TEMPO REAL ●</span>
+                        </div>
+                        <div style="overflow-x:auto;">
+                            <table style="width:100%; border-collapse:collapse; text-align:left; font-size:13px;">
+                                <thead>
+                                    <tr style="border-bottom:1px solid var(--border-subtle); background:rgba(255,255,255,0.02); font-size:11px; color:var(--text-dim); text-transform:uppercase;">
+                                        <th style="padding:12px;">Organização / Setor</th>
+                                        <th style="padding:12px;">CISO / Contato</th>
+                                        <th style="padding:12px;">Realidade Estrutural</th>
+                                        <th style="padding:12px;">Risco em Aberto</th>
+                                        <th style="padding:12px;">Prejuízo Evitado</th>
+                                        <th style="padding:12px; text-align:center;">Score</th>
+                                        <th style="padding:12px; text-align:right;">Ações de Gestão</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="clientsTableBody">
+                                    <tr><td colspan="7" style="text-align:center; padding:30px; color:var(--text-muted);">Carregando empresas...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
             </div>
         </main>
     </div>
@@ -662,11 +811,148 @@ jobs:
         </div>
     </div>
 
+    <!-- ===================================================================
+         MODAL 3: CADASTRO / EDIÇÃO DE CLIENTE CORPORATIVO
+         =================================================================== -->
+    <div class="modal-backdrop" id="clientModal">
+        <div class="modal-card" style="max-width: 540px;">
+            <div class="modal-header">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div class="cobra-badge" data-cobra-shield="18"></div>
+                    <h3 style="font-size: 16px; font-weight: 700; color: #fff;" id="clientModalTitle">Cadastrar Novo Cliente Corporativo</h3>
+                </div>
+                <button class="modal-close-btn" onclick="NeuroClients.closeModal();">✕</button>
+            </div>
+            <div class="modal-body" style="padding:20px;">
+                <input type="hidden" id="clientFormId" value="">
+                
+                <div style="margin-bottom:14px;">
+                    <label style="display:block; font-size:12px; font-weight:600; color:#cbd5e1; margin-bottom:4px;">Razão Social / Nome da Empresa *</label>
+                    <input type="text" id="clientFormName" class="form-input" placeholder="Ex: FinTech Prime Global S.A." required>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+                    <div>
+                        <label style="display:block; font-size:12px; font-weight:600; color:#cbd5e1; margin-bottom:4px;">CNPJ (Opcional)</label>
+                        <input type="text" id="clientFormCnpj" class="form-input" placeholder="00.000.000/0001-00">
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:12px; font-weight:600; color:#cbd5e1; margin-bottom:4px;">Segmento / Setor</label>
+                        <select id="clientFormIndustry" class="form-select">
+                            <option value="FINTECH">Fintech / Banking</option>
+                            <option value="HEALTHCARE">Saúde / Healthcare</option>
+                            <option value="E_COMMERCE">E-Commerce</option>
+                            <option value="LOGISTICS">Logística</option>
+                            <option value="GOV">Governo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+                    <div>
+                        <label style="display:block; font-size:12px; font-weight:600; color:#cbd5e1; margin-bottom:4px;">CISO / Responsável Técnico *</label>
+                        <input type="text" id="clientFormContactName" class="form-input" placeholder="Nome do CISO" required>
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:12px; font-weight:600; color:#cbd5e1; margin-bottom:4px;">E-mail do Responsável *</label>
+                        <input type="email" id="clientFormContactEmail" class="form-input" placeholder="ciso@empresa.com.br" required>
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+                    <div>
+                        <label style="display:block; font-size:12px; font-weight:600; color:#cbd5e1; margin-bottom:4px;">Telefone / Plantão</label>
+                        <input type="text" id="clientFormContactPhone" class="form-input" placeholder="+55 (11) 90000-0000">
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:12px; font-weight:600; color:#cbd5e1; margin-bottom:4px;">SLA Contratual</label>
+                        <select id="clientFormSla" class="form-select">
+                            <option value="ENTERPRISE_24_7">24/7 Enterprise Elite</option>
+                            <option value="BUSINESS_CRITICAL">Business Critical</option>
+                            <option value="STANDARD">Standard ASPM</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:14px; background:rgba(255,255,255,0.02); padding:12px; border-radius:6px; border:1px solid var(--border-subtle);">
+                    <div>
+                        <label style="display:block; font-size:11px; font-weight:700; color:var(--matrix-green); margin-bottom:4px;">Faturamento Anual (R$)</label>
+                        <input type="number" id="clientFormRevenue" class="form-input" placeholder="50000000" value="50000000">
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:11px; font-weight:700; color:var(--matrix-green); margin-bottom:4px;">Registros Sensíveis LGPD</label>
+                        <input type="number" id="clientFormRecords" class="form-input" placeholder="100000" value="100000">
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:11px; font-weight:700; color:var(--matrix-green); margin-bottom:4px;">Custo Downtime (R$/hora)</label>
+                        <input type="number" id="clientFormDowntime" class="form-input" placeholder="25000" value="25000">
+                    </div>
+                </div>
+
+                <div>
+                    <label style="display:block; font-size:12px; font-weight:600; color:#cbd5e1; margin-bottom:4px;">Observações de Compliance / Escopo</label>
+                    <textarea id="clientFormNotes" class="form-textarea" rows="2" placeholder="Informações de conformidade, exigências LGPD ou repositórios críticos..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary-dark" onclick="NeuroClients.closeModal();">Cancelar</button>
+                <button class="btn-primary-matrix" onclick="NeuroClients.saveClient();">✓ Salvar Empresa</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================
+         MODAL 4: DETALHES & ATIVOS DO CLIENTE
+         =================================================================== -->
+    <div class="modal-backdrop" id="clientDetailsModal">
+        <div class="modal-card" style="max-width: 680px;">
+            <div class="modal-header">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div class="cobra-badge" data-cobra-shield="18"></div>
+                    <h3 style="font-size: 16px; font-weight: 700; color: #fff;">Ambiente & Ativos do Cliente</h3>
+                </div>
+                <button class="modal-close-btn" onclick="NeuroClients.closeDetailsModal();">✕</button>
+            </div>
+            <div class="modal-body" id="clientDetailsBody" style="padding:20px; max-height:calc(85vh - 120px); overflow-y:auto;">
+                <div style="color:var(--matrix-green); text-align:center; padding:20px;">Carregando...</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary-dark" onclick="NeuroClients.closeDetailsModal();">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================
+         MODAL 5: ANÁLISE DE IMPACTO FINANCEIRO CONTEXTUALIZADO (FAIR / NIST / LGPD)
+         =================================================================== -->
+    <div class="modal-backdrop" id="clientFinancialModal">
+        <div class="modal-card" style="max-width: 760px;">
+            <div class="modal-header">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div class="cobra-badge" data-cobra-shield="20"></div>
+                    <div>
+                        <div style="font-size:11px; font-weight:700; color:var(--matrix-green); text-transform:uppercase;">// MODELO DE RISCO FINANCEIRO QUANTITATIVO (FAIR & NIST 800-30)</div>
+                        <h3 style="font-size: 16px; font-weight: 800; color: #fff;" id="clientFinancialTitle">Dossiê de Impacto Financeiro</h3>
+                    </div>
+                </div>
+                <button class="modal-close-btn" onclick="NeuroClients.closeFinancialModal();">✕</button>
+            </div>
+            <div class="modal-body" id="clientFinancialBody" style="padding:22px; max-height:calc(85vh - 120px); overflow-y:auto;">
+                <div style="color:var(--matrix-green); text-align:center; padding:30px;">Calculando risco financeiro e prejuízo evitado...</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary-dark" onclick="NeuroClients.closeFinancialModal();">Fechar</button>
+            </div>
+        </div>
+    </div>
+
     <div id="toastContainer" class="toast-container"></div>
 
     <!-- Scripts -->
     <script src="/js/cobra-logo.js"></script>
     <script src="/js/api.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/clients.js"></script>
     <script src="/js/scorecard.js"></script>
     <script src="/js/inventory.js"></script>
     <script src="/js/scanners.js"></script>

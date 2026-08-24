@@ -26,7 +26,7 @@ async def execute_terminal_command(payload: TerminalCommandRequest, db: Session 
 
     if root_cmd in ["help", "?"]:
         output = (
-            "NEUROSEC CYBER CLI v3.0.0 — Comandos Disponíveis:\n"
+            "NEUROSEC CYBER CLI ASPM 4.0 — Comandos Disponíveis:\n"
             "-----------------------------------------------------------------\n"
             "  help                      Exibe este menu de ajuda com a sintaxe.\n"
             "  scorecard                 Exibe o resumo executivo da postura atual.\n"
