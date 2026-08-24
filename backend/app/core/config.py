@@ -33,8 +33,10 @@ class Settings(SettingsBase):
     GROQ_MODEL: str = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
     GROQ_URL: str = "https://api.groq.com/openai/v1/chat/completions"
     
-    # Database
-    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./neurosec.db")
+    # Database (Caminho absoluto universal para garantir 100% de consistência)
+    _BACKEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+    _DEFAULT_DB_PATH = os.path.join(_BACKEND_DIR, "neurosec.db").replace("\\", "/")
+    DATABASE_URL: str = os.getenv("DATABASE_URL", f"sqlite:///{_DEFAULT_DB_PATH}")
     
     # Environment & CORS
     ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
