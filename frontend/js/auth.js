@@ -205,6 +205,15 @@ const NeuroAuth = {
     },
 
     checkSessionOnDashboard() {
+        const isDashboard = window.location.pathname.includes("dashboard") || window.location.pathname.includes("cockpit") || window.location.pathname.includes("app");
+        const token = this.getToken();
+        
+        if (isDashboard && !token) {
+            console.log("[NeuroAuth] Sessão não autenticada no Dashboard. Redirecionando para Login & MFA...");
+            window.location.href = "/login";
+            return;
+        }
+
         // Atualiza elementos visuais do usuário no Dashboard se presentes
         const userBadge = document.getElementById("navUserBadge");
         const userName = document.getElementById("navUserName");
