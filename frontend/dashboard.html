@@ -36,16 +36,12 @@
 
             <!-- Navigation Modules -->
             <div class="sidebar-nav" style="flex:1; overflow-y:auto; padding:16px 10px;">
-                <!-- Module 1: Postura, Scorecard & Clientes (DESTAQUE NO TOPO) -->
+                <!-- Module 1: Gestão de Clientes & Cockpit 360° (DESTAQUE PRINCIPAL) -->
                 <div class="nav-module-group">
-                    <div class="nav-module-title">1. Postura & Clientes</div>
-                    <button class="sub-tab-btn active" data-tab="tab-scorecard">
-                        <span class="sub-tab-icon">📊</span>
-                        <span class="sub-tab-text">Security Scorecard (0-100)</span>
-                    </button>
-                    <button class="sub-tab-btn" data-tab="tab-clients" style="color:var(--matrix-green); font-weight:700; background:rgba(0,255,65,0.06); border:1px solid rgba(0,255,65,0.25);">
+                    <div class="nav-module-title">1. Clientes Corporativos</div>
+                    <button class="sub-tab-btn active" data-tab="tab-clients" style="color:var(--matrix-green); font-weight:700; background:rgba(0,255,65,0.08); border:1px solid rgba(0,255,65,0.3);">
                         <span class="sub-tab-icon">🏢</span>
-                        <span class="sub-tab-text">Clientes & Multi-Tenant</span>
+                        <span class="sub-tab-text">Clientes & Cockpit 360°</span>
                     </button>
                     <button class="sub-tab-btn" data-tab="tab-inventory">
                         <span class="sub-tab-icon">🛡️</span>
@@ -135,7 +131,7 @@
             <header class="dash-topbar">
                 <div class="topbar-left">
                     <span class="breadcrumb-module">NeuroSec ASPM 4.5 /</span>
-                    <span class="breadcrumb-active" id="activeBreadcrumb">Security Scorecard (0-100)</span>
+                    <span class="breadcrumb-active" id="activeBreadcrumb">Clientes & Cockpit 360°</span>
                 </div>
 
                 <div class="topbar-right" style="display:flex; align-items:center; gap:10px;">
@@ -167,7 +163,7 @@
                 <!-- =======================================================
                      VIEW 1: SCORECARD EXECUTIVO COM GRÁFICOS NEON
                      ======================================================= -->
-                <section class="subtab-view active" id="tab-scorecard">
+                <section class="subtab-view" id="tab-scorecard">
                     <!-- Top KPIs and Gauge -->
                     <div style="display: grid; grid-template-columns: 320px 1fr; gap: 24px; margin-bottom: 24px;">
                         <!-- Gauge Score Card -->
@@ -632,7 +628,7 @@ jobs:
                 <!-- =======================================================
                      VIEW 14: GESTÃO DE CLIENTES & COCKPIT 360° (TELA PRÓPRIA INTEGRADA)
                      ======================================================= -->
-                <section class="subtab-view" id="tab-clients">
+                <section class="subtab-view active" id="tab-clients">
                     <!-- =======================================================
                          SUB-VIEW A: PORTFÓLIO GLOBAL DE EMPRESAS
                          ======================================================= -->

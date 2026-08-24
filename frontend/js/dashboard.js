@@ -1,8 +1,9 @@
 // NeuroSec ASPM 4.5 — Dashboard SPA Orchestrator & Sidebar Controller
 const NeuroDashboard = {
-    currentTab: "tab-scorecard",
+    currentTab: "tab-clients",
 
     tabTitles: {
+        "tab-clients": "Gestão de Clientes & Cockpit 360° (Multi-Tenant Hub)",
         "tab-scorecard": "Security Scorecard & Métricas Executivas",
         "tab-inventory": "Inventário Dinâmico de Ameaças",
         "tab-sast": "SAST // Scanner de Código Estático",
