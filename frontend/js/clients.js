@@ -107,11 +107,11 @@ const NeuroClients = {
                     </td>
                     <td style="padding:16px 12px; text-align:right;">
                         <div style="display:inline-flex; gap:8px; align-items:center;">
-                            <button class="btn-primary-matrix" style="padding:7px 14px; font-size:12px; font-weight:700; display:flex; align-items:center; gap:6px; box-shadow:0 0 10px rgba(0,255,65,0.2);" onclick="NeuroClients.openClientCockpit(${c.id})" title="Acessar o Painel Executivo 360°, Scorecard e Dossiê Financeiro">
+                            <button class="btn-primary-matrix" style="padding:8px 14px; font-size:12px; font-weight:700; display:inline-flex; align-items:center; gap:6px; box-shadow:0 0 10px rgba(0,255,65,0.2); white-space:nowrap;" onclick="NeuroClients.openClientCockpit(${c.id})" title="Acessar Informações do Cliente, Postura e Dossiê Financeiro">
                                 <span>📊</span>
-                                <span>Acessar Cockpit 360°</span>
+                                <span>Informações do Cliente</span>
                             </button>
-                            <button class="btn-secondary-dark" style="padding:7px 10px; font-size:12px; color:#EF4444; border-color:rgba(239,68,68,0.3);" onclick="NeuroClients.deleteClient(${c.id}, '${c.name}')" title="Excluir Organização">
+                            <button class="btn-secondary-dark" style="padding:8px 10px; font-size:12px; color:#EF4444; border-color:rgba(239,68,68,0.3);" onclick="NeuroClients.deleteClient(${c.id}, '${c.name}')" title="Excluir Organização">
                                 🗑️
                             </button>
                         </div>
@@ -155,7 +155,7 @@ const NeuroClients = {
         }
 
         try {
-            NeuroUI.toast("Carregando Cockpit 360° e Dossiê Financeiro...", "info");
+            NeuroUI.toast("Carregando Informações e Dossiê do Cliente...", "info");
             const [clientData, finData] = await Promise.all([
                 NeuroAPI.get(`/clients/${clientId}`),
                 NeuroAPI.get(`/clients/${clientId}/financial-analysis`)
