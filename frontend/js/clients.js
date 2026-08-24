@@ -201,7 +201,7 @@ const NeuroClients = {
             document.getElementById("cockpitAnnualRevenue").innerText = finData.annual_revenue_brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
             document.getElementById("cockpitSensitiveRecords").innerText = finData.sensitive_records_count.toLocaleString('pt-BR');
 
-            // 4. Decomposição das Perdas por Vetor (FAIR/NIST/LGPD)
+            // 4. Decomposição das Perdas por Vetor (FAIR/NIST/LGPD - PMEs)
             const vectorsContainer = document.getElementById("cockpitFinancialVectors");
             if (vectorsContainer) {
                 vectorsContainer.innerHTML = `
@@ -218,7 +218,7 @@ const NeuroClients = {
                             <span style="font-size:12px; font-weight:700; color:#E2E8F0;">2. Risco de Interrupção / Downtime</span>
                             <span style="font-family:var(--font-mono); font-weight:800; color:#F97316; font-size:13px;">${finData.downtime_risk_brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
                         </div>
-                        <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">Custo de paralisação de R$ ${finData.downtime_cost_per_hour.toLocaleString('pt-BR')}/hora por RCE ou Cloud.</p>
+                        <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">Custo de paralisação de R$ ${finData.downtime_cost_per_hour.toLocaleString('pt-BR')}/hora por RCE ou falhas de nuvem.</p>
                     </div>
 
                     <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-subtle); padding:14px; border-radius:8px;">
@@ -226,7 +226,92 @@ const NeuroClients = {
                             <span style="font-size:12px; font-weight:700; color:#E2E8F0;">3. Sanções & Multas Regulatórias</span>
                             <span style="font-family:var(--font-mono); font-weight:800; color:#EAB308; font-size:13px;">${finData.regulatory_fine_risk_brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
                         </div>
-                        <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">Proporcional ao faturamento com teto legal de R$ 50 Milhões (ANPD / BACEN).</p>
+                        <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">Teto legal de 2% do faturamento da empresa (ANPD / LGPD Art. 52).</p>
+                    </div>
+                `;
+            }
+
+            // 4.2 Matriz de Conformidade Regulatória (ISO 27001, LGPD/ANPD, e Norma Setorial)
+            const complianceContainer = document.getElementById("cockpitComplianceCards");
+            if (complianceContainer && finData.compliance_matrix) {
+                const matrix = finData.compliance_matrix;
+                const iso = matrix.iso_27001 || { score: 100, status: "CONFORME", controls: [] };
+                const lgpd = matrix.lgpd_anpd || { score: 100, status: "CONFORME", controls: [] };
+                const sec = matrix.sector_standard || { name: "Norma Setorial", score: 100, status: "CONFORME", controls: [] };
+
+                const getBadge = (score) => {
+                    if (score >= 80) return `<span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:4px; background:rgba(0,255,65,0.15); color:var(--matrix-green); border:1px solid var(--matrix-green);">CONFORME ●</span>`;
+                    if (score >= 50) return `<span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:4px; background:rgba(249,115,22,0.15); color:#F97316; border:1px solid #F97316;">PARCIAL ▲</span>`;
+                    return `<span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:4px; background:rgba(239,68,68,0.15); color:#EF4444; border:1px solid #EF4444;">NÃO CONFORME ✕</span>`;
+                };
+
+                const getBarColor = (score) => score >= 80 ? "var(--matrix-green)" : (score >= 50 ? "#F97316" : "#EF4444");
+
+                complianceContainer.innerHTML = `
+                    <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-subtle); padding:16px; border-radius:8px; display:flex; flex-direction:column; gap:10px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-size:13px; font-weight:700; color:#fff;">ISO/IEC 27001:2022</span>
+                            ${getBadge(iso.score)}
+                        </div>
+                        <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted);">
+                            <span>Aderência aos Controles</span>
+                            <strong style="color:#fff; font-family:var(--font-mono);">${iso.score}%</strong>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.06); height:6px; border-radius:3px; overflow:hidden;">
+                            <div style="width:${iso.score}%; height:100%; background:${getBarColor(iso.score)}; transition:width 0.5s ease;"></div>
+                        </div>
+                        <div style="display:flex; flex-direction:column; gap:4px; margin-top:4px;">
+                            ${(iso.controls || []).map(c => `
+                                <div style="font-size:11px; display:flex; justify-content:space-between; color:${c.status === 'PASS' ? '#94A3B8' : '#EF4444'};">
+                                    <span>${c.id} - ${c.name}</span>
+                                    <span>${c.status === 'PASS' ? '✓' : '✕'}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-subtle); padding:16px; border-radius:8px; display:flex; flex-direction:column; gap:10px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-size:13px; font-weight:700; color:#fff;">LGPD / ANPD (Lei 13.709)</span>
+                            ${getBadge(lgpd.score)}
+                        </div>
+                        <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted);">
+                            <span>Aderência à Proteção de Titulares</span>
+                            <strong style="color:#fff; font-family:var(--font-mono);">${lgpd.score}%</strong>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.06); height:6px; border-radius:3px; overflow:hidden;">
+                            <div style="width:${lgpd.score}%; height:100%; background:${getBarColor(lgpd.score)}; transition:width 0.5s ease;"></div>
+                        </div>
+                        <div style="display:flex; flex-direction:column; gap:4px; margin-top:4px;">
+                            ${(lgpd.controls || []).map(c => `
+                                <div style="font-size:11px; display:flex; justify-content:space-between; color:${c.status === 'PASS' ? '#94A3B8' : '#EF4444'};">
+                                    <span>${c.id} - ${c.name}</span>
+                                    <span>${c.status === 'PASS' ? '✓' : '✕'}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-subtle); padding:16px; border-radius:8px; display:flex; flex-direction:column; gap:10px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-size:13px; font-weight:700; color:#fff;">${sec.name}</span>
+                            ${getBadge(sec.score)}
+                        </div>
+                        <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted);">
+                            <span>Norma de Conformidade Setorial</span>
+                            <strong style="color:#fff; font-family:var(--font-mono);">${sec.score}%</strong>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.06); height:6px; border-radius:3px; overflow:hidden;">
+                            <div style="width:${sec.score}%; height:100%; background:${getBarColor(sec.score)}; transition:width 0.5s ease;"></div>
+                        </div>
+                        <div style="display:flex; flex-direction:column; gap:4px; margin-top:4px;">
+                            ${(sec.controls || []).map(c => `
+                                <div style="font-size:11px; display:flex; justify-content:space-between; color:${c.status === 'PASS' ? '#94A3B8' : '#EF4444'};">
+                                    <span>${c.id} - ${c.name}</span>
+                                    <span>${c.status === 'PASS' ? '✓' : '✕'}</span>
+                                </div>
+                            `).join('')}
+                        </div>
                     </div>
                 `;
             }

@@ -74,6 +74,7 @@ class ClientFinancialAnalysisResponse(BaseModel):
     posture_status: str
     open_vulns_count: int
     remediated_vulns_count: int
+    compliance_matrix: Optional[Dict[str, Any]] = None
     methodology: str
 
 class ClientSummaryResponse(BaseModel):

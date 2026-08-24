@@ -673,10 +673,11 @@ jobs:
                                 <div>
                                     <label style="display:block; font-size:11px; font-weight:700; color:#cbd5e1; text-transform:uppercase; margin-bottom:4px;">Segmento / Setor</label>
                                     <select id="clientFormIndustry" class="form-select">
-                                        <option value="FINTECH">Fintech / Banking</option>
-                                        <option value="HEALTHCARE">Saúde / Healthcare</option>
-                                        <option value="E_COMMERCE">E-Commerce & Varejo</option>
+                                        <option value="AGRO">Agrotech / Agronegócio & IoT</option>
+                                        <option value="HEALTHCARE">Saúde / Telemedicina</option>
+                                        <option value="FINTECH">Fintech / Meios de Pagamento</option>
                                         <option value="LOGISTICS">Logística & Frotas</option>
+                                        <option value="E_COMMERCE">E-Commerce & Varejo</option>
                                         <option value="GOV">Governo & Setor Público</option>
                                     </select>
                                 </div>
@@ -766,10 +767,11 @@ jobs:
                                     <label style="display:block; font-size:11px; font-weight:700; color:var(--text-dim); text-transform:uppercase; margin-bottom:6px;">Segmento de Mercado</label>
                                     <select id="clientIndustryFilter" class="form-select" onchange="NeuroClients.filter();">
                                         <option value="ALL">Todos os Segmentos</option>
-                                        <option value="FINTECH">Fintech / Banking</option>
-                                        <option value="HEALTHCARE">Saúde / Healthcare</option>
-                                        <option value="E_COMMERCE">E-Commerce & Varejo</option>
+                                        <option value="AGRO">Agrotech / Agronegócio & IoT</option>
+                                        <option value="HEALTHCARE">Saúde / Telemedicina</option>
+                                        <option value="FINTECH">Fintech / Meios de Pagamento</option>
                                         <option value="LOGISTICS">Logística & Frotas</option>
+                                        <option value="E_COMMERCE">E-Commerce & Varejo</option>
                                         <option value="GOV">Governo & Setor Público</option>
                                     </select>
                                 </div>
@@ -917,19 +919,31 @@ jobs:
                                     <span style="font-size:12px; color:var(--text-muted);"><span id="cockpitSensitiveRecords">--</span> titulares sensíveis LGPD</span>
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- Decomposição Financeira FAIR / NIST SP 800-30 / LGPD -->
+                        <!-- Decomposição Financeira FAIR / NIST SP 800-30 / LGPD (PME Realista) -->
                         <div class="pulse-card" style="margin-bottom:24px; padding:22px;">
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border-subtle); padding-bottom:10px;">
                                 <div>
-                                    <span class="section-tag">// MODELO DE RISCO QUANTITATIVO FAIR & NIST 800-30</span>
+                                    <span class="section-tag">// MODELO DE RISCO QUANTITATIVO FAIR & NIST 800-30 (PMEs)</span>
                                     <h3 style="font-size:16px; font-weight:800; color:#fff;">Decomposição das Perdas Financeiras Estimadas por Vetor</h3>
                                 </div>
-                                <span style="font-size:11px; color:var(--matrix-green); font-family:var(--font-mono);">CALCULADO VIA ENGENHARIA MATEMÁTICA</span>
+                                <span style="font-size:11px; color:var(--matrix-green); font-family:var(--font-mono);">PROPORCIONAL À ESCALA PME</span>
                             </div>
                             <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:14px;" id="cockpitFinancialVectors">
                                 <!-- Preenchido dinamicamente pelo JS -->
+                            </div>
+                        </div>
+
+                        <!-- MATRIZ DE CONFORMIDADE REGULATÓRIA (ISO 27001, LGPD, PCI-DSS / SETORIAL) -->
+                        <div class="pulse-card" style="margin-bottom:24px; padding:22px; border:1px solid rgba(0,240,255,0.3);">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid var(--border-subtle); padding-bottom:10px;">
+                                <div>
+                                    <span class="section-tag" style="color:var(--cyan-neon);">// AUDITORIA & CONFORMIDADE REGULATÓRIA CONTEXTUALIZADA</span>
+                                    <h3 style="font-size:16px; font-weight:800; color:#fff;">Matriz de Aderência a Frameworks & Normas Oficiais</h3>
+                                </div>
+                                <span style="font-size:11px; color:var(--cyan-neon); font-family:var(--font-mono);">MAPEADO POR FALHAS REAIS ●</span>
+                            </div>
+                            <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:16px;" id="cockpitComplianceCards">
+                                <!-- Preenchido dinamicamente pelo JS com barras de progresso e controles auditados -->
                             </div>
                         </div>
 

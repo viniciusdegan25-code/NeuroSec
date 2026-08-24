@@ -101,12 +101,13 @@ class ScorecardService:
 
     @classmethod
     def calculate_client_financial_risk(cls, client: Any, vulns: list, assets: list = None) -> Dict[str, Any]:
-        """Calcula a perda financeira estimada, prejuízo evitado e score contextualizado para a realidade estrutural daquela empresa."""
+        """Calcula a perda financeira estimada, prejuízo evitado, conformidade e score contextualizado para PMEs e médias empresas."""
         
         # 1. Parâmetros Setoriais do Mercado Brasileiro (Fonte: IBM Security / FAIR / ANPD)
         sector_cost_per_record = {
-            "FINTECH": 450.0,
+            "AGRO": 220.0,
             "HEALTHCARE": 510.0,
+            "FINTECH": 450.0,
             "E_COMMERCE": 260.0,
             "LOGISTICS": 195.0,
             "GOV": 340.0
@@ -114,9 +115,9 @@ class ScorecardService:
         industry = (client.industry or "FINTECH").upper()
         unit_record_cost = sector_cost_per_record.get(industry, 250.0)
 
-        revenue = float(getattr(client, "annual_revenue_brl", 50000000.0) or 50000000.0)
-        records = int(getattr(client, "sensitive_records_count", 100000) or 100000)
-        downtime_h_cost = float(getattr(client, "downtime_cost_per_hour", 25000.0) or 25000.0)
+        revenue = float(getattr(client, "annual_revenue_brl", 8500000.0) or 8500000.0)
+        records = int(getattr(client, "sensitive_records_count", 25000) or 25000)
+        downtime_h_cost = float(getattr(client, "downtime_cost_per_hour", 3500.0) or 3500.0)
 
         open_exposure_total = 0.0
         loss_avoided_total = 0.0
@@ -130,40 +131,61 @@ class ScorecardService:
         low_count = 0
         rem_count = 0
 
+        # Falhas mapeadas para conformidade
+        has_secret_vuln = False
+        has_injection_vuln = False
+        has_crypto_vuln = False
+        has_sca_vuln = False
+        has_cloud_vuln = False
+
         for v in vulns:
             sev = (v.severity or "MEDIUM").upper()
             status = v.status or "open"
+            vtype = (v.vuln_type or "").lower()
             cvss = float(v.cvss_score or 5.0)
 
-            # Estimativa estocástica de impacto por severidade
+            # Rastreamento de tipos de falhas ativas
+            if status in ["open", "patch_ready"]:
+                if "secret" in vtype or "key" in vtype or "password" in vtype:
+                    has_secret_vuln = True
+                if "injection" in vtype or "eval" in vtype or "command" in vtype:
+                    has_injection_vuln = True
+                if "hsts" in vtype or "tls" in vtype or "ssl" in vtype or "crypto" in vtype or "cleartext" in vtype:
+                    has_crypto_vuln = True
+                if "biblioteca" in vtype or "cve" in vtype or "sca" in vtype:
+                    has_sca_vuln = True
+                if "s3" in vtype or "cloud" in vtype or "bucket" in vtype or "ssh" in vtype or "iac" in vtype:
+                    has_cloud_vuln = True
+
+            # Estimativa de impacto realista para escala de PME
             if sev == "CRITICAL":
-                breach_fraction = min(0.20, 0.08 + (cvss - 8.0) * 0.06)
-                outage_hours = 18.0
-                reg_multiplier = 0.012  # 1.2% do faturamento
+                breach_fraction = min(0.25, 0.10 + (cvss - 8.0) * 0.05)
+                outage_hours = 12.0
+                reg_multiplier = 0.015  # 1.5% do faturamento da PME
                 if status == "open": crit_count += 1
             elif sev == "HIGH":
-                breach_fraction = 0.05
-                outage_hours = 6.0
-                reg_multiplier = 0.004
+                breach_fraction = 0.08
+                outage_hours = 4.0
+                reg_multiplier = 0.006
                 if status == "open": high_count += 1
             elif sev == "MEDIUM":
-                breach_fraction = 0.01
-                outage_hours = 1.5
-                reg_multiplier = 0.001
+                breach_fraction = 0.02
+                outage_hours = 1.0
+                reg_multiplier = 0.002
                 if status == "open": med_count += 1
             else:
-                breach_fraction = 0.001
+                breach_fraction = 0.005
                 outage_hours = 0.5
-                reg_multiplier = 0.0002
+                reg_multiplier = 0.0005
                 if status == "open": low_count += 1
 
             if status == "remediated":
                 rem_count += 1
 
-            # Componentes de perda financeira
+            # Componentes de perda financeira (Adequados para PMEs: teto legal 2% do faturamento por infração na LGPD)
             v_breach_loss = records * breach_fraction * unit_record_cost
             v_downtime_loss = outage_hours * downtime_h_cost
-            v_regulatory_fine = min(50000000.0, revenue * reg_multiplier)
+            v_regulatory_fine = min(revenue * 0.02, revenue * reg_multiplier)
 
             single_vuln_total_impact = v_breach_loss + v_downtime_loss + v_regulatory_fine
 
@@ -175,8 +197,58 @@ class ScorecardService:
             elif status == "remediated":
                 loss_avoided_total += single_vuln_total_impact
 
-        # Cálculo do Score Contextualizado da Empresa (0 a 100)
-        penalty = (crit_count * 22) + (high_count * 12) + (med_count * 5) + (low_count * 2)
+        # 2. Matriz de Conformidade Regulatória Matemático-Contextual
+        # ISO 27001 (4 Controles Chave)
+        iso_controls = [
+            {"id": "A.9.4.3", "name": "Gestão de Senhas e Segredos", "status": "FAIL" if has_secret_vuln else "PASS", "details": "Chaves e senhas não podem estar em texto plano."},
+            {"id": "A.14.2.1", "name": "Desenvolvimento Seguro de Software", "status": "FAIL" if has_injection_vuln else "PASS", "details": "Validação de entradas contra Injeção SQL e RCE."},
+            {"id": "A.12.6.1", "name": "Gestão de Vulnerabilidades Técnicas", "status": "FAIL" if (crit_count + high_count) > 0 else "PASS", "details": "Varredura contínua de CVEs em dependências."},
+            {"id": "A.10.1.1", "name": "Controles de Criptografia", "status": "FAIL" if has_crypto_vuln else "PASS", "details": "Criptografia de ponta a ponta e HSTS."}
+        ]
+        iso_pass = sum(1 for c in iso_controls if c["status"] == "PASS")
+        iso_score = int((iso_pass / len(iso_controls)) * 100)
+
+        # LGPD / ANPD (3 Artigos Chave)
+        lgpd_controls = [
+            {"id": "Art. 46", "name": "Segurança e Proteção de Dados", "status": "FAIL" if (has_crypto_vuln or has_secret_vuln) else "PASS", "details": "Garantia de confidencialidade dos titulares cadastrados."},
+            {"id": "Art. 48", "name": "Prevenção de Incidentes e Vazamentos", "status": "FAIL" if (has_injection_vuln or has_cloud_vuln) else "PASS", "details": "Bloqueio de vetores de exfiltração de dados."},
+            {"id": "Art. 50", "name": "Governança e Boas Práticas em TI", "status": "FAIL" if crit_count > 0 else "PASS", "details": "Mitigação prioritária de falhas críticas de sistema."}
+        ]
+        lgpd_pass = sum(1 for c in lgpd_controls if c["status"] == "PASS")
+        lgpd_score = int((lgpd_pass / len(lgpd_controls)) * 100)
+
+        # PCI-DSS ou Norma Setorial Especializada
+        if industry == "FINTECH":
+            sector_name = "PCI-DSS 4.0 (Padrão de Segurança de Cartões e PIX)"
+            sector_controls = [
+                {"id": "Req. 4.1", "name": "Criptografia em Trânsito", "status": "FAIL" if has_crypto_vuln else "PASS", "details": "Uso obrigatório de TLS 1.3 e HSTS em APIs de pagamento."},
+                {"id": "Req. 6.2", "name": "Proteção contra Falhas de Software", "status": "FAIL" if has_injection_vuln else "PASS", "details": "Sanitização de parâmetros em transações financeiras."},
+                {"id": "Req. 8.2", "name": "Autenticação e Segredos de Acesso", "status": "FAIL" if has_secret_vuln else "PASS", "details": "Proteção de tokens de autorização de pagamentos."}
+            ]
+        elif industry == "HEALTHCARE":
+            sector_name = "CFM / Res. 1.821 (Sigilo Médico & Prontuário Digital)"
+            sector_controls = [
+                {"id": "Art. 10", "name": "Confidencialidade de Prontuários", "status": "FAIL" if (has_injection_vuln or has_secret_vuln) else "PASS", "details": "Proteção absoluta de prontuários e diagnósticos de saúde."},
+                {"id": "Art. 12", "name": "Disponibilidade da Telemedicina", "status": "FAIL" if (crit_count > 0) else "PASS", "details": "Garantia de uptime dos serviços de agendamento e laudo."}
+            ]
+        elif industry == "AGRO":
+            sector_name = "MAPA / Governança de Dados Agrícolas & IoT"
+            sector_controls = [
+                {"id": "Controle 1", "name": "Integridade de Sensores e Telemetria", "status": "FAIL" if (has_injection_vuln or has_secret_vuln) else "PASS", "details": "Proteção contra manipulação de dados de sensores de solo e safras."},
+                {"id": "Controle 2", "name": "Segurança de Firmware e Nuvem Agrícola", "status": "FAIL" if (has_cloud_vuln or has_sca_vuln) else "PASS", "details": "Auditoria de bibliotecas IoT e buckets em nuvem."}
+            ]
+        else:
+            sector_name = "ANTT / Resolução de Rastreabilidade e Frotas"
+            sector_controls = [
+                {"id": "Controle 1", "name": "Integridade do Roteirizador Web", "status": "FAIL" if has_injection_vuln else "PASS", "details": "Segurança de coordenadas de entregas e motoristas."},
+                {"id": "Controle 2", "name": "Disponibilidade da API de Rastreamento", "status": "FAIL" if crit_count > 0 else "PASS", "details": "Operação contínua do rastreador de entregas."}
+            ]
+
+        sector_pass = sum(1 for c in sector_controls if c["status"] == "PASS")
+        sector_score = int((sector_pass / len(sector_controls)) * 100)
+
+        # 3. Score Contextualizado (0 a 100)
+        penalty = (crit_count * 20) + (high_count * 10) + (med_count * 4) + (low_count * 1)
         remediation_bonus = rem_count * 4
         client_score = max(0, min(100, 100 - penalty + remediation_bonus))
 
@@ -214,5 +286,23 @@ class ScorecardService:
             "posture_status": posture_status,
             "open_vulns_count": len([v for v in vulns if v.status in ["open", "patch_ready"]]),
             "remediated_vulns_count": rem_count,
-            "methodology": "Modelo FAIR (Factor Analysis of Information Risk) & NIST SP 800-30 cruzado com parâmetros da LGPD (Art. 52) e IBM Security Cost Report."
+            "compliance_matrix": {
+                "iso_27001": {
+                    "score": iso_score,
+                    "status": "CONFORME" if iso_score >= 80 else ("PARCIAL" if iso_score >= 50 else "NÃO CONFORME"),
+                    "controls": iso_controls
+                },
+                "lgpd_anpd": {
+                    "score": lgpd_score,
+                    "status": "CONFORME" if lgpd_score >= 80 else ("PARCIAL" if lgpd_score >= 50 else "NÃO CONFORME"),
+                    "controls": lgpd_controls
+                },
+                "sector_standard": {
+                    "name": sector_name,
+                    "score": sector_score,
+                    "status": "CONFORME" if sector_score >= 80 else ("PARCIAL" if sector_score >= 50 else "NÃO CONFORME"),
+                    "controls": sector_controls
+                }
+            },
+            "methodology": "Modelo FAIR (Factor Analysis of Information Risk) & NIST SP 800-30 cruzado com parâmetros da LGPD (Art. 52 - 2% do faturamento) e IBM Security Cost Report para PMEs."
         }
