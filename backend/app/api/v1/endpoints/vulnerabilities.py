@@ -4,7 +4,7 @@ from typing import List, Optional
 from datetime import datetime, timedelta
 
 from app.db.database import get_db
-from app.db.models import Vulnerability, AuditLog
+from app.db.models import Vulnerability, AuditLog, ClientOrganization, Asset
 from app.schemas.vulnerability import VulnerabilityResponse, VulnerabilityUpdateStatus
 
 router = APIRouter()
@@ -70,9 +70,75 @@ def seed_demo_scenario(db: Session = Depends(get_db)):
     db.query(AuditLog).delete()
     db.commit()
 
+    # Garante que as 3 empresas corporativas de demonstração existam
+    if db.query(ClientOrganization).count() == 0:
+        clients = [
+            ClientOrganization(
+                id=1,
+                name="Banco Aurora S.A.",
+                cnpj="12.345.678/0001-90",
+                contact_name="Carlos Menezes",
+                contact_email="carlos.menezes@bancoaurora.com.br",
+                contact_phone="+55 (11) 98765-4321",
+                sla_tier="ENTERPRISE_24_7",
+                industry="FINTECH",
+                annual_revenue_brl=450000000.0,
+                sensitive_records_count=1200000,
+                downtime_cost_per_hour=120000.0,
+                criticality_level="TIER_1_SYSTEMIC",
+                security_score=66,
+                monitored_assets_count=6,
+                open_vulns_count=3,
+                status="active",
+                notes="Ambiente bancário com monitoramento contínuo de APIs Open Finance e Core Bancário."
+            ),
+            ClientOrganization(
+                id=2,
+                name="Nexus Pay Meios de Pagamento",
+                cnpj="23.456.789/0001-01",
+                contact_name="Mariana Duarte",
+                contact_email="m.duarte@nexuspay.io",
+                contact_phone="+55 (11) 97654-3210",
+                sla_tier="ENTERPRISE_24_7",
+                industry="FINTECH",
+                annual_revenue_brl=80000000.0,
+                sensitive_records_count=350000,
+                downtime_cost_per_hour=45000.0,
+                criticality_level="TIER_1_SYSTEMIC",
+                security_score=88,
+                monitored_assets_count=8,
+                open_vulns_count=1,
+                status="active",
+                notes="Gateway de pagamentos PCI-DSS com auditoria diária de infraestrutura e dependências."
+            ),
+            ClientOrganization(
+                id=3,
+                name="AeroLog Logística Digital",
+                cnpj="34.567.890/0001-12",
+                contact_name="Roberto Silveira",
+                contact_email="roberto@aerolog.com.br",
+                contact_phone="+55 (21) 96543-2109",
+                sla_tier="BUSINESS_CRITICAL",
+                industry="LOGISTICS",
+                annual_revenue_brl=35000000.0,
+                sensitive_records_count=60000,
+                downtime_cost_per_hour=18000.0,
+                criticality_level="TIER_2_SIGNIFICANT",
+                security_score=100,
+                monitored_assets_count=4,
+                open_vulns_count=0,
+                status="active",
+                notes="Plataforma de rastreamento e frotas conectadas em nuvem AWS."
+            )
+        ]
+        for c in clients:
+            db.add(c)
+        db.commit()
+
     demo_vulns = [
         Vulnerability(
             internal_id=1,
+            client_id=1,
             key="SAST-AUTH-001",
             asset_name="services/auth/jwt_provider.py",
             asset_type="CODE",
@@ -88,6 +154,7 @@ def seed_demo_scenario(db: Session = Depends(get_db)):
         ),
         Vulnerability(
             internal_id=2,
+            client_id=1,
             key="SAST-PAY-002",
             asset_name="services/payments/checkout.py",
             asset_type="CODE",
@@ -103,6 +170,7 @@ def seed_demo_scenario(db: Session = Depends(get_db)):
         ),
         Vulnerability(
             internal_id=3,
+            client_id=1,
             key="SAST-EXEC-003",
             asset_name="workers/report_generator.py",
             asset_type="CODE",
@@ -118,6 +186,7 @@ def seed_demo_scenario(db: Session = Depends(get_db)):
         ),
         Vulnerability(
             internal_id=4,
+            client_id=1,
             key="SCA-YAML-004",
             asset_name="requirements.txt:pyyaml==5.3.1",
             asset_type="DEPENDENCY",
@@ -133,6 +202,7 @@ def seed_demo_scenario(db: Session = Depends(get_db)):
         ),
         Vulnerability(
             internal_id=5,
+            client_id=2,
             key="SCA-REQ-005",
             asset_name="requirements.txt:requests==2.25.1",
             asset_type="DEPENDENCY",
@@ -148,6 +218,7 @@ def seed_demo_scenario(db: Session = Depends(get_db)):
         ),
         Vulnerability(
             internal_id=6,
+            client_id=1,
             key="CSPM-S3-006",
             asset_name="infra/terraform/storage.tf",
             asset_type="CLOUD",
@@ -163,6 +234,7 @@ def seed_demo_scenario(db: Session = Depends(get_db)):
         ),
         Vulnerability(
             internal_id=7,
+            client_id=2,
             key="CSPM-IAM-007",
             asset_name="infra/terraform/iam.tf",
             asset_type="CLOUD",
@@ -178,8 +250,9 @@ def seed_demo_scenario(db: Session = Depends(get_db)):
         ),
         Vulnerability(
             internal_id=8,
+            client_id=2,
             key="DAST-WEB-008",
-            asset_name="https://api.fintech-global.com.br",
+            asset_name="https://api.nexuspay.io",
             asset_type="URL",
             vuln_type="Missing HTTP Strict Transport Security (HSTS)",
             severity="MEDIUM",
@@ -193,23 +266,36 @@ def seed_demo_scenario(db: Session = Depends(get_db)):
         ),
         Vulnerability(
             internal_id=9,
+            client_id=3,
             key="DAST-CSP-009",
-            asset_name="https://app.fintech-global.com.br",
+            asset_name="https://app.aerolog.com.br",
             asset_type="URL",
             vuln_type="Missing Content-Security-Policy (CSP)",
             severity="MEDIUM",
             cvss_score=5.0,
-            status="open",
+            status="remediated",
             cve_id="CWE-693",
             line_number=1,
             owasp_category="A05:2021-Security Misconfiguration",
             original_code="Content-Security-Policy header is missing, allowing unrestricted cross-origin scripts.",
-            days_open=9
+            days_open=0
         )
     ]
 
     for v in demo_vulns:
         db.add(v)
+
+    # Recalcula as métricas financeiras de cada cliente
+    from app.services.scorecard_service import ScorecardService
+    all_clients = db.query(ClientOrganization).all()
+    for cl in all_clients:
+        cl_vulns = [v for v in demo_vulns if v.client_id == cl.id]
+        cl_assets = db.query(Asset).filter(Asset.client_id == cl.id).all()
+        fin_calc = ScorecardService.calculate_client_financial_risk(cl, cl_vulns, cl_assets)
+        cl.financial_exposure_risk_brl = fin_calc["financial_exposure_risk_brl"]
+        cl.financial_loss_avoided_brl = fin_calc["financial_loss_avoided_brl"]
+        cl.security_score = fin_calc["security_score"]
+        cl.open_vulns_count = fin_calc["open_vulns_count"]
 
     # Adiciona eventos de auditoria para compor o histórico
     db.add(AuditLog(
@@ -225,7 +311,7 @@ def seed_demo_scenario(db: Session = Depends(get_db)):
         target_vuln_id=8,
         vuln_key="DAST-WEB-008",
         operator="SecOps Lead",
-        details="Patch de configuração HSTS aprovado e propagado no proxy Cloudflare.",
+        details="Patch de configuração HSTS aprovado e propagado no proxy Cloudflare da Nexus Pay.",
         diff_preview="Strict-Transport-Security: max-age=31536000; includeSubDomains; preload"
     ))
 
