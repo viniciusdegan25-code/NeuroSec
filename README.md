@@ -7,7 +7,7 @@
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python)](https://python.org)
 [![AI Engine](https://img.shields.io/badge/AI%20Engine-Llama--3.1--8b%20via%20Groq-f97316?style=for-the-badge&logo=openai)](https://groq.com)
 [![Compliance](https://img.shields.io/badge/Compliance-ISO%2027001%20%7C%20LGPD%20%7C%20PCI--DSS-00FF41?style=for-the-badge)](https://neurosec-api.onrender.com/dashboard)
-[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue?style=for-the-badge)](LICENSE)
 
 **Plataforma de Gestão de Postura de Segurança de Aplicações (ASPM) de Nova Geração.**  
 *Unificando análise estática, varredura dinâmica, cadeia de suprimentos de software, postura em nuvem, risco quantitativo FAIR/NIST e matrizes de conformidade oficial com remediação autônoma por IA.*
@@ -256,7 +256,7 @@ Projeto desenvolvido como solução de ponta para o **Challenge Acadêmico de Ci
 
 * **Repositório GitHub**: [https://github.com/viniciusdegan25-code/NeuroSec](https://github.com/viniciusdegan25-code/NeuroSec)
 * **Ambiente em Nuvem (Render)**: [https://neurosec-api.onrender.com/login](https://neurosec-api.onrender.com/login)
-* **Licença**: MIT License.
+* **Licença**: GNU General Public License v3 (GPLv3).
 
 ---
 
