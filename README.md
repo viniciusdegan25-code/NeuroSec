@@ -252,11 +252,20 @@ TAXA DE SUCESSO: 11/11 FERRAMENTAS OPERACIONAIS (100% PASS)
 
 ## 👥 Publicação Acadêmica & Equipe
 
-Projeto desenvolvido como solução de ponta para o **Challenge Acadêmico de Cibersegurança e Gestão de Riscos**, demonstrando a viabilidade técnica de democratizar a segurança de aplicações para o ecossistema de PMEs brasileiras.
+Projeto desenvolvido para o **Challenge FIAP 2026 // Cibersegurança, DevSecOps & Gestão de Riscos**, demonstrando a viabilidade técnica de democratizar a segurança de aplicações (ASPM) para o ecossistema de PMEs brasileiras.
 
-* **Repositório GitHub**: [https://github.com/viniciusdegan25-code/NeuroSec](https://github.com/viniciusdegan25-code/NeuroSec)
-* **Ambiente em Nuvem (Render)**: [https://neurosec-api.onrender.com/login](https://neurosec-api.onrender.com/login)
-* **Licença**: GNU General Public License v3 (GPLv3).
+### 🎓 Integrantes do Grupo (FIAP):
+
+| Integrante | RM (FIAP) | Função Principal no Projeto |
+| :--- | :---: | :--- |
+| **Gabriel Barros** | `RM569367` | Engenharia de Segurança & Scanners Multicamadas (SAST/DAST/SCA) |
+| **Vinicius Degan Silva** | `RM569279` | Arquitetura de Software, Modelagem FAIR/NIST & Governança |
+| **Guilherme Catto** | `RM568672` | Desenvolvimento Backend, APIs REST & Trilha de Auditoria |
+| **Lucas Dias** | `RM573456` | Interface do Usuário (UI/UX), CI/CD & Integrações |
+
+* **Repositório Oficial no GitHub**: [https://github.com/viniciusdegan25-code/NeuroSec](https://github.com/viniciusdegan25-code/NeuroSec)
+* **Ambiente em Nuvem Ativo (Render)**: [https://neurosec-api.onrender.com/login](https://neurosec-api.onrender.com/login)
+* **Licença de Software**: GNU General Public License v3 (GPLv3).
 
 ---
 
